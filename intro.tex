@@ -1,3 +1,14 @@
 \section{Introduction}
 
-The Large Synoptic Survey Telescope \citep[LSST;][]{2008arXiv0805.2366I}...
+The Large Synoptic Survey Telescope \citep[LSST;][]{2008arXiv0805.2366I} is an 8.4\,m telescope being built on Cerro Pachon in Chile.
+The Data Management System \citep[DMS;][]{2015arXiv151207914J} is designed to handle the flow of data from the telescope, approaching 20\,TB per night, in order to issue alerts and to prepare annual data releases.
+A central component of the DMS is the LSST Science Pipelines software that provides the algorithms and frameworks required to process the data and generate the coadds, difference images, and catalogs to the user community for scientific analysis.
+
+The LSST Science Pipelines software consists of the building blocks required to construct high performance pipelines to process the data from LSST.
+It has been under development since at least 2004 \citep{2004AAS...20510811A} and has evolved significantly over the years as the project transitioned from prototyping \citep{2010SPIE.7740E..15A} and entered into formal construction \citep{2018SPIE10707-10J}.
+The software is designed to be usable by other optical telescopes and this has been demonstrated with Hyper Suprime Cam \citep{2018PASJ...70S...5B}.
+
+In this paper we provide an overview of the components of the software system.
+This includes a description of the support libraries and data access abstraction, along with the algorithmic components and the pipeline task system.
+We do not include validation of the individual algorithms.
+The other components of the LSST DMS, such as the workflow system, the Qserv database \citep{Wang:2011:QDS:2063348.2063364} and the LSST Science Platform \citep{LSE-319}, are described elsewhere.

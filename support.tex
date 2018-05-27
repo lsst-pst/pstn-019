@@ -1,4 +1,23 @@
-\section{Infrastructure}
+\section{Fundamentals}
 
-Logging and exceptions.
-Mention pybind11 usage and ndarray.
+The LSST Science Pipelines software is written in Python with C++ used for high performance algorithms and for core classes that are usable in both languages.
+We recently dropped Python 2 and adopted Python 3 \citep{2017arXiv171200461J}, requiring a minimum version of Python 3.6.
+The C++ layer can use C++14 features and we use pybind11 to provide the interface from Python to C++.
+Additionally, the C++ layer uses \texttt{ndarray} to allow seamless passing of C++ arrays to and from Python \texttt{numpy} arrays.
+This compatibility with \texttt{numpy} is important in that it makes LSST data structures available to standard Python libraries such as Scipy and Astropy \citep{2016SPIE.9913E..0GJ,2018arXiv180102634T}.
+
+Although all the software uses the \texttt{lsst} namespace, the code base is split into individual Python products in the LSST GitHub organization\footnote{\url{https://github.com/lsst}} that can be installed independently and which declare their own dependencies.
+These dependencies are managed using the EUPS system \citep{EUPS,2018SPIE10707-10J}.
+Each product is built using the SCons system \citep{2005Scons1377085} with LSST-specific extensions provided in the \texttt{sconsUtils} package enforcing standard build rules.
+
+For logging we use Log4CXX wrapped in the \texttt{lsst.log} package to make it look more like standard Python logging whilst also supporting deferred string formatting such that log messages are only formed if the log message level is sufficient for the message to be logged.
+Finally, we also provide some LSST-specific exceptions that can be thrown from C++ code and caught in Python.
+
+As of April 2018, the Science Pipelines software is approximately 290,000 lines of Python and 225,000 lines of C++.\footnote{Line counts include comments but not blank lines. Python interfaces are implemented using \texttt{pybind11} and that is counted as C++ code. For the purposes of this count Science pipelines software is defined as the \texttt{lsst\_distrib} metapackage and does not include code from third party packages.}
+
+\subsection{Unit Testing and Code Coverage}
+
+Unit testing and code coverage are critical components of code quality \citep{2018SPIE10707-10J}.
+Every package comes with unit tests written using the standard \texttt{unittest} module.
+We run the tests using \texttt{pytest} \citep{pytest} and this comes with many advantages in that all the tests run in the same process and requiring global parameters to be well understood, test can be run in parallel in multiple processes, plugins can be enabled to extend testing, and a test report can be created giving details of run times and test failures.
+Coding standards compliance with PEP\,8 \citep{pep8} and code coverage are enabled using \texttt{pytest} plugins, and we also check for leaked file descriptors during tests.
