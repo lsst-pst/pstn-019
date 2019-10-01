@@ -1,4 +1,7 @@
+authors.tex
+meta.tex
 PSTN-019.pdf
+*.xdv
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
