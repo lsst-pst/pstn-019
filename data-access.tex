@@ -97,3 +97,11 @@ There are currently \texttt{obs} packages for:
 \end{itemize}
 
 Additionally, teams outside the project have developed \texttt{obs} packages to support Subaru's Prime Focus Spectrograph \citep{2020SPIE11447E..7VW} and VISTA's VIRCAM \citep{2015A&A...575A..25S}.
+
+\subsection{Metadata Translation}
+
+Every instrument uses different metadata standards but the Butler data model and pipelines require some form of standardization to determine values such as the coordinates of an observation, the observaton type, or the time of observation.
+To perform that standard extraction of metadata each supported instrument must provide a metadata translator class using the \texttt{astro\_metadata\_translator} infrastructure.\footnote{\url{https://astro-metadata-translator.lsst.io}}
+The translator classes can understand evolving data models and allow the standardized metadata to be extracted for the lifetime of an instrument even if headers changed.
+Furthermore, in addition to providing standardized metadata the package can also provide programmatic or per-exposure corrections to data headers prior to calculating the translated metadata.
+This allows files that were written with incorrect headers to be recovered.
