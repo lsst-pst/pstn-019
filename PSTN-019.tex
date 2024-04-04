@@ -26,8 +26,13 @@
 \input{afw}
 \input{isr}
 \input{meas}
+\input{diffim}
 \input{jointcal}
 \input{pipe}
+\input{schemas}
+\input{display}
+\input{analysis}
+\input{validation}
 \input{conclusions}
 
 \acknowledgments
@@ -36,11 +41,12 @@ Additional Rubin Observatory funding comes from private donations, grants to uni
 
 \facility{Rubin}
 \software{%
-ndarray,
-astropy,
-pytest,
-matplotlib,
-galsim,
+ndarray\footnote{\url{https://github.com/ndarray/ndarray}},
+astropy \citep{2022ApJ...935..167A},
+pytest \citep{pytest},
+matplotlib \citep{2007CSE.....9...90H},
+galsim \citep{2015A&C....10..121R},
+numpy \citep{Harris2020},
 }
 
 \bibliography{local,lsst,lsst-dm,refs_ads,refs,books}
