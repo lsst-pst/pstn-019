@@ -13,7 +13,7 @@ endif
 
 export TEXMFHOME ?= lsst-texmf/texmf
 
-$(DOCNAME).pdf: $(tex) meta.tex local.bib authors.tex
+$(DOCNAME).pdf: $(tex) local.bib authors.tex
 	latexmk -bibtex -xelatex -f $(DOCNAME)
 
 authors.tex:  authors.yaml
@@ -24,15 +24,5 @@ clean:
 	latexmk -c
 	rm -f $(DOCNAME).bbl
 	rm -f $(DOCNAME).pdf
-	rm -f meta.tex
 
 .FORCE:
-
-meta.tex: Makefile .FORCE
-	rm -f $@
-	touch $@
-	echo '% GENERATED FILE -- edit this in the Makefile' >>$@
-	/bin/echo '\newcommand{\lsstDocType}{$(DOCTYPE)}' >>$@
-	/bin/echo '\newcommand{\lsstDocNum}{$(DOCNUMBER)}' >>$@
-	/bin/echo '\newcommand{\vcsRevision}{$(GITVERSION)$(GITDIRTY)}' >>$@
-	/bin/echo '\newcommand{\vcsDate}{$(GITDATE)}' >>$@
