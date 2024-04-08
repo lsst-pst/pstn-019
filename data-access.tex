@@ -2,4 +2,106 @@
 
 \subsection{Butler}
 
+Early in the development of the LSST Science Pipelines software it was decided that the algorithmic code should be written without knowing where files came from, what format they were written in, where the outputs are going to be written or how they are going to be stored.
+All that the algorithmic code needs to know is the relevant data model and the Python type.
+To meet these requirements we developed a library called the Data Butler \citep[see e.g.,][]{2022SPIE12189E..11J,2023arXiv230303313L}.
+
+The Butler internally is implemented as a registry, a database keeping track of datasets, and a datastore, a storage system that can map a Butler dataset to a specific collection of bytes.
+A datastore is usuall a file store (including POSIX file system, S3 object stores, or WebDAV) but could also be implemented as a NoSQL database or a metrics database such as Sasquatch \citep{SQR-068}.
+
+\begin{deluxetable}{ll}
+
+%% Keep a portrait orientation
+
+%% Over-ride the default font size
+%% Use Default (12pt)
+
+%% Use \tablewidth{?pt} to over-ride the default table width.
+%% If you are unhappy with the default look at the end of the
+%% *.log file to see what the default was set at before adjusting
+%% this value.
+
+%% This is the title of the table.
+\tablecaption{Common dimensions present in the default dimension universe.\label{tab:dims}}
+
+%% This command over-rides LaTeX's natural table count
+%% and replaces it with this number.  LaTeX will increment
+%% all other tables after this table based on this number
+%% \tablenum{1}
+
+%% The \tablehead gives provides the column headers.  It
+%% is currently set up so that the column labels are on the
+%% top line and the units surrounded by ()s are in the
+%% bottom line.  You may add more header information by writing
+%% another line between these lines. For each column that requries
+%% extra information be sure to include a \colhead{text} command
+%% and remember to end any extra lines with \\ and include the
+%% correct number of &s.
+\tablehead{\colhead{Name} & \colhead{Description} \\
+\colhead{} & \colhead{} }
+
+%% All data must appear between the \startdata and \enddata commands
+\startdata
+\texttt{instrument} &  Instrument.  \\
+\texttt{band} & Waveband of interest.  \\
+\texttt{physical\_filter} &  Filter used for the exposure. \\
+\texttt{day\_obs} & The observing day. \\
+\texttt{group} &  Group identifier. \\
+\texttt{exposure} & Individual exposure. \\
+\texttt{visit} &  Collection of 1 or 2 exposures. \\
+\texttt{tract} &  Tesselation of the sky. \\
+\texttt{patch} &  Patch within a tract.\\
+\enddata
+
+%% Include any \tablenotetext{key}{text}, \tablerefs{ref list},
+%% or \tablecomments{text} between the \enddata and
+%% \end{deluxetable} commands
+
+\end{deluxetable}
+
+A core concept of the Butler is that every dataset must be given what we call a ``data coordinate.''
+The data coordinate locates the dataset in the dimensional space where dimensions are defined in terms that scientists understand.
+Some commonly used dimensions are listed in Table~\ref{tab:dims}.
+Each dataset is uniquely located by specifying its dataset type, its run collection, and its coordinates, with Butler refusing to accept another dataset that matches all three of those values.
+The dataset type defines the relevant dimensions and the associated Python storage class.
+The run collection can be thought of as a folder but does not have to be a folder within datastore.
+
+As a concrete example, the file from one detector of an LSSTCam observation taken sometime in 2025 could have a data coordinate of \texttt{instrument="LSSTCam", detector=42, exposure=2025080300100} and be associated with a \texttt{raw} dataset type.
+The \texttt{exposure} record itself implies other information such as the physical filter and the time of observation.
+A deep coadd on a patch of sky would not have \texttt{exposure} dimensions at all and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, skymap="something"}, which would tell you exactly where it is located in the sky since you can calculate it from the tract and patch and skymap.
+
 \subsection{Instrument Abstractions: Obs Packages}
+
+The Butler and pipeline construction code know nothing about the specifics of a particular instrument.
+In the default dimension universe there is an \texttt{instrument} dimension that includes a field containing the full name of a Python \texttt{Instrument} class.
+This class, which uses a standard interface, is used by the system to isolate the instrument-specific from the pipeline-generic.
+Some of the responsibilities are:
+
+\begin{itemize}
+\item Register instrument-specific dimensions such as \texttt{detector}, \texttt{physical\_filter} and the default \texttt{visit\_system}.
+\item Define the default \texttt{raw} dataset type and the associated dimensions.
+\item Provide configuration defaults for pipeline task code that is processing data from this instrument.
+\item Provide a ``formatter'' class that knows how to read raw data.
+\item Define the default curated calibrations known to this instrument.
+\end{itemize}
+
+By convention we define the instrument class and associated configuration in \texttt{obs} packages.
+As an extension to the base definition of an ``instrument``, the LSST Science Pipelines define a modified \texttt{Instrument} class that includes focal plane distortions using the \texttt{afw} package (see \S\ref{sec:afw}).
+There are currently \texttt{obs} packages for:
+
+\begin{itemize}
+\item LSSTCam \citep{2010SPIE.7735E..0JK}, LATISS \citep{2020SPIE11452E..0UI}, and associated Rubin Observatory test stands and simulators.
+\item Hyper-SuprimeCam \citep{2018PASJ...70S...1M}.
+\item The Dark Energy Camera \citep{2008SPIE.7014E..0ED}.
+\item CFHT's MegaPrime \citep{2003SPIE.4841...72B}.
+\end{itemize}
+
+Additionally, teams outside the project have developed \texttt{obs} packages to support Subaru's Prime Focus Spectrograph \citep{2020SPIE11447E..7VW} and VISTA's VIRCAM \citep{2015A&A...575A..25S}.
+
+\subsection{Metadata Translation}
+
+Every instrument uses different metadata standards but the Butler data model and pipelines require some form of standardization to determine values such as the coordinates of an observation, the observaton type, or the time of observation.
+To perform that standard extraction of metadata each supported instrument must provide a metadata translator class using the \texttt{astro\_metadata\_translator} infrastructure.\footnote{\url{https://astro-metadata-translator.lsst.io}}
+The translator classes can understand evolving data models and allow the standardized metadata to be extracted for the lifetime of an instrument even if headers changed.
+Furthermore, in addition to providing standardized metadata the package can also provide programmatic or per-exposure corrections to data headers prior to calculating the translated metadata.
+This allows files that were written with incorrect headers to be recovered.

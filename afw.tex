@@ -1,1 +1,33 @@
-\section{Astronomy Frame Work: afw}
+\section{Core Infrastructure Libraries}
+
+\subsection{Region Handling}
+
+\texttt{geom} and \texttt{sphgeom}?
+
+Use ICRS coordinates everywhere.
+All coordinate transformations are done within Astropy.
+
+\subsection{Time and Hierarchical Data Structures}
+
+\texttt{daf\_base}.
+
+Use Datetime only to store times in C++ objects.
+Use \texttt{astropy.time} for all other time handling, following the recommendations from \citet{2016SPIE.9913E..0GJ}.
+
+\texttt{PropertySet} and \texttt{PropertyList} to allow \texttt{dict}-like data structures to be passed from Python to C++ and back again.
+
+\subsection{Application Framework}
+\label{sec:afw}
+\texttt{afw} -- this is called the ``Application Framework'' in \citet{2010SPIE.7740E..15A}\footnote{This document can be downloaded from \url{https://ls.st/Document-9349}}
+
+\begin{itemize}
+\item Image/MaskedImage/Exposure
+\item Table and Catalogs.
+\item Detection
+\item Math
+\item Camera geometry
+\item FITS I/O
+\item WCS: AST library \citep{2016A&C....15...33B} backs the world coordinate system handling.
+\end{itemize}
+
+\texttt{coadd\_utils} ?
