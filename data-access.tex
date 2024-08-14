@@ -72,6 +72,7 @@ The \texttt{exposure} record itself implies other information such as the physic
 A deep coadd on a patch of sky would not have \texttt{exposure} dimensions at all and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, skymap="something"}, which would tell you exactly where it is located in the sky since you can calculate it from the tract and patch and skymap.
 
 \subsection{Instrument Abstractions: Obs Packages}
+\label{sec:obs_packages}
 
 The Butler and pipeline construction code know nothing about the specifics of a particular instrument.
 In the default dimension universe there is an \texttt{instrument} dimension that includes a field containing the full name of a Python \texttt{Instrument} class.
