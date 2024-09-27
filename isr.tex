@@ -3,24 +3,15 @@
 
 \subsection{Amplifier Offset Correction}
 \label{sec:isr:ampoffset}
-As part of the instrument signature removal (ISR) process, the amplifier offset
-correction algorithm addresses systematic discontinuities in background sky
-levels across amplifier boundaries. These discontinuities arise from electronic
-biases between adjacent amplifiers and persist even after applying dark and
-flat corrections. Drawing on the \texttt{PANSTARRS}' Pattern Continuity
-algorithm \citep{2020ApJS..251....4W}, our method reduces these offsets,
-thereby mitigating problems such as background oversubtraction and
-undersubtraction at the boundaries.
+The amplifier offset correction (commonly referred to as amp-offset correction, or pattern continuity correction) runs as part of the instrument signature removal (ISR) process.
+This correction is designed to address systematic discontinuities in background sky levels across amplifier boundaries.
+We believe that these discontinuities arise from electronic biases between adjacent amplifiers, persisting even after application of dark and flat corrections.
 
-The algorithm starts by computing differences between narrow stripes of
-exposure along each amplifier edge and those of adjacent amplifiers,
-considering only the unmasked regions. These differences are captured in a
-matrix, where diagonal entries represent the number of neighboring amplifiers,
-and off-diagonal entries reflect associations between the amplifiers. A second
-matrix encodes directional information for these associations.
-The amplifier offsets are adjusted by solving a matrix system derived from the
-aforementioned matrices. This system is solved using least-squares minimization
-to align neighboring amplifiers and smooth out discontinuities. The method is
-generalized to support 2D amplifier layouts on a detector, incorporating
-length-based weighting into the matrices to account for amplifiers that are not
-necessarily square.
+Drawing on the \texttt{PANSTARRS}' Pattern Continuity algorithm \citep{2020ApJS..251....4W}, our method aims to eliminate these offsets, thereby preventing problems such as background over-/under-subtraction at amplifier boundaries caused by discontinuities across the detector.
+
+The amp-offset algorithm initially computes a robust flux difference measure between two narrow strips along each amplifier-amplifier interface.
+Regions containing detected sources, or pixel data which have been masked for other reasons, are not considered.
+These amp-interface differences are stored in an amp-offset matrix; diagonal entries represent the number of neighboring amplifiers, and off-diagonal entries encode information about the associations between amplifiers.
+A complementary interface matrix encodes directional information for these associations.
+Using this information, a least-squares minimization is performed to determine the optimal pedestal value to be added or subtracted to each amp which would reduce the amp-offset between that amplifier and all of its neighboring amplifiers.
+This method is generalized to support 2D amplifier geometries within a detector, as with LSSTCam, incorporating length-based weighting into the matrices to account for amplifiers that are not square.
