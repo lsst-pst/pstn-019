@@ -9,7 +9,7 @@ We believe that these discontinuities arise from electronic biases between adjac
 
 Drawing on the \texttt{PANSTARRS}' Pattern Continuity algorithm \citep{2020ApJS..251....4W}, our method aims to eliminate these offsets, thereby preventing problems such as background over-/under-subtraction at amplifier boundaries caused by discontinuities across the detector.
 
-The amp-offset algorithm initially computes a robust flux difference measure between two narrow strips along each amplifier-amplifier interface.
+The amp-offset algorithm initially computes a robust flux difference measure between two narrow strips on opposite sides of each amplifier-amplifier interface.
 Regions containing detected sources, or pixel data which have been masked for other reasons, are not considered.
 These amp-interface differences are stored in an amp-offset matrix; diagonal entries represent the number of neighboring amplifiers, and off-diagonal entries encode information about the associations between amplifiers.
 A complementary interface matrix encodes directional information for these associations.
