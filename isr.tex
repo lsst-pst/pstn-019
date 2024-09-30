@@ -1,2 +1,17 @@
 \section{Instrument Signature Removal}
 \label{sec:isr}
+
+\subsection{Amplifier Offset Correction}
+\label{sec:isr:ampoffset}
+The amplifier offset correction (commonly referred to as amp-offset correction, or pattern continuity correction) runs as part of the instrument signature removal (ISR) process.
+This correction is designed to address systematic discontinuities in background sky levels across amplifier boundaries.
+We believe that these discontinuities arise from electronic biases between adjacent amplifiers, persisting even after application of dark and flat corrections.
+
+Drawing on the \texttt{PANSTARRS}' Pattern Continuity algorithm \citep{2020ApJS..251....4W}, our method aims to eliminate these offsets, thereby preventing problems such as background over-/under-subtraction at amplifier boundaries caused by discontinuities across the detector.
+
+The amp-offset algorithm initially computes a robust flux difference measure between two narrow strips on opposite sides of each amplifier-amplifier interface.
+Regions containing detected sources, or pixel data which have been masked for other reasons, are not considered.
+These amp-interface differences are stored in an amp-offset matrix; diagonal entries represent the number of neighboring amplifiers, and off-diagonal entries encode information about the associations between amplifiers.
+A complementary interface matrix encodes directional information for these associations.
+Using this information, a least-squares minimization is performed to determine the optimal pedestal value to be added or subtracted to each amp which would reduce the amp-offset between that amplifier and all of its neighboring amplifiers.
+This method is generalized to support 2D amplifier geometries within a detector, as with LSSTCam, incorporating length-based weighting into the matrices to account for amplifiers that are not square.
