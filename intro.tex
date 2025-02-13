@@ -1,14 +1,14 @@
 \section{Introduction}
 \label{sec:intro}
 
-The Vera C.\ Rubin Observatory will be performing the 10-year Legacy Survey of Space and Time \citep[LSST;][]{2019ApJ...873..111I} starting in 2025.
+The NSF-DOE Vera C.\ Rubin Observatory will be performing the 10-year Legacy Survey of Space and Time \citep[LSST;][]{2019ApJ...873..111I} starting in 2025.
 Rubin Observatory is located on Cerro Pachon in Chile and consists of the 8.4\,m Simonyi Survey Telescope with the 3.4-gigapixel LSSTCam survey camera performing the main survey and the Rubin Auxiliary Telescope providing supplementary atmospheric calibration data.
 The Data Management System \citep[DMS;][]{2022arXiv221113611O} is designed to handle the flow of data from the telescope, approaching 20\,TB per night, in order to issue alerts and to prepare annual data releases.
 A central component of the DMS is the LSST Science Pipelines software that provides the algorithms and frameworks required to process the data from the LSST and generate the coadds, difference images, and catalogs to the user community for scientific analysis.
 
 The LSST Science Pipelines software consists of the building blocks and pipeline infrastructure required to construct high performance pipelines to process the data from LSST.
 It has been under development since at least 2004 \citep{2004AAS...20510811A} and has evolved significantly over the years as the project transitioned from prototyping \citep{2010SPIE.7740E..15A} and entered into formal construction \citep{2017ASPC..512..279J}.
-The software is designed to be usable by other optical telescopes and this has been demonstrated with Hyper Suprime Cam on the Subaru Telescope in Hawaii \citep{2018PASJ...70S...5B} and also with data from the Dark Energy Camera (DECam).
+The software is designed to be usable by other optical telescopes and this has been demonstrated with Hyper Suprime Cam on the Subaru Telescope in Hawaii \citep{2018PASJ...70S...5B} and also with data from the Dark Energy Camera (DECam),  the VISTA infrared camera (VIRCAM), the Wide Field Survey Telescope \citep[WFST;][]{2025arXiv250115018C}, and the Gravitational-wave Optical Transient Observer \citep[GOTO;][]{2021PASA...38....4M}.
 
 In this paper we provide an overview of the components of the software system.
 This includes a description of the support libraries and data access abstraction, the pipeline task system, and an overview of the algorithmic components.
