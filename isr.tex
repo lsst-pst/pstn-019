@@ -3,7 +3,7 @@
 
 Raw images from charge-coupled devices (CCDs) contain instrumental effects, such as dark currents, clocking artifacts or crosstalk between neighboring amplifiers, that can be removed in the data processing.
 In the Rubin pipeline, this step is called Instrument Signature Removal (ISR) and is the first processing applied to a raw CCD exposure.
-The package performing the ISR on an exposure, called \texttt{ip\_isr}, is detailed below in Sec. \ref{sec:ip_isr}: it is a critical package for Data Release Pipeline (DRP) used to process LSST images and requires calibration products produced and verified by \texttt{cp\_pipe} and \texttt{cp\_verify} respectively as described in Sec. \ref{sec:calib_pipe}. For further information about the life cycle of a calibration product and the procedures it entails, see \url{https://dmtn-222.lsst.io/}. In Sec. \ref{sec:isr:ampoffset}, we specifically describe the correction of amplifier offset in more details.
+The package performing the ISR on an exposure, called \texttt{ip\_isr}, is detailed below in Sec. \ref{sec:ip_isr}: it is a critical package for Data Release Pipeline (DRP) used to process LSST images and requires calibration products produced and verified by \texttt{cp\_pipe} and \texttt{cp\_verify} respectively as described in Sec. \ref{sec:calib_pipe}. For further information about the life cycle of a calibration product and the procedures it entails, see \citet{DMTN-222}. In Sec. \ref{sec:isr:ampoffset}, we specifically describe the correction of amplifier offset in more details.
 
 We note that we focus here on our approach to perform ISR on data from LSST cameras only (LSSTCam, ComCam and LATISS), although we also provide calibration pipelines for other cameras such as DECam and HSC (using a different ISR approach).
 
@@ -11,11 +11,11 @@ We note that we focus here on our approach to perform ISR on data from LSST came
 \label{sec:ip_isr}
 
 Exposures from LSST cameras are affected by instrumental effects, ranging from well-known CCD effects like dark currents or bias levels to effects more recently characterized like tree-rings (see \cite{park_properties_2017,park_tree_2020,esteves_photometry_2023} for more details on tree rings in LSSTCam) or the Brighter-Fatter effect as discussed in \cite{broughton_2023}. Correcting for these effects requires specific calibrations, which we refer to as calibration products. In LSST cameras, calibration products typically are a combined bias, a combined dark, a Photon Transfer Curve (PTC), a crosstalk matrix, a list of defects and a look-up table of non-linearity parameters.
-The meaning of these calibration products and the details on the Rubin Observatory's ISR and calibration approach can be found in \url{https://sitcomtn-086.lsst.io/v/SITCOM-949/index.html}.
+The meaning of these calibration products and the details on the Rubin Observatory's ISR and calibration approach can be found in \citep{SITCOMTN-086}.
 \begin{figure}[h!]
     \centering
 \includegraphics[scale=0.25]{isr_plots/instrumentmodel_isr.png}
-    \caption{Schematic of the instrument model for detector effects in LSST cameras which \texttt{isrTaskLSST} is based on at the time of publication. Diagram made by Eli Rykoff, more details about the model can be found in \url{https://sitcomtn-086.lsst.io/v/SITCOM-949/index.html}.}
+    \caption{Schematic of the instrument model for detector effects in LSST cameras which \texttt{isrTaskLSST} is based on at the time of publication. Diagram made by Eli Rykoff, more details about the model can be found in \citet{SITCOMTN-086}.}
     \label{fig:isr_model}
 \end{figure}
 
@@ -51,4 +51,4 @@ This method is generalized to support 2D amplifier geometries within a detector,
 The pipelines to build calibration products (\texttt{cp}) for the LSST cameras are defined in \texttt{cp\_pipe}\footnote{\url{https://github.com/lsst/cp\_pipe} and see documentation at \url{https://pipelines.lsst.io/modules/lsst.cp.pipe/constructing-calibrations.html}}.
 They set \texttt{isrTaskLSST} configuration parameters needed for each calibration product, by enabling all the sequential steps of the ISR task up to the step before the correction being generated. In some cases, configurations also specify whether to combine exposures (for bias or dark exposures for instance) and to bin exposures to support display.
 
-Once calibration products are produced, they are ``verified'' (see \url{https://dmtn-222.lsst.io/} for more details) using \texttt{cp\_verify}\footnote{\url{https://github.com/lsst/cp\_verify}} pipelines by checking they pass metrics defined in \url{https://dmtn-101.lsst.io/}. In this case, verify configuration parameters enable all corrections in the ISR task up to and including the application of the correction being verified. As a result, the calibration products can then be certified to be available in the \texttt{butler} and used to ISR an exposure.
+Once calibration products are produced, they are ``verified'' (see \citet{DMTN-222} for more details) using \texttt{cp\_verify}\footnote{\url{https://github.com/lsst/cp\_verify}} pipelines by checking they pass metrics defined in \citep{DMTN-101}. In this case, verify configuration parameters enable all corrections in the ISR task up to and including the application of the correction being verified. As a result, the calibration products can then be certified to be available in the \texttt{butler} and used to ISR an exposure.
