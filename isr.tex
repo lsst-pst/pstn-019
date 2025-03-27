@@ -14,9 +14,8 @@ We note that we focus here on our approach to performing ISR on data from LSST c
 Exposures from LSST cameras are affected by instrumental effects, ranging from well-known CCD effects like dark currents or bias levels to effects more recently characterized like tree-rings (see \citet{2017JInst..12C5015P,2020JATIS...6a1005P,2023PASP..135k5003E,2015JInst..10C8010O,2016ApJ...825...61O} for more details on tree rings in LSSTCam and their impact on science) or the Brighter-Fatter effect as discussed in \cite{2024PASP..136d5003B}.
 Correcting for these effects requires specific calibrations, which we refer to as calibration products. In LSST cameras, calibration products typically are a combined bias, a combined dark, a Photon Transfer Curve (PTC), a crosstalk matrix, a list of defects, and a look-up table of non-linearity parameters.
 The meaning of these calibration products and the details on the Rubin Observatory's ISR and calibration approach can be found in \citet{2024arXiv240414516P} and \citep{SITCOMTN-086}.
-\begin{figure}[h!]
-    \centering
-\includegraphics[scale=0.25]{isr_plots/instrumentmodel_isr.png}
+\begin{figure}
+    \plotone{isr_plots/instrumentmodel_isr.png}
     \caption{Schematic of the instrument model for detector effects in LSST cameras which \texttt{isrTaskLSST} is based on at the time of publication. Diagram made by Eli Rykoff, more details about the model can be found in \citet{SITCOMTN-086} and \citet{ 2024arXiv240414516P}.}
     \label{fig:isr_model}
 \end{figure}
