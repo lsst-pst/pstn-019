@@ -92,9 +92,9 @@ As an extension to the base definition of an ``instrument``, the LSST Science Pi
 There are currently project-supported \texttt{obs} packages for:
 
 \begin{itemize}
-\item LSSTCam \citep{2010SPIE.7735E..0JK}, LATISS \citep{2020SPIE11452E..0UI}, and associated Rubin Observatory test stands and simulators.
+\item LSSTCam \citep{2024SPIE13096E..1SR,2024SPIE13096E..1OL, 2024SPIE13103E..0WU,2010SPIE.7735E..0JK}, LATISS \citep{2020SPIE11452E..0UI}, and associated Rubin Observatory test stands and simulators.
 \item Hyper-SuprimeCam \citep{2018PASJ...70S...1M}.
-\item The Dark Energy Camera \citep{2008SPIE.7014E..0ED}.
+\item The Dark Energy Camera \citep{2015AJ....150..150F,2008SPIE.7014E..0ED}.
 \item CFHT's MegaPrime \citep{2003SPIE.4841...72B}.
 \end{itemize}
 
@@ -103,7 +103,7 @@ the Wide Field Survey Telescope \citep[WFST;][]{2025arXiv250115018C}, and the Gr
 
 \subsection{Metadata Translation}
 
-Every instrument uses different metadata standards but the Butler data model and pipelines require some form of standardization to determine values such as the coordinates of an observation, the observaton type, or the time of observation.
+Every instrument uses different metadata standards but the Butler data model and pipelines require some form of standardization to determine values such as the coordinates of an observation, the observation type, or the time of observation.
 To perform that standard extraction of metadata each supported instrument must provide a metadata translator class using the \texttt{astro\_metadata\_translator} infrastructure.\footnote{\url{https://astro-metadata-translator.lsst.io}}
 The translator classes can understand evolving data models and allow the standardized metadata to be extracted for the lifetime of an instrument even if headers changed.
 Furthermore, in addition to providing standardized metadata the package can also provide programmatic or per-exposure corrections to data headers prior to calculating the translated metadata.
