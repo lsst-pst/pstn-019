@@ -2,13 +2,13 @@
 \label{sec:support}
 
 The LSST Science Pipelines software is written in Python with C++ used for high-performance algorithms and for core classes that are usable in both languages.
-We use Python 3 \citep[having ported from python 2,][currently with a minimum version of Python 3.11]{2020ASPC..522..541J}, and the C++ layer can use C++17 features with pybind11 being used to provide the interface from Python to C++.
+We use Python 3 \citep[having ported from python 2,][currently with a minimum version of Python 3.12]{2020ASPC..522..541J}, and the C++ layer can use C++17 features with pybind11 being used to provide the interface from Python to C++.
 Additionally, the C++ layer uses \texttt{ndarray} to allow seamless passing of C++ arrays to and from Python \texttt{numpy} arrays.
 This compatibility with \texttt{numpy} is important in that it makes LSST data structures available to standard Python libraries such as Scipy and Astropy \citep{2016SPIE.9913E..0GJ,2018AJ....156..123A}.
 
 Although all the software uses the \texttt{lsst} namespace, the code base is split into individual Python products in the LSST GitHub organization\footnote{\url{https://github.com/lsst}} that can be installed independently and which declare their own dependencies.
-These dependencies are managed using the ``Extended Unix Product System" (EUPS) \citep{EUPS,2018SPIE10707E..09J} where
-most of the products are built using the SCons system \citep{2005Scons1377085} with LSST-specific extensions provided in the \texttt{sconsUtils} package enforcing standard build rules.
+These dependencies are managed using the ``Extended Unix Product System'' \citep[EUPS;][]{EUPS,2018SPIE10707E..09J} where
+most of the products are built using the SCons system \citep{2005Scons1377085} with LSST-specific extensions provided in the \texttt{sconsUtils} package enforcing standard build rules and creating the necessary Python package metadata files.
 
 For logging we always use standard Python logging with an additional \texttt{VERBOSE} log level between \texttt{INFO} and \texttt{DEBUG} to provide additional non-debugging detail that can be enabled during batch processing.
 This verbose logging is used for periodic logging where long-lived analysis tasks are required to issue a log message every 10 minutes to indicate to the batch system that they are still alive and actively performing work.
@@ -16,12 +16,12 @@ For logging from C++ we use Log4CXX wrapped in the \texttt{lsst.log} package to 
 These C++ log messages are forwarded to Python rather than being issued from an independent logging stream.
 Finally, we also provide some LSST-specific exceptions that can be thrown from C++ code and caught in Python.
 
-As of April 2024, the Science Pipelines software is approximately 640,000 lines of Python and 225,000 lines of C++.
+As of April 2025, the Science Pipelines software is approximately 700,000 lines of Python and 225,000 lines of C++.
 The number of lines in the pipelines code as a function of time is given in Fig.~\ref{fig:pipe-loc}.
 
 \begin{figure}
 \plotone{fig-pipe-loc}
-\caption{The number of lines of code comprising the LSST Science Pipelines software as a function of time.
+\caption{The number of lines of code comprising the LSST Science Pipelines software as a function of year.
 Line counts include comments but not blank lines. Python interfaces are implemented using \texttt{pybind11} and that is counted as C++ code. For the purposes of this count Science pipelines software is defined as the \texttt{lsst\_distrib} metapackage and does not include code from third party packages.}
 \label{fig:pipe-loc}
 \end{figure}
@@ -29,7 +29,7 @@ Line counts include comments but not blank lines. Python interfaces are implemen
 \subsection{Python environment}
 
 An important aspect of running a large data processing campaign is to ensure that the software environment is well defined.
-We define a base python environment using conda-forge via a meta package named \texttt{rubinenv}\footnote{\url{https://github.com/conda-forge/rubinenv-feedstock}}.
+We define a base python environment using conda-forge via a meta package named \texttt{rubin-env}\footnote{\url{https://github.com/conda-forge/rubinenv-feedstock}}.
 This specifies all the software needed to build and run the science pipelines software.
 A Docker container is built for each software release and the fully-specified versions of all software are recorded to ensure repeatability.
 
@@ -37,6 +37,6 @@ A Docker container is built for each software release and the fully-specified ve
 
 Unit testing and code coverage are critical components of code quality \citep{2018SPIE10707E..09J}.
 Every package comes with unit tests written using the standard \texttt{unittest} module.
-We run the tests using \texttt{pytest} \citep{pytest} and this comes with many advantages in that all the tests run in the same process and requiring global parameters to be well understood, test can be run in parallel in multiple processes, plugins can be enabled to extend testing and record test coverage, and a test report can be created giving details of run times and test failures.
-Coding standards compliance with PEP\,8 \citep{pep8} is enforced using GitHub actions and \texttt{pre-commit} checks.
-A Jenkins system provides the team with continuous integration facilities.
+We run the tests using \texttt{pytest} \citep{pytest} and this comes with many advantages in that all the tests run in the same process and requiring global parameters to be well understood, tests can be run in parallel in multiple processes, plugins can be enabled to extend testing and record test coverage, and a test report can be created giving details of run times and test failures.
+Coding standards compliance with PEP\,8 \citep{pep8} is enforced using GitHub Actions, the \texttt{ruff} package, and \texttt{pre-commit} checks.
+A Jenkins system provides the team with continuous integration facilities that includes running longer tests with pre-cursor datasets.

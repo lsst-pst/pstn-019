@@ -1,0 +1,5 @@
+\subsubsection{\texttt{ap\_pipe}}
+
+\texttt{ap\_pipe} currently has pipeline variants for LATISS, the Rubin Observatory simulators, Hyper-SuprimeCam, and the Dark Energy Camera.
+Because these variants serve as testbeds for AP-specific algorithms and configuration settings, they are, as much as possible, the ``same'' pipeline, differing almost entirely in loading instrument defaults from \texttt{obs} packages (\S\ref{sec:obs_packages}).
+The only other customization is an extra task for handling DECam's inter-chip crosstalk, which does not have an equivalent for Rubin instruments.

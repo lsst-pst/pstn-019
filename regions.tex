@@ -1,0 +1,8 @@
+\subsection{Region Handling}
+
+The \texttt{sphgeom} package is used for spherical geometry calculations, sky-based region defintions, and sky pixelization schemes.
+The \texttt{geom} package is used to locations and extents within a Cartesian coordinate space.
+
+(Aside: I only just realized that lsst.geom has SpherePoint that is effectively LonLat from sphgeom and we have both lsst.geom.Angle and lsst.sphgeom.Angle... I feel like if I document this, that questions will be asked...)
+
+For coordinates, we use ICRS everywhere and leave any required coordinate transformations to the Astropy infrastructure.

@@ -1,0 +1,8 @@
+\subsection{Time and Hierarchical Data Structures}
+
+The \texttt{daf\_base} package provides core data structures for handling time and hierarchical data structures.
+The \texttt{DateTime} package is used in our C++ data models mostly to represent TAI times.
+For general manipulations of times in Python we now use \texttt{astropy.time}, following the recommendations from \citet{2016SPIE.9913E..0GJ}.
+
+The \texttt{PropertySet} and \texttt{PropertyList} classes tallow \texttt{dict}-like data structures to be passed from Python to C++ and back again.
+The \texttt{PropertySet} represents a hierarchical key/value data structure whereas \texttt{PropertyList} is a flat data structure that is used to represent a FITS header and supports multi-valued keys and key comments.

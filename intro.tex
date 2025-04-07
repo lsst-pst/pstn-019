@@ -2,7 +2,7 @@
 \label{sec:intro}
 
 The NSF-DOE Vera C.\ Rubin Observatory will be performing the 10-year Legacy Survey of Space and Time \citep[LSST;][]{2019ApJ...873..111I} starting in 2025.
-Rubin Observatory is located on Cerro Pachon in Chile and consists of the 8.4\,m Simonyi Survey Telescope with the 3.4-gigapixel LSSTCam survey camera performing the main survey and the Rubin Auxiliary Telescope providing supplementary atmospheric calibration data.
+Rubin Observatory is located on Cerro Pachon in Chile and consists of the 8.4\,m Simonyi Survey Telescope \citep{2022SPIE12182E..0WT} with the 3.2-gigapixel LSSTCam survey camera \citep{2024SPIE13096E..1SR} performing the main survey and the Rubin Auxiliary Telescope \citep{2020SPIE11452E..0UI} providing supplementary atmospheric calibration data.
 The Data Management System \citep[DMS;][]{2022arXiv221113611O} is designed to handle the flow of data from the telescope, approaching 20\,TB per night, in order to issue alerts and to prepare annual data releases.
 A central component of the DMS is the LSST Science Pipelines software that provides the algorithms and frameworks required to process the data from the LSST and generate the coadds, difference images, and catalogs to the user community for scientific analysis.
 
@@ -13,4 +13,4 @@ The software is designed to be usable by other optical telescopes and this has b
 In this paper we provide an overview of the components of the software system.
 This includes a description of the support libraries and data access abstraction, the pipeline task system, and an overview of the algorithmic components.
 We do not include details of the science validation of the individual algorithms.
-The other components of the LSST DMS, such as the workflow system \citep{2022arXiv221115795G}, the Qserv database \citep{Wang:2011:QDS:2063348.2063364} and the Rubin Science Platform \citep{LSE-319}, are not covered in this paper.
+The other components of the LSST DMS, such as the workflow system \citep{2022arXiv221115795G,2024EPJWC.29504026K}, the Qserv database \citep{Wang:2011:QDS:2063348.2063364,C15_adassxxxii} and the Rubin Science Platform \citep{LSE-319,2024ASPC..535..227O}, are not covered in this paper.
