@@ -1,8 +1,9 @@
 \section{Display Abstractions}
 \label{sec:display}
 
-Display plugins for:
+The Python object representing an image with metadata is a bespoke object not understand by generic tooling.
+To display an image we provide a display abstraction layer that allows the image to be displayed and graphics overlaid by using a plugin mechanism.
 
-matplotlib \citep{2007CSE.....9...90H},
-firefly \citep{2020ASPC..527..243R},
-ds9 \citep{2003ASPC..295..489J}
+In some plugins the pixel data can be extracted from the exposure object and sent directly to display, in other plugins we form a simple single HDU FITS image (possibly with simplified world coordinates) and pass the temporary FITS file to the display system.
+
+There a currently plugins for matplotlib \citep{2007CSE.....9...90H}, Firefly \citep{2020ASPC..527..243R}, SAOImage DS9 \citep{2003ASPC..295..489J}, and Ginga \citep[][via Astrowidgets]{2013ASPC..475..319J}.

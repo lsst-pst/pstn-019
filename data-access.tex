@@ -8,7 +8,7 @@ All that the algorithmic code needs to know is the relevant data model and the P
 To meet these requirements we developed a library called the Data Butler \citep[see e.g.,][]{2022SPIE12189E..11J,2023arXiv230303313L}.
 
 The Butler internally is implemented as a registry, a database keeping track of datasets, and a datastore, a storage system that can map a Butler dataset to a specific collection of bytes.
-A datastore is usuall a file store (including POSIX file system, S3 object stores, or WebDAV) but could also be implemented as a NoSQL database or a metrics database such as Sasquatch \citep{SQR-068}.
+A datastore is usually a file store (including POSIX file system, S3 object stores, or WebDAV) but it is also possible to store metrics directly into the Sasquatch metrics service \citep{SQR-068,2024SPIE13101E..1MF}.
 
 \begin{deluxetable}{ll}
 
@@ -64,8 +64,8 @@ A core concept of the Butler is that every dataset must be given what we call a 
 The data coordinate locates the dataset in the dimensional space where dimensions are defined in terms that scientists understand.
 Some commonly used dimensions are listed in Table~\ref{tab:dims}.
 Each dataset is uniquely located by specifying its dataset type, its run collection, and its coordinates, with Butler refusing to accept another dataset that matches all three of those values.
-The dataset type defines the relevant dimensions and the associated Python storage class.
-The run collection can be thought of as a folder but does not have to be a folder within datastore.
+The dataset type defines the relevant dimensions (such as whether this is referring to observations or a sky map) and the associated Python type representing the dataset.
+The run collection can be thought of as a folder grouping datasets created by the same batch operation, but does not have to be a folder within a file system.
 
 As a concrete example, the file from one detector of an LSSTCam observation taken sometime in 2025 could have a data coordinate of \texttt{instrument="LSSTCam", detector=42, exposure=2025080300100} and be associated with a \texttt{raw} dataset type.
 The \texttt{exposure} record itself implies other information such as the physical filter and the time of observation.
@@ -107,4 +107,4 @@ Every instrument uses different metadata standards but the Butler data model and
 To perform that standard extraction of metadata each supported instrument must provide a metadata translator class using the \texttt{astro\_metadata\_translator} infrastructure.\footnote{\url{https://astro-metadata-translator.lsst.io}}
 The translator classes can understand evolving data models and allow the standardized metadata to be extracted for the lifetime of an instrument even if headers changed.
 Furthermore, in addition to providing standardized metadata the package can also provide programmatic or per-exposure corrections to data headers prior to calculating the translated metadata.
-This allows files that were written with incorrect headers to be recovered.
+This allows files that were written with incorrect headers to be recovered during file ingestion.

@@ -1,0 +1,18 @@
+\subsection{meas\_extensions\_shapeHSM}
+\label{sec:meas_extensions_shapeHSM}
+
+The \texttt{meas\_extensions\_shapeHSM} package contains the plugins to measure the shapes of objects.
+The plugins measure the moments of the sources and PSFs with adaptive Gaussian weights.
+The algorithm was initially described in \cite{2003MNRAS.343..459H} and was modified later in \cite{2005MNRAS.361.1287M}.
+The implementation of these algorithms lives within the \texttt{hsm} module of the GalSim package \citep{2015A&C....10..121R}.
+\texttt{meas\_extensions\_shapeHSM} now interacts directly with the Python layer of GalSim to make the measurements.
+
+The base plugin for measuring moments is the \texttt{HsmMomentsPlugin} and is the parent class of the \texttt{HsmSourceMomentsPlugin} and \texttt{HsmPsfMomentsPlugin} which are specialized to measure on the sources (and objects) and PSFs respectively.
+\texttt{HsmSourceMomentsRoundPlugin} is a further specialized plugin that measures the moments with circular Gaussian weights instead of the elliptical ones in \texttt{HsmSourceMomentsPlugin}.
+The \texttt{HsmPsfMomentsDebiasedPlugin} adds noise to the PSF image to degrade it to have the same signal-to-noise ratio (SNR) as the source image.
+This makes the ellipticity calculated from this plugin have the same bias as the source ellipticity
+The PSF moments from this plugin should be used when calculating ellipticity residuals so the bias is largely cancelled.
+Having the various specializations as distinct plugins allows an object to be measured under different configurations simultaneously and included in the output catalogs.
+
+In addition to the plugins that measure (adaptive) weighted moments, there are also a series of \texttt{HsmShape} plugins to estimate the PSF-corrected ellipticities of objects.
+In particular, the outputs from \texttt{HsmShapeRegaussPlugin} have been used to measure weak gravitation lensing signals in the Hyper Suprime-Cam SSP data \citep{2018PASJ...70S..25M, 2022PASJ...74..421L}.

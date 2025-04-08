@@ -45,12 +45,3 @@ These amp-interface differences are stored in an amp-offset matrix; diagonal ent
 A complementary interface matrix encodes directional information for these associations.
 Using this information, a least-squares minimization is performed to determine the optimal pedestal value to be added or subtracted to each amp which would reduce the amp-offset between that amplifier and all of its neighboring amplifiers.
 This method is generalized to support 2D amplifier geometries within a detector, as with LSSTCam, incorporating length-based weighting into the matrices to account for amplifiers that are not square.
-
-\subsection{Calibration pipelines}
-\label{sec:calib_pipe}
-
-The pipelines to build calibration products (\texttt{cp}) for the LSST cameras are defined in \texttt{cp\_pipe}\footnote{\url{https://github.com/lsst/cp\_pipe} and see documentation at \url{https://pipelines.lsst.io/modules/lsst.cp.pipe/constructing-calibrations.html}}.
-They set \texttt{isrTaskLSST} configuration parameters needed for each calibration product, by enabling all the sequential steps of the ISR task up to the step before the correction being generated. In some cases, configurations also specify whether to combine exposures (for bias or dark exposures for instance) and to bin exposures to support display.
-
-Once calibration products are produced, they are ``verified'' (see \citet{DMTN-222} for more details) using \texttt{cp\_verify}\footnote{\url{https://github.com/lsst/cp\_verify}} pipelines by checking they pass metrics defined in \citet{DMTN-101}.
-In this case, verify configuration parameters enable all corrections in the ISR task up to and including the application of the correction being verified. As a result, the calibration products can then be certified to be available in the \texttt{butler} and used to ISR an exposure.
