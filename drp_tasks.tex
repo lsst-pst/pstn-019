@@ -1,1 +1,30 @@
 \subsubsection{\texttt{drp\_tasks}}
+
+\textbf{Coaddition Tasks}
+\label{sec:coaddition-tasks}
+
+The LSST Science Pipelines provide a modular task framework for constructing coadds from multiple single-epoch images.
+Coadds are used as static-sky templates for image subtraction and detecting and measuring faint sources.
+The coaddition process is divided into two main stages: resampling the input images onto a common projection and stacking those resampled images into a single coadd.
+Each stage is implemented via configurable tasks that allow the pipelines to be adapted for different instruments and observing strategies.
+The first step in coaddition is to resample each single-epoch exposure onto a common projection and pixel grid called a \textit{skyMap}.
+This step is performed by the following Tasks: 
+\begin{itemize}
+\item \texttt{MakeDirectWarpTask} performs a straightforward resampling of calibrated exposures.
+ \item \texttt{MakePsfMatchedWarpTask} also convolves them to a configurable, common model-PSF.
+ This PSF-homogenized variant is useful when the scientific goals require uniform PSF properties across the coadd and is used for artifact rejection during coaddition
+ \end{itemize}
+
+All warping tasks use a configurable interpolation kernel. A 5th-order Lanczos kernel is used by default, balancing fidelity and computational efficiency.
+Input images are geometrically transformed using the World Coordinate System (WCS) and interpolated onto the target projection defined by a tract and patch geometry.
+Each resulting resampled image is called a \texttt{warp}.
+
+Once warps are generated, they are stacked into a final coadd by \texttt{AssembleCoaddTask} or one of its subclasses.
+The default implementation, \texttt{CompareWarpAssembleCoaddTask}, performs outlier rejection to remove transient artifacts such as cosmic rays, satellite trails, and moving objects.
+The algorithm compares pixel values across epochs and masks those that significantly deviate from the expected distribution.
+The artifact rejection algorithm is detailed in \citep{DMTN-080}.
+By default, weights for stacking are derived from the inverse of the average variance of each warp, with optional filters on PSF quality and seeing.
+The stacked image is accompanied by a mask plane and variance map, and the set of input PSF models is combined into a spatially-varying coadd PSF model (\texttt{CoaddPsf}) to serve as the PSF model for the coadd. 
+
+Users can adapt the pipeline to their data by modifying warp selection criteria, choosing a projection as defined in a \texttt{SkyMap} object, and adjusting artifact rejection parameters.
+While the default LSST pipelines build direct (non-PSF-matched) coadds for source detection and measurement, the modularity of the task framework makes it easy to substitute PSF-homogenized coadds or experiment with alternative stacking strategies \citep{DMTN-015}.
