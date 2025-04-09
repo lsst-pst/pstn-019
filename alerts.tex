@@ -1,4 +1,13 @@
-\section{Alert Generation and Distribution}
+\section{Alert Generation}
 \label{sec:alerts}
 
-\texttt{ap\_association}, \texttt{alert\_packet}
+In order to to enable real-time science, the AP pipelines generate alert packets for each detected DIASource.
+These packets are serialized in Apache Avro\footnote{\url{https://avro.apache.org/}} format and then transmitted to community alert brokers via Kafka for further processing.
+\citet{DMTN-093} provides a high-level overview of the alert system.
+
+Within the pipelines, alert packets are constructed by \texttt{packageAlertsTask} within \texttt{ap\_association}.
+Alert packets contain the triggering DIASource record; the associated DIAObject or SSObject record; up to twelve months of past history from DIASources, DIAForcedSources, and/or upper limits; and cutout images of the science, template, and difference images centered at the position of the cutout.
+Cutouts are provided as FITS images serialized by the astropy \texttt{CCDData} class, and include image, variance, and mask planes along with WCS information and an image of the approximate PSF.
+
+Avro schemas are stored in the \texttt{alert\_packet} package.
+They are derived from the corresponding AP schemas in \texttt{sdm\_schemas} used to instantiate the AP databases.
