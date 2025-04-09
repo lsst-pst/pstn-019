@@ -1,6 +1,18 @@
 \subsection{Astrometric Calibration}
 
-\texttt{meas\_astrom}
-\texttt{gbdes} \citep{2022ascl.soft10011B,2017PASP..129g4503B}
+\subsection{meas\_astrom}
 
-Jointcal no longer discussed.
+Single frame astrometric fits are performed by \texttt{AstrometryTask} in \texttt{meas\_astrom} and run in \texttt{CalibrateImage} (TODO: crosslink?).
+This task matches a catalog of sources detected and measured on an image to a reference catalog and solves for the \textit{World Coordinate System} (WCS) of the image.
+Matching and WCS fitting are performed iteratively, to reject astrometric outliers.
+The matcher is either the optimistic (\texttt{MatchOptimisticBTask}) or pessimistic (\texttt{MatchPessimisticBTask}) matcher from V. Tabur 2007 (TOOD: citep!), with the pessimistic matcher used by default due to better performance on dense fields; see \citep{DMTN-031} for details.
+The WCS fitter can be a simple affine model on top of the known camera geometry (TODO: link to afw cameraGeom!), as in \texttt{FitAffineWcsTask}, or a FITS TAN-SIP WCS (TODO: link to FITS WCS paper!), as in \texttt{FitTanSipWCSTask} or \texttt{FitSipDistortionTask}.
+We default to fitting the simple affine model because we have a well fit distortion model from running \texttt{gbdes} in DRP \ref{sec:gbdes}, thus we do not need the extra degrees of freedom provided by a TAN-SIP model.
+
+Because \texttt{AstrometryTask} only requires a single image, it is suitable for use during Alert Production, which does not have access to the entire focal plane.
+This single frame astrometric fit is sufficient for initial calibration and difference imaging (assuming the modeled camera geometry is a close match to the true camera distortions), but during DRP we perform a full focal plane fit with \texttt{gbdes}.
+
+\subsection{gbdes}
+\label{sec:gbdes}
+
+\texttt{gbdes} \citep{2022ascl.soft10011B,2017PASP..129g4503B}
