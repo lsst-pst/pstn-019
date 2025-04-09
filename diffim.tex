@@ -1,4 +1,30 @@
 \section{Difference Imaging}
 \label{sec:diffim}
 
+\subsection{Filtering non-astrophysical diaSources}
+
+Some bogus diaSources are expected due to reflective artificial objects orbiting the Earth.
+These may originate from, e.g., satellites or space debris, which are most numerous in low-Earth orbit (LEO).
+Objects in this region of Earth's orbital space, typically defined as having an orbital altitude below 2000 km, move fast across the sky and may leave long streaks or trails that cross many LSSTCam detectors.
+For more details on how LSSTCam will be affected by bright streaks in general, please see \citet{Tyson20,Hasan22,Polin24,Snyder24,Polin25}.
+Depending on physical properties --- materials, size, orbital trajectory, tumbling, etc. --- some subset of artificial objects appear as streaks or glints upon visual inspection are expected to initially be detected as sources in difference images.
+Many will not be detected and are mostly concerning due to the effect they may have as a population increasing the background sky brightness during the decade of LSST Operations \citep{Kocifaj21}, which is out of scope for difference imaging.
+\citet{Tyson24} concluded that most debris smaller than 10 cm in size should not routinely be detected due to being out of focus and moving fast across the focal plane.
+
+To reduce the number of diaSources originating from non-astrophysical sources, we apply a multi-prong approach:
+
+% TODO: Meredith to elaborate on each of the following DM-45301
+\begin{enumerate}
+\item Known satellite catalog cross-reference
+\item Long trailed source detection and removal
+\item Streak detection and masking
+\item Future: glint detection and masking
+\item Future: active scheduler avoidance \citep{Hu22}
+\end{enumerate}
+
+We emphasize that no pixels will be altered or otherwise redacted, and that the approaches above are intended to be complementary and enable science users to decide which diaSources to include in their analyses.
+They are not intended to completely eradicate all signatures of non-astrophysical objects from all LSST Science Pipelines data products.
+In addition, we note faint signals of non-astrophysical sources below the detection threshold will remain, and these and other effects from the ever-changing population of human-made objects orbiting Earth will affect systematic errors in ways it is impossible to quantify upfront.
+
+
 \texttt{ip\_diffim}
