@@ -3,8 +3,30 @@
 Pex Config is the foundational configuration system for the LSST Rubin Observatory’s ambitious science pipelines.
 It’s far more than a simple parameter parser; it’s a framework that mediates between diverse configuration sources and the complex software that processes astronomical data.
 At its core, Pex Config functions as an intermediate representation, decoupling the pipelines from the specifics of configuration file formats (like YAML, JSON) and providing a unified, Python-native interface to all configurable parameters.
+This intermediate representation, resembling a Domain Specific Language embedded within Python, also allows leveraging the full power of a programming language for parsing or setting configuration values.
+An example of this can be seen in the following code block which shows a fragment used to configure one of the shape measurement routines.
 This abstraction is critical for maintainability, allowing the underlying file formats and or execution systems to evolve without impacting the pipeline code.
 It also provides a mechanism to deprecate configurables which will change in future versions of the software stack, allowing users an easy migration path.
+
+\begin{minipage}{\columnwidth}
+    \begin{lstlisting}[caption=Code configuration in python, language=python]
+import os.path
+from lsst.utils import getPackageDir
+
+try:
+    location = getPackageDir("meas_extensions_shapeHSM")
+    path = os.path.join(, "config", "enable.py")
+    config.load(path)
+    plugins = config.plugins
+    plugin = plugins["ext_shapeHSM_HsmShapeRegauss"]
+    plugin.deblendNChild = "deblend_nChild"
+    # Enable debiased moments
+    config.plugins.names |= ["ext_shapeHSM_HsmPsfMomentsDebiased"]
+except LookupError as e:
+    print("Cannot enable shapeHSM (%s): disabling HSM shape measurements" % (e,))
+    \end{lstlisting}
+\end{minipage}
+
 
 
 The design of Pex Config centers around the concepts of “Fields” and “Config” objects.
@@ -20,6 +42,7 @@ A strength of Pex Config is its flexible application of configuration values.
 Values can be set at multiple stages: via command-line arguments, loaded from configuration files, or defined directly within the pipeline code.
 Importantly, these stages are applied progressively, with later stages overriding earlier ones.
 This allows for a powerful combination of default settings, user-defined customizations, and dynamic adjustments.
+Because Pex Config 
 Mechanisms also exist to apply values to all instances of a particular Config object within a tree, simplifying the management of shared parameters and ensuring consistency.
 
 
@@ -35,3 +58,4 @@ Finally, Pex Config is designed with documentation in mind.
 All Fields and Config objects can be richly documented using docstrings and documentation attributes.
 This documentation structure is not only readable by humans but can also be parsed by automated tools to generate comprehensive documentation pages, eliminating the need for manual documentation creation.
 This ensures that the configuration system is well-documented and easy to understand, even for new developers.
+
