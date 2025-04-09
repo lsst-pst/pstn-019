@@ -226,3 +226,4 @@ TSWLatexianTemp*
 
 # macOS-specific hidden files
 .DS_Store
+.qodo
