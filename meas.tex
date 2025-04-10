@@ -27,8 +27,15 @@ Plugins are added to a \textit{registry}, so that they and their outputs can be 
 This way, measurements produced by each plugin will have consistent, distinct names in the output schema, e.g. \texttt{base\_SdssCentroid\_x}, \texttt{base\_SdssCentroid\_y}, \texttt{base\_SdssCentroid\_flag}.
 
 Measurement plugins often depend on each other, and must be run in a particular order.
-This order is defined by the \texttt{executionOrder} config parameter, with smaller execution numbers being run first.
-\texttt{BasePlugin} defines a list of named constants for particular cases, e.g. \texttt{FLUX\_ORDER} for plugins that require both a shape and centroid to have been measured.
+Rather than creating a directed acyclic graph to denote the dependencies, the plugins are batched and and are run in any order within a batch.
+The batch order is defined by the \texttt{getExecutionOrder} method, with smaller execution numbers being run first.
+\texttt{BasePlugin} defines a list of named constants for particular cases:
+\begin{enumerate}
+    \item \texttt{CENTROID\_ORDER} for plugins that require only footprints and peaks
+    \item \texttt{SHAPE\_ORDER} for plugins that require a centroid to have been measured
+    \item \texttt{FLUX\_ORDER} for plugins that require both a shape and centroid to have been measured.
+\end{enumerate}
+
 Measurement plugins output their results to a \texttt{SourceCatalog} (TODO: crosslink to afw section!), which has a \textit{slot} system for predefined aliases to allow a plugin to get a value without knowing exactly what plugin originally computed that value, e.g. \texttt{slot\_Centroid} could point to \texttt{base\_SdssCentroid}, or some other plugin that measures centroids.
 
 \subsubsection{SingleFrameMeasurementTask}
