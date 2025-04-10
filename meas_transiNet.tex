@@ -3,7 +3,7 @@
 The \texttt{meas\_transiNet} package determines a numerical score for input cutout images using pre-trained machine-learning models.
 Image differencing may produce false detections, so time-domain surveys chacteristically use machine learning classifiers to distinguish astrophysical sources from artifacts \citep[``Real/Bogus;'' e.g.,][]{2012PASP..124.1175B, 2015AJ....150...82G, 2019MNRAS.489.3582D}.
 
-The \texttt{meas\_transiNet} defines ``model packages'' that consist of a python architecture class, a PyTorch \citep{paszke2019pytorch} weights file, and associated metadata.
+The \texttt{meas\_transiNet} defines ``model packages'' that consist of a python architecture class, a PyTorch \citep{NEURIPS2019_bdbca288} weights file, and associated metadata.
 The inference task may be configured to load a model package from disk or from the Butler.
 
 The \texttt{RBTransiNetTask} PipelineTask takes as input three square cutouts of configurable size from the science, template, and difference images centered on the location of a source.
@@ -12,4 +12,3 @@ Either CPU or GPU backends may be used for inference.
 The output of the task is a single float ranging from 0--1 for each cutout triplet, with higher values indicating that the DIASource is more likely to be astrophysical.
 These reliability scores are then joined with the DIASource catalogs by a later transformation task.
 Detailed discussion of the model architecture, training, and performance will be presented in T.\ Acero Cuellar et.\ al (in prep.).
-
