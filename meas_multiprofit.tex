@@ -1,2 +1,20 @@
 \subsection{meas\_extensions\_multiprofit}
 \label{sec:meas_extensions_multiprofit}
+
+MultiProFit is a package for Gaussian mixture model fitting \citep{DMTN-312}.
+MultiProFit is primarily used to provide multiband Sersic model fits to objects using all available coadds.
+The \texttt{multiprofit} package is a standalone Python-only package that provides the interfaces for astronomical object fitting.
+\texttt{multiprofit} depends primarily on \texttt{gauss2d\_fit}, a standalone C++ package with Python bindings for fast evaluation of Gaussian mixture model likelihoods and gradients thereof.
+\texttt{gauss2d\_fit} in turn is an extension of \texttt{gauss2d}, providing additional classes for parameters with arbitrary limits and transformations from the \texttt{modelfit\_parameters} header-only C++ library.
+All of these packages are included in the science pipelines but can also be installed independently, as \texttt{multiprofit} only depends on other standalone packages like \texttt{pex\_config}.
+
+The \texttt{meas\_extensions\_multiprofit} package contains pipeline tasks (with interfaces defined in \texttt{pipe\_tasks}) necessary to run \texttt{multiprofit} on coadded and deblended images.
+The first of these tasks fits a Gaussian mixture model to the PSF model image at the location of each object in a patch.
+This procedure is similar to the shapelet PSF fitting functionality in \texttt{meas\_modelfit}.
+The main differences are that the components are pure Gaussians (shapelet parameters are not supported), can have independent shapes, and are constrained to have integrals summing to unity (i.e. they are normalized).
+Currently, only a maximum of two components are supported; this limitation may be removed in the future.
+
+The remainder of the tasks in \texttt{meas\_extensions\_multiprofit} use the Gaussian mixture PSF model to fit a PSF-convolved model to all objects in a given patch, for all available bands.
+Convenient tasks are available for a variety of models, including a single Sersic, as well as multi-component bulge-disk models with an optional central point source component.
+In all cases, the structural parameters for each component are band-independent, with a separate total flux parameter for each band.
+That is, individual components do not have intrinsic color gradients (although the convolved models might, if the PSF parameters vary by band).
