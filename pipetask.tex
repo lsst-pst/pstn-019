@@ -1,9 +1,7 @@
 \subsection{Pipeline Support}
 
-The \texttt{Task} Python class provides a standard interface for how to execute an algorithm.
+The \texttt{Task} Python class provides a standard interface for how to execute an algorithm and has an associated \texttt{Config} class which contains its configurable parameters.
 The \texttt{PipelineTask} variant provides stronger guarantees on configuration and provides a means by which the pipeline execution framework can determine how to link a task into a pipeline and how to determine what type of data should be read from a Butler and what should be written out to a Butler.
-
-Describe \texttt{pex\_config} because it's not described anywhere.
 
 Pipeline in YAML.
 
