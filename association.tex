@@ -1,4 +1,31 @@
 \section{Source Association}
 \label{sec:association}
 
-\texttt{ap\_association}, for both DiaSource and Solar System processing
+The \texttt{ap\_association} package contains multiple tasks for standardizing newly detected DiaSources and associating them with existing or new DiaObjects.
+Standardization converts the output catalogs from \ref{sec:diffim} to the format specified in \texttt{sdm\_schemas} (Sec. \ref{sec:schemas}), and applies filtering consistent with \citep{DMTN-199}.
+Once DiaSource catalogs are standardized, they are associated to DiaObjects in either of two modes: Data Release Production (DRP) or Alert Production (AP).
+Both implementations use the Pessimistic Pattern Matcher B \citep{DMTN-031} to score and match DiaSources, but differ in how DiaObjects are stored and how visits are ordered.
+
+\begin{itemize}
+\item DRP association loads all DiaSource catalogs from a set time period overlapping a single patch at once, and creates new DiaObjects for matched DiaSources from all visits simultaneously.
+\item AP association processes a single visit at a time, and creates new DiaObjects incrementally from unassociated DiaSources.
+DiaObjects and their associated DiaSources are stored in the Alert Production Database (APDB) (Sec. \ref{sec:apdb}).
+\end{itemize}
+
+After association, an additional filtering step may be applied to DiaSources with no matched DiaObject of Solar System object (Sec \ref{sec:solar}).
+Properties of the source such as its reliability score (Sec. \ref{sec:reliability}, source flags, or signal-to-noise cuts may be used to drop detections that are likely to be false detections and avoid creating erroneous new DiaObjects.
+
+\subsection{Solar System object association}
+\label{sec:solar}
+
+Ephemerides from known Solar System objects are preloaded with approximate locations for the expected time of observation in \texttt{mpSkyEphemerisQuery}.
+Since these are loaded in Prompt Processing before the science image arrives and is calibrated, the orbital fit parameters are used in association to correct the position to the midpoint of the observation, including the shutter motion profile since the shutter takes a second to cross the focal plane.
+Solar System objects are associated to DiaSources using the closest match within a configurable radius.
+
+\subsection{Alert Production Database (APDB)}
+\label{sec:apdb}
+
+The Alert Production Database \citep[APDB;][]{DMTN-293}) supports SQL, Postgres, and Cassandra database formats.
+The previous history of DiaObjects, DiaSources, and DiaForcedSources for the region containing the science image is loaded with \texttt{loadDiaCatalogs}, which are passed to \texttt{diaPipe} for association.
+Loading is split from the association step to enable preloading of catalogs from the database in Prompt Processing during the interval when the next visit has been scheduled but the images have not yet been taken.
+When AP-style association is run outside of Prompt Processing, it is therefore essential to process all association tasks in strict visit order to prevent loading catalogs from the APDB prematurely and losing DiaObject history in association.
