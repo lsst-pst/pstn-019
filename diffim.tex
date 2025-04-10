@@ -8,15 +8,17 @@ Finally, peaks are detected on the difference image and DiaSources are measured 
 The final difference image with updated mask planes is written along with the DiaSource catalog.
 
 \subsection{subtractImages}
+
 The primary implementation of image subtraction used by \texttt{subtractImages} is based on \cite{1998ApJ...503..325A}, and uses spatially-varying Gaussian basis functions for the fit.
 The PSF-matching kernel can be constructed for either the science or the template image, and the resulting difference image is decorrelated \citet{DMTN-021}.
-Optionally, the science image can be preconvolved with its own PSF before PSF-matching, producing a Score image analogous to \cite{Zackay_2016}.
+Optionally, the science image can be preconvolved with its own PSF before PSF-matching, producing a Score image analogous to \citet{2016ApJ...830...27Z}.
 
 \subsection{detectAndMeasure}
+
 Positive and negative peaks are detected by thresholding the Score image if it is available.
 Otherwise, the difference image is smoothed with a Gaussian of the same width as the PSF of the science image, and thresholds are taken on the smoothed image.
 Contiguous pixels around each peak that are statistically brighter than the background are grouped into source footprints, and any overlapping footprints are merged.
 Footprints that contain both a positive and a negative peak are fit as dipoles.
 The dipole fit simultaneously solves for the negative and positive lobe centroids and fluxes using non-linear least squares minimization.
-DiaSources that are not classified as dipoles instead fall back on an SDSS-style centroid (\cite{Pier_2003}).
-Finally, all configured measurement plugins are run, including HSM shape measurements (\cite{2003MNRAS.343..459H} and \cite{2005MNRAS.361.1287M} ) and trailed source measurements.
+DiaSources that are not classified as dipoles instead fall back on an SDSS-style centroid \citep{2003AJ....125.1559P}.
+Finally, all configured measurement plugins are run, including HSM shape measurements \citep{2003MNRAS.343..459H,2005MNRAS.361.1287M} and trailed source measurements.
