@@ -1,1 +1,16 @@
-\subsection{meas\_extensions\_piff}
+\subsubsection{meas\_extensions\_piff}
+
+
+The \texttt{meas\_extensions\_piff} package is a wrapper around the PSF package \texttt{Piff} used to estimate and compute the PSF \citep{2021ascl.soft02024J,2021MNRAS.501.1282J}.
+\texttt{Piff} is a modular package that supports various PSF models, interpolation schemes, coordinate systems, and can operate on
+a per-CCD basis or over the full field of view, as indicated by its name.
+The implementation within  \texttt{meas\_extensions\_piff} does not exploit the full modularity of \texttt{Piff}; instead, it closely follows the method used for cosmic shear analysis like in DES \citep{2021MNRAS.501.1282J,2025OJAp....8E..26S}.
+
+The PSF model utilized is a \texttt{PixelGrid}, and the interpolation is performed using \texttt{BasisPolynomial} interpolation \citep{2021MNRAS.501.1282J}.
+Modeling is executed per CCD and can employ either pixel or sky coordinates.
+A key difference from \texttt{PSFex} is that  \texttt{Piff} implements outlier rejection based on chi-squared criteria \citep[see][for more details]{2021MNRAS.501.1282J}.
+
+Most of the configuration described here is adjustable through the \texttt{PiffPsfDeterminerConfig} that are exposing some of the configurable parameters of \texttt{Piff} and can be fine-tuned for a dedicated survey.
+However, some important features that were implemented by \citet{2021MNRAS.501.1282J} and \citet{2025OJAp....8E..26S} have not yet been enabled but will be available in the near future.
+While \citet{2021MNRAS.501.1282J} operates in sky coordinates with a WCS that includes CCD distortions such as treerings,  \texttt{meas\_extensions\_piff} can work in sky coordinates and incorporate WCS; as written, it does not, however, account for CCD distortions like tree rings.
+Additionally, although \citet{2025OJAp....8E..26S} incorporated a color correction to account for chromatic effects on the PSF, this correction has not yet been implemented in  \texttt{meas\_extensions\_piff}.

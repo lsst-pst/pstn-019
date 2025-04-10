@@ -1,0 +1,10 @@
+\subsection{PSF Modeling}
+
+Within the pipeline, three distinct PSF models are defined:  \texttt{pcaPsf}, \texttt{PSFex}, and \texttt{Piff}.
+Only \texttt{PSFex} and \texttt{Piff} are currently used.
+\texttt{PSFex} is a fast, and less accurate PSF estimation and is wrapped within \texttt{meas\_extensions\_psfex}.
+In contrast, \texttt{Piff} is a slightly slower, but more accurate PSF estimation that is incorporated in \texttt{meas\_extensions\_piff}. Both \texttt{meas\_extensions\_psfex} and \texttt{meas\_extensions\_piff} are described below.
+
+
+\input{meas_psfex}
+\input{meas_piff}
