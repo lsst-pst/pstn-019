@@ -1,1 +1,35 @@
 \subsection{meas\_algorithms}
+\label{sec:meas_algorithms}
+
+The \texttt{meas\_algorithms} package contains a wide variety of astronomical algorithms.
+We briefly describe some of them here; for the full list of \texttt{Tasks} defined in this module, see the \href{https://pipelines.lsst.io/v/daily/modules/lsst.meas.algorithms/index.html}{full package documentation}.
+
+\begin{itemize}
+    \item \texttt{MeasureApCorrTask} measures aperture corrections on an image (TODO: how? Eli?).
+    \item \texttt{NormalizedCalibrationFluxTask} measures SOMETHING TODO: Eli?
+    \item \texttt{ObjectSizeStarSelectorTask} is used to find likely PSF-like sources to be used to fit a PSF model during initial calibration.
+    \item \texttt{SkyObjectsTask} generates \texttt{Footprints} on regions of an image that do not have a \texttt{DETECTED} mask plane set (TODO: link to afw Mask!).
+    \item \texttt{SubtractBackgroundTask} fits and subtracts the background of an image, potentially appending it to an earlier fitted background model.
+    \item \texttt{ScienceSourceSelectorTask} and \texttt{ReferenceSourceSelectorTask} select sources from a catalog given a set of configurable criteria.
+\end{itemize}
+
+This package also contains tools for defining and converting existing third party catalogs to be used as reference catalogs by Science Pipelines code, via \texttt{ConvertReferenceCatalogTask} and its commandline interface \texttt{convertReferenceCatalog}.
+These tools are described in more detail in the \href{https://pipelines.lsst.io/v/daily/modules/lsst.meas.algorithms/creating-a-reference-catalog.html}{documentation for creating an LSST reference catalog}.
+
+\subsubsection{SourceDetectionTask}
+\label{sec:SourceDetectionTask}
+
+We detect positive and negative sources on an image with \texttt{SourceDetectionTask} to produce a \texttt{SourceCatalog} of \texttt{Footprints}.
+This task requires that the image be background subtracted to produce good results.
+\texttt{SourceDetectionTask} convolves the image with a Gaussian approximation to the exposure PSF and detects peaks and footprints above a configurable threshold in either signal-to-noise or absolute flux level.
+The detected footprints may be significantly blended, depending on the detection threshold and source density in the input image: in order to separate footprints that contain many peaks, some form of deblending (TODO: section link!) must be performed.
+
+\subsubsection{DynamicDetectionTask}
+\label{sec:DynamicDetectionTask}
+
+TODO: someone else will have to write this.
+
+\subsubsection{MaskStreaksTask}
+\label{MaskStreaksTask}
+
+TODO: for Meredith or Clare?
