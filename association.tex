@@ -25,7 +25,7 @@ Solar System objects are associated to DiaSources using the closest match within
 \subsection{Alert Production Database (APDB)}
 \label{sec:apdb}
 
-The Alert Production Database (APDB) supports SQL, Postgres, and Cassandra database formats.
+The Alert Production Database \citep[APDB;][]{DMTN-293}) supports SQL, Postgres, and Cassandra database formats.
 The previous history of DiaObjects, DiaSources, and DiaForcedSources for the region containing the science image is loaded with \texttt{loadDiaCatalogs}, which are passed to \texttt{diaPipe} for association.
 Loading is split from the association step to enable preloading of catalogs from the database in Prompt Processing during the interval when the next visit has been scheduled but the images have not yet been taken.
 When AP-style association is run outside of Prompt Processing, it is therefore essential to process all association tasks in strict visit order to prevent loading catalogs from the APDB prematurely and losing DiaObject history in association.
