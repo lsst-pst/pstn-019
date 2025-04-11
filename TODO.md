@@ -6,7 +6,10 @@
 
 ## Citations/links needed
 
-- HTCondor and Panda (Pipelines and Tasks)
+- HTCondor and PanDA (Pipelines and Tasks)
+- SDSS Photo and Pan-STARRS IPP (Core)
+- Eigen, GSL, Boost, StarLink AST (Core)
+- Astropy (Core).
 
 ## Possibly-unnecessary detail
 
