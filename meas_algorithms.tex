@@ -8,7 +8,7 @@ We briefly describe some of them here; for the full list of \texttt{Tasks} defin
     \item \texttt{MeasureApCorrTask} measures aperture corrections on an image (TODO: how? Eli?).
     \item \texttt{NormalizedCalibrationFluxTask} measures SOMETHING TODO: Eli?
     \item \texttt{ObjectSizeStarSelectorTask} is used to find likely PSF-like sources to be used to fit a PSF model during initial calibration.
-    \item \texttt{SkyObjectsTask} generates \texttt{Footprints} on regions of an image that do not have a \texttt{DETECTED} mask plane set (TODO: link to afw Mask!).
+    \item \texttt{SkyObjectsTask} generates `sky object' \texttt{Footprints} on regions of an image that do not have a \texttt{DETECTED} mask plane set (TODO: link to afw Mask!).
     \item \texttt{SubtractBackgroundTask} fits and subtracts the background of an image, potentially appending it to an earlier fitted background model.
     \item \texttt{ScienceSourceSelectorTask} and \texttt{ReferenceSourceSelectorTask} select sources from a catalog given a set of configurable criteria.
 \end{itemize}
@@ -27,7 +27,12 @@ The detected footprints may be significantly blended, depending on the detection
 \subsubsection{DynamicDetectionTask}
 \label{sec:DynamicDetectionTask}
 
-TODO: someone else will have to write this.
+The \texttt{DynamicDetectionTask} is a specialized version of \texttt{SourceDetectionTask} that adapts detection thresholds based on the local background and noise.
+This task was initially developed to address detection efficiency issues noted in HSC data.
+First, \texttt{DynamicDetectionTask} detects sources using a lower detection threshold than normal.
+In so doing, we identify regions of the sky which are unlikely to contain real source flux.
+Next, a configurable number of sky objects are placed in these sky regions (1000 by default), and the PSF flux and standard deviation for each of these measurements is calculated.
+Using this information, we set the detection threshold such that the standard deviation of the measurements matches the median estimated error.
 
 \subsubsection{MaskStreaksTask}
 \label{MaskStreaksTask}
