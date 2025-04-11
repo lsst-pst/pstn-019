@@ -69,7 +69,7 @@ The run collection can be thought of as a folder grouping datasets created by th
 
 As a concrete example, the file from one detector of an LSSTCam observation taken sometime in 2025 could have a data coordinate of \texttt{instrument="LSSTCam", detector=42, exposure=2025080300100} and be associated with a \texttt{raw} dataset type.
 The \texttt{exposure} record itself implies other information such as the physical filter and the time of observation.
-A deep coadd on a patch of sky would not have \texttt{exposure} dimensions at all and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, skymap="something"}, which would tell you exactly where it is located in the sky since you can calculate it from the tract and patch and skymap.
+A deep coadd on a patch of sky would not have \texttt{exposure} dimensions at all and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, band="r", skymap="something"}, which would tell you exactly where it is located in the sky and in what waveband since you can calculate it from the tract, patch, band and skymap.
 
 \subsection{Instrument Abstractions: Obs Packages}
 \label{sec:obs_packages}
