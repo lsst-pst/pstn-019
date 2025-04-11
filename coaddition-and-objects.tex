@@ -1,4 +1,4 @@
-\subsubsection{\texttt{drp\_tasks}}
+\subsection{Coaddition and Object Tables}
 
 \textbf{Coaddition Tasks}
 \label{sec:coaddition-tasks}
@@ -28,3 +28,5 @@ The stacked image is accompanied by a mask plane and variance map, and the set o
 
 Users can adapt the pipeline to their data by modifying warp selection criteria, choosing a projection as defined in a \texttt{SkyMap} object, and adjusting artifact rejection parameters.
 While the default LSST pipelines build direct (non-PSF-matched) coadds for source detection and measurement, the modularity of the task framework makes it easy to substitute PSF-homogenized coadds or experiment with alternative stacking strategies \citep{DMTN-015}.
+
+TODO: multiband detection, deblending, measurement.

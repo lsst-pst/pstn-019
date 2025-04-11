@@ -1,10 +1,13 @@
-\section{Detection and measurement}
-\label{sec:meas}
+\subsection{Source Measurement}
+\label{sec:measurement}
+
+TODO: reorganize this section by algorithm/role instead of package.
 
 We perform detection and measurement on images with the \texttt{meas} framework.
 We distinguish between \textit{detection} and \textit{measurement}:
 \begin{itemize}
     \item \textit{detection}: identifying \textit{Footprints} (TODO: add afw link!) of sources as being above a given flux or signal-to-noise level (see \ref{sec:SourceDetectionTask}).
+    \item \textit{deblending}: TODO
     \item \textit{measurement}: running \texttt{plugins} on each source in the image to compute properties of that source (e.g. a centroid or aperture flux) (see below).
 \end{itemize}
 
@@ -12,7 +15,7 @@ We also distinguish between measurement on the original detection image (\textit
 Measurement could be performed on a single raw or calibrated image, a coadd of multiple images, or a difference of images: from the perspective of a measurement plugin, there is no difference between these cases.
 \textit{forced measurement} is performed on one image, using a "reference" catalog of sources that were detected on another image.
 
-\subsection{meas\_base}
+\subsubsection{meas\_base}
 \label{sec:meas_base}
 
 The \texttt{meas} framework interface is defined in the \texttt{meas\_base} package.
@@ -57,12 +60,9 @@ Typically only photometric measurements are scientifically useful, as the centro
 Other than this coordinate transformation, forced measurement proceeds much like single frame measurement above.
 Two concrete implementations of the task include \texttt{ForcedPhotCcdTask} for single-visit images and \texttt{ForcedPhotCoaddTask} for coadd patch images, both using the output of a previous single frame measurement run on coadds as the reference catalog.
 
-\input{meas_algorithms}
-\input{deblending}
 \input{meas_convolved}
 \input{meas_gaap}
 \input{meas_photometryKron}
-\input{meas_psf}
 \input{meas_shapeHSM}
 \input{meas_simpleShape}
 \input{meas_trailedSources}

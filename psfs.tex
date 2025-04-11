@@ -1,0 +1,38 @@
+\subsection{PSF Modeling}
+
+Within the pipeline, three distinct PSF models are defined:  \texttt{pcaPsf}, \texttt{PSFex}, and \texttt{Piff}.
+Only \texttt{PSFex} and \texttt{Piff} are currently used.
+\texttt{PSFex} is a fast, and less accurate PSF estimation and is wrapped within \texttt{meas\_extensions\_psfex}.
+In contrast, \texttt{Piff} is a slightly slower, but more accurate PSF estimation that is incorporated in \texttt{meas\_extensions\_piff}. Both \texttt{meas\_extensions\_psfex} and \texttt{meas\_extensions\_piff} are described below.
+
+\subsubsection{meas\_extensions\_psfex}\label{sec:meas_extensions_psfex}
+
+The \texttt{meas\_extensions\_psfex} package provides an interface to a patched version of the PSFEx tool \citep{2011ASPC..442..435B} for modeling spatially varying point spread functions (PSFs).
+It uses PSF candidates typically selected from detected sources using a configurable star selector that selects clean, isolated stars.
+At its core is \texttt{PsfexPsfDeterminerTask}, which prepares these selected stars for input into PSFEx, runs the external binary, and converts the output into an LSST-specific PSF object (\texttt{PsfexPsf}).
+Key parameters such as spatial interpolation order and oversampling ratio are controlled via \texttt{PsfexPsfDeterminerConfig}.
+
+For each CCD in the focal plane, PSFEx independently models the PSF as a linear combination of basis vectors and captures spatial variation using polynomial interpolation.
+\texttt{PsfexStarSelectorTask} offers a built-in mechanism for star selection using strict cuts on signal-to-noise ratio, FWHM range, ellipticity, and quality flags.
+The package raises specific exceptions for common failure modes: when no stars are available, when none pass quality cuts, or when too few good stars remain to support the required model complexity--as determined by the degrees of freedom needed for the fit.
+In the latter case, the insufficient sample size forces the PSFEx model to reduce its polynomial degree to an unsupported level.
+The code also includes hooks for visual debugging (via \texttt{afwDisplay} and optional \texttt{matplotlib} plots), enabling visual inspection of PSF candidates and rejection reasons during development or QA.
+
+\texttt{meas\_extensions\_psfex} is used in contexts where PSFEx compatibility is required or when modeling speed is preferred over robustness.
+Another external PSF modeler (discussed in Section~\ref{sec:meas_extensions_piff}) provides greater robustness but is slower in comparison.
+
+\subsubsection{meas\_extensions\_piff}
+
+The \texttt{meas\_extensions\_piff} package is a wrapper around the PSF package \texttt{Piff} used to estimate and compute the PSF \citep{2021ascl.soft02024J,2021MNRAS.501.1282J}.
+\texttt{Piff} is a modular package that supports various PSF models, interpolation schemes, coordinate systems, and can operate on
+a per-CCD basis or over the full field of view, as indicated by its name.
+The implementation within  \texttt{meas\_extensions\_piff} does not exploit the full modularity of \texttt{Piff}; instead, it closely follows the method used for cosmic shear analysis like in DES \citep{2021MNRAS.501.1282J,2025OJAp....8E..26S}.
+
+The PSF model utilized is a \texttt{PixelGrid}, and the interpolation is performed using \texttt{BasisPolynomial} interpolation \citep{2021MNRAS.501.1282J}.
+Modeling is executed per CCD and can employ either pixel or sky coordinates.
+A key difference from \texttt{PSFex} is that  \texttt{Piff} implements outlier rejection based on chi-squared criteria \citep[see][for more details]{2021MNRAS.501.1282J}.
+
+Most of the configuration described here is adjustable through the \texttt{PiffPsfDeterminerConfig} that are exposing some of the configurable parameters of \texttt{Piff} and can be fine-tuned for a dedicated survey.
+However, some important features that were implemented by \citet{2021MNRAS.501.1282J} and \citet{2025OJAp....8E..26S} have not yet been enabled but will be available in the near future.
+While \citet{2021MNRAS.501.1282J} operates in sky coordinates with a WCS that includes CCD distortions such as treerings,  \texttt{meas\_extensions\_piff} can work in sky coordinates and incorporate WCS; as written, it does not, however, account for CCD distortions like tree rings.
+Additionally, although \citet{2025OJAp....8E..26S} incorporated a color correction to account for chromatic effects on the PSF, this correction has not yet been implemented in  \texttt{meas\_extensions\_piff}.
