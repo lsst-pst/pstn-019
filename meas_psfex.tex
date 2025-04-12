@@ -1,1 +1,15 @@
-\subsubsection{meas\_extensions\_psfex}
+\subsubsection{meas\_extensions\_psfex}\label{sec:meas_extensions_psfex}
+
+The \texttt{meas\_extensions\_psfex} package provides an interface to a patched version of the PSFEx tool \citep{2011ASPC..442..435B} for modeling spatially varying point spread functions (PSFs).
+It uses PSF candidates typically selected from detected sources using a configurable star selector that selects clean, isolated stars.
+At its core is \texttt{PsfexPsfDeterminerTask}, which prepares these selected stars for input into PSFEx, runs the external binary, and converts the output into an LSST-specific PSF object (\texttt{PsfexPsf}).
+Key parameters such as spatial interpolation order and oversampling ratio are controlled via \texttt{PsfexPsfDeterminerConfig}.
+
+For each CCD in the focal plane, PSFEx independently models the PSF as a linear combination of basis vectors and captures spatial variation using polynomial interpolation.
+\texttt{PsfexStarSelectorTask} offers a built-in mechanism for star selection using strict cuts on signal-to-noise ratio, FWHM range, ellipticity, and quality flags.
+The package raises specific exceptions for common failure modes: when no stars are available, when none pass quality cuts, or when too few good stars remain to support the required model complexity--as determined by the degrees of freedom needed for the fit.
+In the latter case, the insufficient sample size forces the PSFEx model to reduce its polynomial degree to an unsupported level.
+The code also includes hooks for visual debugging (via \texttt{afwDisplay} and optional \texttt{matplotlib} plots), enabling visual inspection of PSF candidates and rejection reasons during development or QA.
+
+\texttt{meas\_extensions\_psfex} is used in contexts where PSFEx compatibility is required or when modeling speed is preferred over robustness.
+Another external PSF modeler (discussed in Section~\ref{sec:meas_extensions_piff}) provides greater robustness but is slower in comparison.
