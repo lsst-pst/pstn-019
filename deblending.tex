@@ -53,7 +53,7 @@ For LSST-depth coadds this becomes a significant problem, as deep coadds can hav
 \subsubsection{Multi-band Deblending}
 \label{sec:multiband_deblending}
 
-The multi-band deblender is an implementation of the scarlet deblending algorithm described in \cite{2018ascl.soft03003M}.
+The multi-band deblender is an implementation of the scarlet deblending algorithm described in \citet{2018A&C....24..129M}.
 In our implementation, \texttt{scarlet\_lite}, we have made our own set of simplifying assumptions that are different from the original scarlet algorithm to make it more efficient when used in a large ground based survey like LSST.
 Similar to the original \texttt{scarlet} we make the assumption that astrophysical objects can be thought of as a collection of components, where each component has the properties
 \begin{itemize}
@@ -71,7 +71,7 @@ Scarlet lite initializes models with nearly the same templates as those generate
 Using a $\chi^2$-like monochromatic image created by weighting each band by its inverse variance, scarlet lite creates initial morphology models that are symmetric from the center in the monochromatic image, with the additional constraint that the flux is monotonically decreasing from the center.
 In order to satisfy the constraint that all pixels in the morphology have the same spectrum, scarlet models exist in a partially deconvolved frame with the seeing of a well sampled but narrow Gaussian.
 The initial spectrum of each source is determined using a least squares fit of each monochromatic morphology, convolved with the difference kernel in each band to match the image, for each component.
-It then uses proximal-ADAM (PADAM: \cite{Melchior2019}) to iteratively update the spectrum and morphology with the given constraints until convergence or a maximum number of iterations is reached.
+It then uses proximal-ADAM \citep[PADAM,][]{2019arXiv191010094M} to iteratively update the spectrum and morphology with the given constraints until convergence or a maximum number of iterations is reached.
 It should be noted that although we do use symmetry to initialize the scarlet models, we do not implement a symmetry constraint and the final models are not guaranteed to be symmetric.
 The models are stored as the \texttt{deepCoadd\_scarletModelData} data product, which contains all of the blends for a single patch.
 Like the single-band deblender, the \texttt{scarlet\_lite} models are only used as templates to redistribute flux from the image and all measurements are performed on the flux redistributed models.
