@@ -1,5 +1,10 @@
 \subsection{Astrometric Calibration}
 
+Astrometric calibration is performed in two steps.
+First, an astrometric fit is done for single frames, which produces an astrometric solution sufficient for Alert Production and difference imaging.
+A final astrometric solution is then fit using the ensemble of images from a given band overlapping with a given tract.
+This final astrometric solution is then used for all downstream tasks.
+A full description of astrometric calibration in the pipeline is given in \citet{DMTN-266}.
 \subsection{meas\_astrom}
 
 Single frame astrometric fits are performed by \texttt{AstrometryTask} in \texttt{meas\_astrom} and run in \texttt{CalibrateImage} (TODO: crosslink?).
@@ -14,5 +19,19 @@ This single frame astrometric fit is sufficient for initial calibration and diff
 
 \subsection{gbdes}
 \label{sec:gbdes}
+The final astrometric solution is fit by \texttt{GbdesAstrometricFitTask} in \texttt{drp\_tasks}, which runs the \texttt{wcsfit} fitter from the \texttt{gbdes} package \citep{2022ascl.soft10011B,2017PASP..129g4503B} on the ensemble of images in a given band overlapping with a given tract.
+This task fits a per-detector polynomial distortion model, a per-exposure polynomial distortion model, and position for all the isolated star sources in the component images.
+This is done by first associating all isolated point sources in the input images and matching them with an external reference catalog.
+The model is then fit by iterating between fitting the per-detector and per-exposure polynomial models, and recalculating the best-fit solution for the object positions.
 
-\texttt{gbdes} \citep{2022ascl.soft10011B,2017PASP..129g4503B}
+The task can be configured to fit either a two-parameter (position on the sky) or five-parameter (position, proper motion, and parallax) solution for the input objects.
+Correcting for differential chromatic refraction is another configurable option.
+
+There are also options to run variants of the main \texttt{GbdesAstrometricFitTask}: \texttt{GbdesAstrometricMultibandFitTask} fits images from multiple bands at once, in which case the per-detector distortion model is also per-band; \texttt{GbdesGlobalAstrometricFitTask} removes the restriction to a single tract and fits images regardless of their location on the sky by splitting the images into contiguous groups; \texttt{GbdesGlobalAstrometricMultibandFitTask} combines these two options.
+
+Lastly, the per-detector polynomial model fit by the task is also used to build a camera distortion model, which can be fed back into single-frame modeling or into the \texttt{gbdes} fit for other data.
+For use in single-frame modeling, the \texttt{BuildCameraFromAstrometryTask} subtask is used to build an \texttt{afw} Camera object out of the native polynomial model.
+
+
+
+
