@@ -1,7 +1,28 @@
 \section{Solar System Pipelines}
 \label{sec:solsys}
 
-The Solar System Pipeline (SSP) suite is responsible for (i) discovering
+\begin{figure}[th]
+\begin{center}
+\includegraphics[width=0.45\textwidth]{figures/solarsystempipeline.pdf}
+
+\caption{\label{fig:ssp} Detection, attribution, linking, submission and
+precovery of moving sources within the nightly data: The attribution is
+performed in real-time by the AP pipelines querying the {\tt mpsky} service
+with resulting information attached to the alerts and queued for submission
+to the MPC.  The linking is performed in daytime using {\tt heliolinx}, with
+resulting links queued for submission to the MPC.  Fetching of data from the
+MPC is performed automatically using PostgreSQL replication, with new data
+triggering recomputation of physical properties and precovery runs in the
+Daily Data Products Pipeline.  Any observations discovered by the precovery
+procedure are queued for submission to the MPC, using the submission manager
+tool.  The ephemeris cache is precomputed at dusk using {\tt Sorcha} and
+{\tt mpsky}, to enable fast attribution at nighttime.  All timings denote
+design goals.  }
+
+\end{center}
+\end{figure}
+
+The Solar System Pipeline (SSP; Figure~\ref{fig:ssp}) suite is responsible for (i) discovering
 previously unknown solar system objects by linking together observations
 (usually DIASources) unattributable to static (non-moving) sources, (ii)
 reporting these to the Minor Planet Center (MPC), (iii) computing basic
@@ -53,6 +74,7 @@ accepted) and {\tt mpsky} \citep[fast lookup and serving;][]{mpsky}.  While
 still being constructed, a similar service is planned for ``precovery'' --
 the association of originally missed observations of solar system objects
 observed earlier in the survey.
+\\
 
 Taken together, this suite of pipelines enables Rubin to identify sources
 consistent with being observations of objects in the solar system (both new
