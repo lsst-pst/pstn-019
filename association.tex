@@ -18,9 +18,9 @@ Properties of the source such as its reliability score (Sec. \ref{sec:reliabilit
 \subsection{Solar System object association}
 \label{sec:solar}
 
-Ephemerides from known Solar System objects are preloaded with approximate locations for the expected time of observation in \texttt{mpSkyEphemerisQuery}.
-Since these are loaded in Prompt Processing before the science image arrives and is calibrated, the orbital fit parameters are used in association to correct the position to the midpoint of the observation, including the shutter motion profile since the shutter takes a second to cross the focal plane.
-Solar System objects are associated to DiaSources using the closest match within a configurable radius.
+Before the science image arrives and is calibrated, \texttt{mpSkyEphemerisQuery} preloads ephemerides for known Solar System objects at the expected time of observation from \texttt{mpsky}, an internal service.
+When the observation is taken, the ephemeris is corrected to the exact observation time.
+Solar System objects are associated to the nearest DiaSource within a configurable radius.
 
 \subsection{Alert Production Database (APDB)}
 \label{sec:apdb}
