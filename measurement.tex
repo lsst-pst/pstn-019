@@ -8,7 +8,7 @@ We distinguish between \textit{detection} and \textit{measurement}:
 \begin{itemize}
     \item \textit{detection}: identifying \textit{Footprints} (TODO: add afw link!) of sources as being above a given flux or signal-to-noise level (see \ref{sec:SourceDetectionTask}).
     \item \textit{deblending}: TODO
-    \item \textit{measurement}: running \texttt{plugins} on each source in the image to compute properties of that source (e.g. a centroid or aperture flux) (see below).
+    \item \textit{measurement}: running \texttt{plugins} on each source in the image to compute properties of that source (e.g., a centroid or aperture flux) (see below).
 \end{itemize}
 
 We also distinguish between measurement on the original detection image (\textit{single-frame measurement}) vs. measurement on a different image from the original detection (\textit{forced measurement}).
@@ -21,13 +21,13 @@ Measurement could be performed on a single raw or calibrated image, a coadd of m
 The \texttt{meas} framework interface is defined in the \texttt{meas\_base} package.
 Measurement plugins have the \texttt{Plugin} suffix if they are defined in python, and the \texttt{Algorithm} suffix if they are defined in C++.
 This package defines base classes for plugins (\texttt{SingleFramePlugin}, \texttt{ForcedPlugin} in python; \texttt{SingleFrameAlgorithm}, \texttt{ForcedAlgorithm} in C++) and the measurement tasks that can be configured to run them (\texttt{SingleFrameMeasurementTask}, \texttt{ForcedMeasurementTask}, \texttt{CatalogCalculationTask}), as well as some concrete implementations of plugins (\texttt{ApertureFluxAlgorithm}, \texttt{BlendednessAlgorithm}, \texttt{CircularApertureFluxAlgorithm}, \texttt{GaussianFluxAlgorithm}, \texttt{LocalBackgroundAlgorithm}, \texttt{PeakLikelihoodFluxAlgorithm}, \texttt{PixelFlagsAlgorithm}, \texttt{PsfFluxAlgorithm}, \texttt{ScaledApertureFluxAlgorithm}, \texttt{SdssCentroidAlgorithm}, \texttt{SdssShapeAlgorithm}).
-Each plugin has an associated config class, suffixed with \texttt{Config} in python or \texttt{Control} in C++ (e.g. \texttt{SdssCentroidAlgorithm} has \texttt{SdssCentroidControl}), used to configure parameters of that specific algorithm.
+Each plugin has an associated config class, suffixed with \texttt{Config} in python or \texttt{Control} in C++ (e.g., \texttt{SdssCentroidAlgorithm} has \texttt{SdssCentroidControl}), used to configure parameters of that specific algorithm.
 
 \subsubsection{Measurement plugins}
 \label{sec:plugins}
 
 Plugins are added to a \textit{registry}, so that they and their outputs can be referred to by a shorter common name that identifies the package it was defined in, for example \texttt{lsst.meas.base.SdssCentroidAlgorithm} is registered as \texttt{base\_SdssCentroid}.
-This way, measurements produced by each plugin will have consistent, distinct names in the output schema, e.g. \texttt{base\_SdssCentroid\_x}, \texttt{base\_SdssCentroid\_y}, \texttt{base\_SdssCentroid\_flag}.
+This way, measurements produced by each plugin will have consistent, distinct names in the output schema, e.g., \texttt{base\_SdssCentroid\_x}, \texttt{base\_SdssCentroid\_y}, \texttt{base\_SdssCentroid\_flag}.
 
 Measurement plugins often depend on each other, and must be run in a particular order.
 Rather than creating a directed acyclic graph to denote the dependencies, the plugins are batched and and are run in any order within a batch.
@@ -39,7 +39,7 @@ The batch order is defined by the \texttt{getExecutionOrder} method, with smalle
     \item \texttt{FLUX\_ORDER} for plugins that require both a shape and centroid to have been measured.
 \end{enumerate}
 
-Measurement plugins output their results to a \texttt{SourceCatalog} (TODO: crosslink to afw section!), which has a \textit{slot} system for predefined aliases to allow a plugin to get a value without knowing exactly what plugin originally computed that value, e.g. \texttt{slot\_Centroid} could point to \texttt{base\_SdssCentroid}, or some other plugin that measures centroids.
+Measurement plugins output their results to a \texttt{SourceCatalog} (TODO: crosslink to afw section!), which has a \textit{slot} system for predefined aliases to allow a plugin to get a value without knowing exactly what plugin originally computed that value, e.g., \texttt{slot\_Centroid} could point to \texttt{base\_SdssCentroid}, or some other plugin that measures centroids.
 
 \subsubsection{SingleFrameMeasurementTask}
 \label{sec:SingleFrameMeasurementTask}
@@ -56,7 +56,7 @@ Then, for blended sources, the parent is inserted, measured (running plugins on 
 \label{sec:ForcedMeasurementTask}
 
 Forced measurement uses the known pixel position of objects from a reference catalog to constrain measurements on another image.
-Typically only photometric measurements are scientifically useful, as the centroid and shape are defined by the reference catalog, and transformed to the coordinate system of the image being measured on (e.g. shifting to the appropriate x/y origin, or transforming through the respective WCSs).
+Typically only photometric measurements are scientifically useful, as the centroid and shape are defined by the reference catalog, and transformed to the coordinate system of the image being measured on (e.g., shifting to the appropriate x/y origin, or transforming through the respective WCSs).
 Other than this coordinate transformation, forced measurement proceeds much like single frame measurement above.
 Two concrete implementations of the task include \texttt{ForcedPhotCcdTask} for single-visit images and \texttt{ForcedPhotCoaddTask} for coadd patch images, both using the output of a previous single frame measurement run on coadds as the reference catalog.
 

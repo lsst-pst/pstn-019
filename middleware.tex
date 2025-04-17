@@ -77,7 +77,7 @@ A deep coadd on a patch of sky would not have \texttt{exposure} dimensions at al
 \subsection{Pipelines and Tasks}
 
 The data dimensions system also plays a fundamental role in how the LSST processing pipelines are assembled and run; high-level pieces of algorithmic code called \texttt{PipelineTasks} declare the dimensions of their units of work (``quanta''), their inputs, and their outputs, allowing a directed acyclic graph (a "quantum graph") describing the processing to be assembled from a YAML declaration of the tasks to be run, their configuration, and a butler database query.
-Quantum graphs can range in size from a few tens of quanta (e.g. for the nightly processing performed on a single detector image) to millions (for a piece of the yearly data release pipelines), and serve as the common interface for multiple execution systems, including the low-latency nightly Prompt Processing framework and the Batch Processing Service (BPS), which adapts quantum graphs for execution at scale by third-party workflow management systems like HTCondor and PanDA.
+Quantum graphs can range in size from a few tens of quanta (e.g., for the nightly processing performed on a single detector image) to millions (for a piece of the yearly data release pipelines), and serve as the common interface for multiple execution systems, including the low-latency nightly Prompt Processing framework and the Batch Processing Service (BPS), which adapts quantum graphs for execution at scale by third-party workflow management systems like HTCondor and PanDA.
 
 TODO: examples of pipeline YAML, pipeline graph diagrams
 
