@@ -19,9 +19,10 @@ In the latter case, the insufficient sample size forces the PSFEx model to reduc
 The code also includes hooks for visual debugging (via \texttt{afwDisplay} and optional \texttt{matplotlib} plots), enabling visual inspection of PSF candidates and rejection reasons during development or QA.
 
 \texttt{meas\_extensions\_psfex} is used in contexts where PSFEx compatibility is required or when modeling speed is preferred over robustness.
-Another external PSF modeler (discussed in Section~\ref{sec:meas_extensions_piff}) provides greater robustness but is slower in comparison.
+Another external PSF modeler (discussed in \S\ref{sec:meas_extensions_piff}) provides greater robustness but is slower in comparison.
 
 \subsubsection{meas\_extensions\_piff}
+\label{sec:meas_extensions_piff}
 
 The \texttt{meas\_extensions\_piff} package is a wrapper around the PSF package \texttt{Piff} used to estimate and compute the PSF \citep{2021ascl.soft02024J,2021MNRAS.501.1282J}.
 \texttt{Piff} is a modular package that supports various PSF models, interpolation schemes, coordinate systems, and can operate on
