@@ -1,4 +1,5 @@
 \subsection{Astrometric and Photometric Calibration}
+\label{sec:calibration}
 
 TODO: rework next paragraph to generalize to photometry, since the same pattern is true for both.
 
@@ -59,7 +60,7 @@ Running \texttt{fgcmcal} first requires generating a look-up table.
 The input to the look-up table includes the effect of a MODTRAN~\citep{10.1117/12.366388} atmospheric model at the elevation of the observatory, as well as the throughput as a function of wavelength and position from the optics, filters, and detector quantum efficiency.
 The quality of the output (in terms of repeatability of bright isolated stars across a wide range of colors) depends on the knowledge of the instrumental throughput.
 
-The primary goal of fgcmcal is to provide a uniform relative photometric calibration of the survey.
+The primary goal of \texttt{fgcmcal} is to provide a uniform relative photometric calibration of the survey.
 For ``absolute'' (relative) calibration, a reference catalog can be used as an additional constraint on the fit.
 Thus, the overall throughput output by \texttt{fgcmcal} depends on the reference catalog.
 This can be checked with (e.g.) specific white dwarfs or CALSPEC~\citep{2007ASPC..364..315B} stars in the survey.

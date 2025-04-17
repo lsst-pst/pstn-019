@@ -4,16 +4,16 @@
 \texttt{meas\_extensions\_gaap} implements the Gaussian Aperture and PSF photometry (GAaP) algorithm \citep{2008A&A...482.1053K}.
 It is an aperture photometry algorithm designed to obtain consistent colors of extended objects (i.e., galaxies).
 This is done by weighting each (pre-seeing) region of a galaxy by the same pre-defined 2D Gaussian function in all the bands and is thus largely insensitive to the seeing conditions in the different bands.
-In practice, this is done by first convolving each object by a kernel (using the same tools described in Sec. \ref{sec:diffim}) so that the PSF is Gaussian and is larger by about 15\% (this is configurable).
+In practice, this is done by first convolving each object by a kernel (using the same tools described in \S\ref{sec:dia}) so that the PSF is Gaussian and is larger by about 15\% (this is configurable).
 As a second step, each Gaussianized object is then weighted with a Gaussian aperture so that the effective pre-seeing Gaussian aperture is the same for all objects in all the bands.
 The plugin is configured to use a series of circular Gaussian apertures, an elliptical Gaussian aperture (optionally) that matches the shape of the object in the reference band.
 
-Although the two-step approach is motivated by the original implementation in \cite{2008A&A...482.1053K}, the implementation of this algorithm within the broader context of the measurement framework makes it different from the implementation used in the Kilo-Degree Survey \citep[KiDS;][]{2025arXiv250319439W}.
-In particular, because neighboring objects are replaced with noise before measurement, Gaussianization of the PSF does not result in increased blending as mentioned in Appendix A2 of \cite{2015MNRAS.454.3500K}.
+Although the two-step approach is motivated by the original implementation in \citet{2008A&A...482.1053K}, the implementation of this algorithm within the broader context of the measurement framework makes it different from the implementation used in the Kilo-Degree Survey \citep[KiDS;][]{2025arXiv250319439W}.
+In particular, because neighboring objects are replaced with noise before measurement, Gaussianization of the PSF does not result in increased blending as mentioned in Appendix A2 of \citet{2015MNRAS.454.3500K}.
 Furthermore, the uncertainty handling is different.
 Correlations in noise introduced due to PSF-Gaussianization is included in the uncertainty estimates.
 However, because only per-pixel noise variance is tracked, the noise treatment is forced to assume that the noise is uncorrelated to begin with which is not true on the coadds.
-See \cite{DMTN-190} for more details on the implementation details.
+See \citet{DMTN-190} for more details on the implementation details.
 
 Note that this measurements from this plugin do not produce total fluxes, but should only be used to obtain colors.
-For total fluxes, measurements from \texttt{cModel} or \texttt{MultiProFit} (c.f. Sec. \ref{sec:meas_extensions_multiprofit}) are recommended.
+For total fluxes, measurements from \texttt{cModel} or \texttt{MultiProFit} (c.f., \S\ref{sec:meas_extensions_multiprofit}) are recommended.

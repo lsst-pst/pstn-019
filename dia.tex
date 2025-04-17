@@ -9,7 +9,7 @@ The final difference image with updated mask planes is written along with the Di
 
 \subsubsection{subtractImages}
 
-The primary implementation of image subtraction used by \texttt{subtractImages} is based on \cite{1998ApJ...503..325A}, and uses spatially-varying Gaussian basis functions for the fit.
+The primary implementation of image subtraction used by \texttt{subtractImages} is based on \citet{1998ApJ...503..325A}, and uses spatially-varying Gaussian basis functions for the fit.
 The PSF-matching kernel can be constructed for either the science or the template image, and the resulting difference image is decorrelated \citet{DMTN-021}.
 Optionally, the science image can be preconvolved with its own PSF before PSF-matching, producing a Score image analogous to \citet{2016ApJ...830...27Z}.
 
@@ -27,18 +27,18 @@ Finally, all configured measurement plugins are run, including HSM shape measure
 \label{sec:association}
 
 The \texttt{ap\_association} package contains multiple tasks for standardizing newly detected DiaSources and associating them with existing or new DiaObjects.
-Standardization converts the output catalogs from \ref{sec:diffim} to the format specified in \texttt{sdm\_schemas} (Sec. \ref{sec:schemas}), and applies filtering consistent with \citep{DMTN-199}.
+Standardization converts the output catalogs from difference imaging to the format specified in \texttt{sdm\_schemas} (\S\ref{sec:schemas}), and applies filtering consistent with \citep{DMTN-199}.
 Once DiaSource catalogs are standardized, they are associated to DiaObjects in either of two modes: Data Release Production (DRP) or Alert Production (AP).
 Both implementations use the Pessimistic Pattern Matcher B \citep{DMTN-031} to score and match DiaSources, but differ in how DiaObjects are stored and how visits are ordered.
 
 \begin{itemize}
 \item DRP association loads all DiaSource catalogs from a set time period overlapping a single patch at once, and creates new DiaObjects for matched DiaSources from all visits simultaneously.
 \item AP association processes a single visit at a time, and creates new DiaObjects incrementally from unassociated DiaSources.
-DiaObjects and their associated DiaSources are stored in the Alert Production Database (APDB) (Sec. \ref{sec:apdb}).
+DiaObjects and their associated DiaSources are stored in the Alert Production Database (APDB; \S\ref{sec:apdb}).
 \end{itemize}
 
-After association, an additional filtering step may be applied to DiaSources with no matched DiaObject of Solar System object (Sec \ref{sec:solar}).
-Properties of the source such as its reliability score (Sec. \ref{sec:reliability}, source flags, or signal-to-noise cuts may be used to drop detections that are likely to be false detections and avoid creating erroneous new DiaObjects.
+After association, an additional filtering step may be applied to DiaSources with no matched DiaObject of Solar System object (\S\ref{sec:solar}).
+Properties of the source such as its reliability score (\S\ref{sec:reliability}, source flags, or signal-to-noise cuts may be used to drop detections that are likely to be false detections and avoid creating erroneous new DiaObjects.
 
 \subsubsection{Solar System object association}
 \label{sec:solar}
