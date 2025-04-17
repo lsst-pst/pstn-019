@@ -1,5 +1,8 @@
-\section{Data Access Abstraction}
-\label{sec:data-access}
+\section{Data Access and Execution Abstractions}
+\label{sec:middleware}
+
+The algorithmic components of the LSST Science Pipelines are built on a suite of packages that together form a powerful data access and execution framework (\texttt{pex\_config}, \texttt{resources}, \texttt{daf\_butler}, \texttt{pipe\_base}, \texttt{ctrl\_mpexec}, and \texttt{ctrl\_bps}).
+Unlike most of the rest of the codebase, these packages can be individually installed with \texttt{pip} as well as EUPS and can be used on their own.
 
 \subsection{Butler}
 
@@ -71,6 +74,19 @@ As a concrete example, the file from one detector of an LSSTCam observation take
 The \texttt{exposure} record itself implies other information such as the physical filter and the time of observation.
 A deep coadd on a patch of sky would not have \texttt{exposure} dimensions at all and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, band="r", skymap="something"}, which would tell you exactly where it is located in the sky and in what waveband since you can calculate it from the tract, patch, band and skymap.
 
+\subsection{Pipelines and Tasks}
+
+The data dimensions system also plays a fundamental role in how the LSST processing pipelines are assembled and run; high-level pieces of algorithmic code called \texttt{PipelineTasks} declare the dimensions of their units of work (``quanta''), their inputs, and their outputs, allowing a directed acyclic graph (a "quantum graph") describing the processing to be assembled from a YAML declaration of the tasks to be run, their configuration, and a butler database query.
+Quantum graphs can range in size from a few tens of quanta (e.g. for the nightly processing performed on a single detector image) to millions (for a piece of the yearly data release pipelines), and serve as the common interface for multiple execution systems, including the low-latency nightly Prompt Processing framework and the Batch Processing Service (BPS), which adapts quantum graphs for execution at scale by third-party workflow management systems like HTCondor and PanDA.
+
+TODO: examples of pipeline YAML, pipeline graph diagrams
+
+Algorithmic code below the \texttt{PipelineTask} level is often subdivided into multiple "subtasks" that (like \texttt{PipelineTask} itself) inherit from the base \texttt{Task} class, which provides easy access to hierarchical logging, metadata, and configuration.
+
+\subsection{Configuration}
+
+\input{pex_config}
+
 \subsection{Instrument Abstractions: Obs Packages}
 \label{sec:obs_packages}
 
@@ -87,14 +103,15 @@ Some of the responsibilities are:
 \item Define the default curated calibrations known to this instrument.
 \end{itemize}
 
+The \texttt{Instrument} interface is defined in two levels: the minimal interface in the \texttt{pipe\_base} package defines everything needed to use the butler and execution system, while a more complete subclass in \texttt{obs\_base} provides considerable additional functionality but is not in the minimal, \texttt{pip}-installable suite.
+
 By convention we define the instrument class and associated configuration in \texttt{obs} packages.
-As an extension to the base definition of an ``instrument``, the LSST Science Pipelines define a modified \texttt{Instrument} class that includes focal plane distortions using the \texttt{afw} package (see \S\ref{sec:afw}).
 There are currently project-supported \texttt{obs} packages for:
 
 \begin{itemize}
 \item LSSTCam \citep{2024SPIE13096E..1SR,2024SPIE13096E..1OL, 2024SPIE13103E..0WU,2010SPIE.7735E..0JK}, LATISS \citep{2020SPIE11452E..0UI}, and associated Rubin Observatory test stands and simulators.
-\item Hyper-SuprimeCam \citep{2018PASJ...70S...1M}.
-\item The Dark Energy Camera \citep{2015AJ....150..150F,2008SPIE.7014E..0ED}.
+\item Hyper-SuprimeCam on the Subaru telescope \citep{2018PASJ...70S...1M}.
+\item The Dark Energy Camera on the CTIO Blanco telescope \citep{2015AJ....150..150F,2008SPIE.7014E..0ED}.
 \item CFHT's MegaPrime \citep{2003SPIE.4841...72B}.
 \end{itemize}
 

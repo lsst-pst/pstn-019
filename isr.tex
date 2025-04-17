@@ -1,4 +1,4 @@
-\section{Instrument Signature Removal}
+\subsection{Instrument Signature Removal}
 \label{sec:isr}
 
 Raw images from charge-coupled devices (CCDs) contain instrumental effects, such as dark currents, clocking artifacts, or crosstalk between neighboring amplifiers, that can be removed in the data processing.
@@ -8,7 +8,7 @@ A general overview of the ISR steps (based on the model in Fig.~\ref{fig:isr_mod
 
 We note that we focus here on our approach to performing ISR on data from LSST cameras only (LSSTCam, ComCam, and LATISS), although we also provide calibration pipelines for other cameras such as DECam and HSC (using a different ISR approach).
 
-\subsection{ISR package}
+\subsubsection{ISR package}
 \label{sec:ip_isr}
 
 Exposures from LSST cameras are affected by instrumental effects, ranging from well-known CCD effects like dark currents or bias levels to effects more recently characterized like tree-rings (see \citet{2017JInst..12C5015P,2020JATIS...6a1005P,2023PASP..135k5003E,2015JInst..10C8010O,2016ApJ...825...61O} for more details on tree rings in LSSTCam and their impact on science) or the Brighter-Fatter effect as discussed in \cite{2024PASP..136d5003B}.
@@ -31,7 +31,7 @@ Overall, \texttt{isrTaskLSST} takes a \texttt{raw} CCD exposure, and calibration
 We have also developed \texttt{isrMockLSST} which simulates a raw exposure and corresponding calibration products and is used to test \texttt{isrTaskLSST}.
 
 
-\subsection{Amplifier Offset Correction}
+\subsubsection{Amplifier Offset Correction}
 \label{sec:isr:ampoffset}
 The amplifier offset correction (commonly referred to as amp-offset correction, or pattern continuity correction) runs as part of the instrument signature removal (ISR) process.
 This correction is designed to address systematic discontinuities in background sky levels across amplifier boundaries.

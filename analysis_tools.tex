@@ -1,14 +1,6 @@
-\section{Data Analysis}
-\label{sec:analysis}
-
-\subsubsection{Analysis Tools}
+\subsection{Analysis Tools}
 
 The \texttt{analysis\_tools} package provides a framework to allow reproducible, automatic creation of plots and metrics through a set of configurable, reusable tools that can be used in pipeline execution and interactive analysis.
 The package allows metrics and plots to be consistently created at various points in the pipeline and ensures that the metrics dispatched to the monitoring dashboard (better word?) are generated in sync with the archived plots.
 The package was designed to handle the large data volumes and memory requirements that the survey will generate to ensure that the initial QA products required are rapidly made and readily available for fast action on any emergent data quality issues.
 The individual tools run in the pipelines to calculate the metrics can then be reused in an interactive environment, such as a script or notebook, allowing further investigation into arising issues to reproduce exactly what was originally run.
-
-\subsubsection{Verification}
-\texttt{verify}
-
-\texttt{faro} --- \textbf{do not document this as we are no longer using it for primary metrics calculation}.

@@ -1,5 +1,3 @@
-\subsection{Pex Config}
-
 Pex Config is the foundational configuration system for the LSST Rubin Observatory's ambitious science pipelines.
 It's far more than a simple parameter parser; it's a framework that mediates between diverse configuration sources and the complex software that processes astronomical data.
 At its core, Pex Config functions as an intermediate representation, decoupling the pipelines from the specifics of configuration file formats (like YAML, JSON) and providing a unified, Python-native interface to all configurable parameters.
@@ -26,8 +24,6 @@ except LookupError as e:
     print("Cannot enable shapeHSM (%s): disabling HSM shape measurements" % (e,))
     \end{lstlisting}
 \end{minipage}
-
-
 
 The design of Pex Config centers around the concepts of ``Fields'' and ``Config'' objects.
 Fields represent individual configurable values -- things like exposure times, image quality thresholds, or database connection strings.
