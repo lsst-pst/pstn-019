@@ -15,7 +15,7 @@ These include (but are not limited to):
 \item \texttt{afw.cameraGeom} provides a hierarchical description of large-format photometric cameras (like LSSTCam, HSC, or DECam), including optical distortions, focal plane layouts, and amplifier regions.
 \end{itemize}
 Most of the algorithms and data structures in \texttt{afw} are implemented there directly, and often represent evolutions of concepts first developed in the SDSS \emph{Photo} pipeline or the Pan-STARRS Image Processing Pipelines.
-Others delegate to third-party libraries, particularly Eigen (linear algebra), the Gnu Scientific Library (interpolation, random numbers), Boost (image iterators and geometry), CFITSIO (image and table I/O) and Starlink AST (coordinate systems and transforms).
+Others delegate to third-party libraries, particularly Eigen (linear algebra), the Gnu Scientific Library (interpolation, random numbers), Boost (image iterators and geometry), CFITSIO (image and table I/O) and Starlink AST \citep[coordinate systems and transforms;][]{2016A&C....15...33B}.
 
 Even lower-level data structures are defined in a handful of packages just below \texttt{afw}.
 The \texttt{sphgeom} package is used for spherical geometry calculations, sky-based regions, and hierarchical sky pixelization schemes, while \texttt{geom} provides simple 2-d Euclidean \texttt{Point}, \texttt{Extent}, and \texttt{Box} types in both integer- and floating-point variants.
