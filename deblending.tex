@@ -36,16 +36,16 @@ Notice that even the neighboring sources, which have very good templates created
 In single visits the number of "three in a row" blends is small enough that we sacrifice the quality of the models for efficiency and still use the single-band deblender.
 For LSST-depth coadds this becomes a significant problem, as deep coadds can have as much as 40\% of blends having 3 or more sources and a more sophisticated algorithm is needed.
 
-\begin{figure}[htb]
+\begin{figure}
     \centering
-    \includegraphics[width=0.48\textwidth]{simple_1D_blend.pdf}
+    \plotone{simple_1D_blend.pdf}
     \caption{A 1D slice of two blended Gaussian sources illustrating how symmetry can be utilized to model blended sources.}
     \label{fig:simple_blend}
 \end{figure}
 
-\begin{figure}[htb]
+\begin{figure}
     \centering
-    \includegraphics[width=0.48\textwidth]{complex_1D_blend.pdf}
+    \plotone{complex_1D_blend.pdf}
     \caption{A 1D slice through three aligned Gaussian sources, demonstrating a failure case of relying on symmetry for generating deblender templates. Notice that for sources 2 and 3 the templates are reasonable but due to the inability of source 1 to use symmetry to constrain flux in the blended region, the resulting models for all three sources are poor. This catastrophic "three in a row" problem was part of the motivation for creating \texttt{scarlet} to incorporate spectral information and a more rigorous iterative deblending algorithm.}
     \label{fig:complex_blend}
 \end{figure}
