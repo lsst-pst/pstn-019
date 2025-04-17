@@ -9,7 +9,7 @@ The final difference image with updated mask planes is written along with the Di
 
 \subsubsection{subtractImages}
 
-The primary implementation of image subtraction used by \texttt{subtractImages} is based on \cite{1998ApJ...503..325A}, and uses spatially-varying Gaussian basis functions for the fit.
+The primary implementation of image subtraction used by \texttt{subtractImages} is based on \citet{1998ApJ...503..325A}, and uses spatially-varying Gaussian basis functions for the fit.
 The PSF-matching kernel can be constructed for either the science or the template image, and the resulting difference image is decorrelated \citet{DMTN-021}.
 Optionally, the science image can be preconvolved with its own PSF before PSF-matching, producing a Score image analogous to \citet{2016ApJ...830...27Z}.
 
