@@ -10,6 +10,7 @@ This final astrometric solution is then used for all downstream tasks.
 A full description of astrometric calibration in the pipeline is given in \citet{DMTN-266}.
 
 \subsubsection{Single-Frame Astrometric Calibration}
+\label{sec:astrometryTask}
 
 Single frame astrometric fits are performed by \texttt{AstrometryTask} in \texttt{meas\_astrom} and run in \texttt{CalibrateImage} (TODO: crosslink?).
 This task matches a catalog of sources detected and measured on an image to a reference catalog and solves for the \textit{World Coordinate System} (WCS) of the image.
@@ -38,7 +39,7 @@ Lastly, the per-detector polynomial model fit by the task is also used to build 
 For use in single-frame modeling, the \texttt{BuildCameraFromAstrometryTask} subtask is used to build an \texttt{afw} Camera object out of the native polynomial model.
 
 \subsubsection{Single-Frame Photometric Calibration}
-\label{sec:PhotoCal}
+\label{sec:photoCal}
 
 TODO: Eli should look at this?
 Single frame photometric calibration is performed by \texttt{PhotoCalTask}, in the \texttt{pipe\_tasks} package.
@@ -67,6 +68,7 @@ This can be checked with (e.g.) specific white dwarfs or CALSPEC~\citep{2007ASPC
 However, the relative spatial and chromatic calibration of the \texttt{fgcmcal} calibration means that the absolute calibration reduces to a set of 6 numbers (one for each band, or one overall throughput and 5 absolute colors).
 
 \subsubsection{jointcal}
+\label{sec:jointcal}
 
 \texttt{jointcal} fits both astrometry and photometry across multiple exposures of large mosaic cameras, fitting for both the true star positions/fluxes, and the distortions caused by the telescope and instrument.
 \texttt{jointcal} is no longer used used by the LSST camera pipeline, but is available for use by cameras that are not supported by \texttt{gbdes} and/or \texttt{fgcmcal} (for example, DECam).
