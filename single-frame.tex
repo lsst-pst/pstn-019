@@ -1,3 +1,29 @@
 \subsection{Single-Frame Processing and Calibration}
 
-TODO: calibrateImage, reprocessVisitImage, what happens in between, forced photometry
+\subsubsection{CalibrateImage}
+\label{sec:CalibrateImage}
+
+\texttt{CalibrateImageTask}, from the \texttt{pipe\_tasks} package, performs "single frame processing" on a post-ISR (\S\ref{sec:isr}) single detector exposure (TODO: do we have to mention snaps here at all? I hope not!).
+We repair and mask cosmic rays and defects, perform an initial set of detection (\S\ref{sec:detection}) and measurement (\S\ref{sec:measurement}) passes to estimate the image Point Spread Function (PSF), compute an astrometric (\S\ref{sec:astrometryTask}) and photometric (\S\ref{sec:photoCal}) calibration, and compute summary statistics on the resulting nanojansky-calibrated exposure and catalog.
+The primary user-facing outputs of this task are the photometrically calibrated, background-subtracted \texttt{preliminary\_visit\_image}, the calibrated \texttt{preliminary\_visit\_image\_background} that was subtracted from it, and \texttt{single\_visit\_star\_unstandardized}, a catalog of bright point-like sources that were used as inputs to calibration, with only a small number of measurements performed on them.
+As this task only processes a single detector, it is used by both DRP (\S\ref{sec:drp_pipe}) and AP (\S\ref{sec:ap_pipe}), though with different configurations (AP is focused on latency, while DRP performs more measurements).
+For more details of the exact steps performed in this task, see the \href{https://pipelines.lsst.io/v/daily/modules/lsst.pipe.tasks/tasks/lsst.pipe.tasks.calibrateImage.CalibrateImageTask.html}{CalibrateImageTask pipelines documentation}.
+
+\subsubsection{Catalog standardization and consolidation}
+\label{sec:StandardizeAndConsolidate}
+
+Our detection and measurement tasks (e.g. \texttt{CalibrateImageTask}) work internally with \texttt{afw.table} objects (\S\ref{sec:core}), which are typically per-detector or per-patch (TODO: where do we define patches and tracts in this document?), with column names that may not match the published \href{https://sdm-schemas.lsst.io}{Science Data Model Schema} (SDM).
+We \texttt{standardize} our catalogs to convert the internal column names and units to match the SDM; this is done by various \texttt{Transform} tasks in \texttt{pipe\_tasks}.
+We also \texttt{consolidate} our per-detector or per-patch catalogs into per-visit or per-tract catalogs, respectively, so that all of the objects that were detected in a single full-focal plane visit can be downloaded as a single file; this is done by various \texttt{Consolidate} tasks in \texttt{pipe\_tasks}.
+For example, the per-detector \texttt{single\_visit\_star\_unstandardized} catalogs from \texttt{CalibrateImageTask} are combined into a \texttt{single\_visit\_star} SDM-standardized per-visit catalog.
+AP (TODO: or do we say PP here?) only processes single detectors so does not \texttt{consolidate} per-visit; the APDB (\S\ref{sec:apdb}) is the primary source for measurements of sources from the alert (TODO: prompt?) production pipeline.
+
+\subsubsection{ReprocessVisitImage}
+\label{sec:ReprocessVisitImage}
+
+In DRP, \texttt{ReprocessVisitImageTask}, from the \texttt{drp\_tasks} package, takes the outputs of the global astrometric and photometric models (\S\ref{sec:calibration}), a visit-level background (TODO: skyCorr section link?) and PSF model (TODO: piff section link?) and re-runs detection and measurement on the post-ISR single-detector exposure.
+The primary user-facing outputs of this task are the photometrically calibrated, background-subtracted \texttt{visit\_image}, the calibrated \texttt{visit\_image\_background} that was subtracted from it, and \texttt{source\_unstandardized}, a catalog of all sources detected to 5-sigma, with all relevant measurements performed on them (this is standardized and consolidated into the \texttt{source} per-visit catalog).
+Besides its primary purpose of performing detection and measurement using the "best" available inputs, this task also allows us to only have to save a small number of relatively small-sized intermediate products in order to re-generate the \texttt{visit\_image} from a \texttt{raw} image, reducing long-term storage needs.
+For more details of the exact steps performed in this task, see the \href{https://pipelines.lsst.io/v/daily/modules/lsst.drp.tasks/tasks/lsst.drp.tasks.reprocess_visit_image.ReprocessVisitImageTask.html}{ReprocessVisitImage pipelines documentation}.
+
+TODO: what happens in between, forced photometry
