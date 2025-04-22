@@ -4,7 +4,7 @@
 Difference imaging is implemented in \texttt{ip\_diffim}, and is divided into three steps.
 First, a base template image is constructed with \texttt{getTemplate} by warping previously-generated coadded images to the WCS and bounding box of the science image.
 Then the warped template is subtracted from the science image using one of several available algorithms in \texttt{subtractImages}, which produces a temporary difference image.
-Finally, peaks are detected on the difference image and DiaSources are measured in \texttt{detectAndMeasure}.
+Finally, peaks are detected on the difference image and DiaSources are measured in \texttt{detectAndMeasureDiaSource}.
 The final difference image with updated mask planes is written along with the DiaSource catalog.
 
 \subsubsection{subtractImages}
@@ -13,7 +13,8 @@ The primary implementation of image subtraction used by \texttt{subtractImages} 
 The PSF-matching kernel can be constructed for either the science or the template image, and the resulting difference image is decorrelated \citet{DMTN-021}.
 Optionally, the science image can be preconvolved with its own PSF before PSF-matching, producing a Score image analogous to \citet{2016ApJ...830...27Z}.
 
-\subsubsection{detectAndMeasure}
+\subsubsection{detectAndMeasureDiaSource}
+\label{sec:detectAndMeasureDiaSource}
 
 Positive and negative peaks are detected by thresholding the Score image if it is available.
 Otherwise, the difference image is smoothed with a Gaussian of the same width as the PSF of the science image, and thresholds are taken on the smoothed image.
@@ -22,6 +23,35 @@ Footprints that contain both a positive and a negative peak are fit as dipoles.
 The dipole fit simultaneously solves for the negative and positive lobe centroids and fluxes using non-linear least squares minimization.
 DiaSources that are not classified as dipoles instead fall back on an SDSS-style centroid \citep{2003AJ....125.1559P}.
 Finally, all configured measurement plugins are run, including HSM shape measurements \citep{2003MNRAS.343..459H,2005MNRAS.361.1287M} and trailed source measurements.
+
+\subsubsection{Filtering non-astrophysical DiaSources}
+\label{sec:streaks}
+
+After the \texttt{detectAndMeasureDiaSource} step, some bogus DiaSources are expected due to reflective artificial objects orbiting the Earth.
+These may originate from, e.g., satellites or space debris, which are most numerous in low-Earth orbit.
+Objects in this region, with orbital altitude below 2000 km, move fast across the sky and can leave long streaks that cross one or more LSSTCam detectors.
+For more details on how LSSTCam will be affected by bright streaks, see \citet{2020AJ....160..226T,2022A&C....3900584H,2024SPIE13103E..1ZP,2024SPIE13103E..21S,2025arXiv250205418P}.
+
+To reduce the number of DiaSources originating from non-astrophysical sources, we apply a multi-prong approach:
+
+\begin{enumerate}
+\item Satellite catalog cross-reference via \texttt{sattle}.
+This removes known satellites from the DiaSource catalog and Alerts produced by the AP pipeline.
+It is not currently part of the DRP pipeline.
+
+\item Long trailed source detection and filtering.
+This is part of \texttt{ap\_association} (Section \ref{sec:association}), and runs in both the AP and DRP pipelines.
+It writes detected trailed DiaSources with lengths exceeding about 12 arcsec in a 30 second exposure to a separate catalog, and removes them from subsequent source association.
+
+\item Streak detection and masking.
+This is part of \texttt{meas\_algorithms} and is described in \ref{sec:MaskStreaksTask}.
+It runs during \texttt{detectAndMeasureDiaSource} (Section \ref{sec:detectAndMeasureDiaSource}) in both the AP and DRP pipelines, and creates a STREAK mask plane.
+STREAK mask information is not currently propagated to processed visit images or related catalogs, and it is only available for difference images and related catalogs.
+\end{enumerate}
+
+No pixels are altered or redacted as a result of any of the above.
+These approaches are intended to be complementary and enable science users to decide which DiaSources to include in their analyses.
+In the future, we aim to also detect and mask glints, and we may need to use active scheduler avoidance for extremely bright satellites \citep{2022ApJ...941L..15H}, which is not part of the Science Pipelines.
 
 \subsubsection{Source Association}
 \label{sec:association}

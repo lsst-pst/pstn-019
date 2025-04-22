@@ -36,36 +36,12 @@ In so doing, we identify regions of the sky which are unlikely to contain real s
 Next, a configurable number of sky objects are placed in these sky regions (1000 by default), and the PSF flux and standard deviation for each of these measurements is calculated.
 Using this information, we set the detection threshold such that the standard deviation of the measurements matches the median estimated error.
 
-\subsubsection{Filtering non-astrophysical DiaSources}
-\label{MaskStreaksTask}
+\subsubsection{MaskStreaksTask}
+\label{sec:MaskStreaksTask}
 
-After the \texttt{detectAndMeasure} step, some bogus DiaSources are expected due to reflective artificial objects orbiting the Earth.
-These may originate from, e.g., satellites or space debris, which are most numerous in low-Earth orbit.
-Objects in this region, with orbital altitude below 2000 km, move fast across the sky and can leave long streaks that cross one or more LSSTCam detectors.
-For more details on how LSSTCam will be affected by bright streaks, see \citet{2020AJ....160..226T,2022A&C....3900584H,2024SPIE13103E..1ZP,2024SPIE13103E..21S,2025arXiv250205418P}.
-
-To reduce the number of DiaSources originating from non-astrophysical sources, we apply a multi-prong approach:
-
-\begin{enumerate}
-\item Satellite catalog cross-reference via \texttt{sattle}.
-This removes known satellites from the DiaSource catalog and Alerts produced by the AP pipeline.
-
-\item Long trailed source detection and filtering, which is part of \texttt{ap\_association}.
-This runs in both the AP and DRP pipelines. It writes detected trailed DiaSources with lengths exceeding about 12 arcsec in a 30 second exposure to a separate catalog, and removes them from subsequent source association.
-
-\item Streak detection and masking.
-This is part of \texttt{meas\_algorithms} and runs during \texttt{detectAndMeasure}.
-It adds a STREAK mask plane to the difference images by searching for linear features with a Canny filter and the Kernel-Based Hough Transform \citep{2008PatRe..41..299F}.
-
-\item Future: glint detection and masking, which will use a k-d tree range query around DiaSources to identify candidate ``anchor'' sources with enough neighbors that they could be near the center of a glint trail.
-When implemented, detected glints will also be masked STREAK.
-
-\item Future: active scheduler avoidance for extremely bright satellites \citep{2022ApJ...941L..15H}, which is not part of the Science Pipelines.
-\end{enumerate}
-
-No pixels will be altered or redacted as a result of any of the above techniques.
-These approaches are intended to be complementary and enable science users to decide which DiaSources to include in their analyses.
-Even together, they are not able to completely eradicate all signatures of non-astrophysical objects from all Science Pipelines difference imaging data products.
-We note faint signals of non-astrophysical sources below the detection threshold will remain in the difference images, and these and other effects from the changing population of human-made objects orbiting Earth will affect systematic errors in ways that are impossible to quantify upfront.
-For example, \citet{2024ApJ...966L..38T} concluded that most debris smaller than 10 cm in size should not routinely be detected due to being out of focus and moving fast across the focal plane.
-Such non-detected objects may as a population increase the background sky brightness during the decade of LSST Operations \citep{2021MNRAS.504L..40K,2023NatAs...7..252B}, which is out of scope for difference imaging.
+The \texttt{MaskStreaksTask} adds a STREAK mask plane to the difference images by searching for linear features with a Canny filter and the Kernel-Based Hough Transform \citep{2008PatRe..41..299F}.
+The algorithm is described in more detail in \citet{DMTN-197}.
+We note that \citet{DMTN-197}, written in 2021, includes a section on implementing streak masking during coadd assembly, but does not describe implementing it during difference imaging.
+While it is possible to mask streaks during coadd assembly, on sky regions with many overlapping visits, we find the standard \texttt{CompareWarpAssembleCoaddTask} is sufficient to remove streak artifacts.
+The situation is different in the time domain, i.e., with difference images, and therefore we mask streaks during this step instead.
+This is described in \ref{sec:streaks}.
