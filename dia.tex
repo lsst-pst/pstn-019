@@ -14,6 +14,7 @@ The PSF-matching kernel can be constructed for either the science or the templat
 Optionally, the science image can be preconvolved with its own PSF before PSF-matching, producing a Score image analogous to \citet{2016ApJ...830...27Z}.
 
 \subsubsection{detectAndMeasureDiaSource}
+\label{sec:detectAndMeasureDiaSource}
 
 Positive and negative peaks are detected by thresholding the Score image if it is available.
 Otherwise, the difference image is smoothed with a Gaussian of the same width as the PSF of the science image, and thresholds are taken on the smoothed image.
@@ -37,12 +38,18 @@ To reduce the number of DiaSources originating from non-astrophysical sources, w
 \item Satellite catalog cross-reference via \texttt{sattle}.
 This removes known satellites from the DiaSource catalog and Alerts produced by the AP pipeline.
 
-\item Long trailed source detection and filtering, which is part of \texttt{ap\_association}.
-This runs in both the AP and DRP pipelines. It writes detected trailed DiaSources with lengths exceeding about 12 arcsec in a 30 second exposure to a separate catalog, and removes them from subsequent source association.
+\item Long trailed source detection and filtering, which is part of \texttt{ap\_association} (Section \ref{sec:association}).
+This runs in both the AP and DRP pipelines.
+It writes detected trailed DiaSources with lengths exceeding about 12 arcsec in a 30 second exposure to a separate catalog, and removes them from subsequent source association.
 
 \item Streak detection and masking.
-This is part of \texttt{meas\_algorithms} and runs during \texttt{detectAndMeasureDiaSource}.
+This is part of \texttt{meas\_algorithms} and runs during \texttt{detectAndMeasureDiaSource} (Section \ref{sec:detectAndMeasureDiaSource}).
 It adds a STREAK mask plane to the difference images by searching for linear features with a Canny filter and the Kernel-Based Hough Transform \citep{2008PatRe..41..299F}.
+The streak finding algorithm is described in more detail in \citet{DMTN-197}.
+We note that \citet{DMTN-197}, written in 2021, includes a section on implementing streak masking during coadd assembly, but does not describe implementing it during difference imaging.
+While it is possible to mask streaks during coadd assembly, on sky regions with many overlapping visits, we find the standard \texttt{CompareWarpAssembleCoaddTask} is sufficient to remove streak artifacts.
+The situation is different in the time domain, i.e., with difference images, and therefore we mask streaks during this step instead.
+At present, STREAK mask information is not propagated to processed visit images or related catalogs, and it is only available for difference images and related catalogs.
 
 \item Future: glint detection and masking, which will use a k-d tree range query around DiaSources to identify candidate ``anchor'' sources with enough neighbors that they could be near the center of a glint trail.
 When implemented, detected glints will also be masked STREAK.
@@ -50,12 +57,12 @@ When implemented, detected glints will also be masked STREAK.
 \item Future: active scheduler avoidance for extremely bright satellites \citep{2022ApJ...941L..15H}, which is not part of the Science Pipelines.
 \end{enumerate}
 
-No pixels will be altered or redacted as a result of any of the above techniques.
+No pixels are altered or redacted as a result of any of the above techniques.
 These approaches are intended to be complementary and enable science users to decide which DiaSources to include in their analyses.
 Even together, they are not able to completely eradicate all signatures of non-astrophysical objects from all Science Pipelines difference imaging data products.
 We note faint signals of non-astrophysical sources below the detection threshold will remain in the difference images, and these and other effects from the changing population of human-made objects orbiting Earth will affect systematic errors in ways that are impossible to quantify upfront.
 For example, \citet{2024ApJ...966L..38T} concluded that most debris smaller than 10 cm in size should not routinely be detected due to being out of focus and moving fast across the focal plane.
-Such non-detected objects may as a population increase the background sky brightness during the decade of LSST Operations \citep{2021MNRAS.504L..40K,2023NatAs...7..252B}, which is out of scope for difference imaging.
+Such non-detected objects may as a population increase the background sky brightness during the decade of LSST Operations \citep{2021MNRAS.504L..40K,2023NatAs...7..252B}, which is out of scope for difference imaging analysis.
 
 
 \subsubsection{Source Association}
