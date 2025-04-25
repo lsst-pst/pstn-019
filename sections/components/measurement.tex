@@ -1,36 +1,24 @@
 \subsection{Source Measurement}
 \label{sec:measurement}
 
-TODO: reorganize this section by algorithm/role instead of package.
+After sources are \emph{detected} (\ref{sec:detection}) and optionally \emph{deblended} (\ref{sec:deblending}), the source measurement tasks are responsible for applying a suite of measurement \emph{plugins} on the deblended pixels for each source.
+Centroiders, shape measurements, and photometry algorithms are all implemented as measurement plugins.
 
-We perform detection and measurement on images with the \texttt{meas} framework.
-We distinguish between \textit{detection} and \textit{measurement}:
-\begin{itemize}
-    \item \textit{detection}: identifying \textit{Footprints} (TODO: add afw link!) of sources as being above a given flux or signal-to-noise level (see \ref{sec:SourceDetectionTask}).
-    \item \textit{deblending}: TODO
-    \item \textit{measurement}: running \texttt{plugins} on each source in the image to compute properties of that source (e.g., a centroid or aperture flux) (see below).
-\end{itemize}
+We also distinguish between measurement on the original detection image (\texttt{SingleFrameMeasurementTask}) vs. measurement on a different image from the original detection (\texttt{ForcedMeasurementTask}).
+Measurement could be performed on a single-visit image, a coadd of multiple images, or a difference of images: from the perspective of a measurement plugin, there is no difference between these cases.
+\textit{Forced measurement} is performed on one image using a ``reference'' catalog of sources that were detected on another image.
 
-We also distinguish between measurement on the original detection image (\textit{single-frame measurement}) vs. measurement on a different image from the original detection (\textit{forced measurement}).
-Measurement could be performed on a single raw or calibrated image, a coadd of multiple images, or a difference of images: from the perspective of a measurement plugin, there is no difference between these cases.
-\textit{forced measurement} is performed on one image, using a "reference" catalog of sources that were detected on another image.
+The measurement tasks, plugin base classes, and a suite of standard common plugins are defined in the \texttt{meas\_base} package, including (but not limited to):
 
-\subsubsection{meas\_base}
-\label{sec:meas_base}
+\subsubsection{Framework Mechanics}
+\label{sec:measurement-interfaces}
 
-The \texttt{meas} framework interface is defined in the \texttt{meas\_base} package.
-Measurement plugins have the \texttt{Plugin} suffix if they are defined in python, and the \texttt{Algorithm} suffix if they are defined in C++.
-This package defines base classes for plugins (\texttt{SingleFramePlugin}, \texttt{ForcedPlugin} in python; \texttt{SingleFrameAlgorithm}, \texttt{ForcedAlgorithm} in C++) and the measurement tasks that can be configured to run them (\texttt{SingleFrameMeasurementTask}, \texttt{ForcedMeasurementTask}, \texttt{CatalogCalculationTask}), as well as some concrete implementations of plugins (\texttt{ApertureFluxAlgorithm}, \texttt{BlendednessAlgorithm}, \texttt{CircularApertureFluxAlgorithm}, \texttt{GaussianFluxAlgorithm}, \texttt{LocalBackgroundAlgorithm}, \texttt{PeakLikelihoodFluxAlgorithm}, \texttt{PixelFlagsAlgorithm}, \texttt{PsfFluxAlgorithm}, \texttt{ScaledApertureFluxAlgorithm}, \texttt{SdssCentroidAlgorithm}, \texttt{SdssShapeAlgorithm}).
-Each plugin has an associated config class, suffixed with \texttt{Config} in python or \texttt{Control} in C++ (e.g., \texttt{SdssCentroidAlgorithm} has \texttt{SdssCentroidControl}), used to configure parameters of that specific algorithm.
-
-\subsubsection{Measurement plugins}
-\label{sec:plugins}
-
-Plugins are added to a \textit{registry}, so that they and their outputs can be referred to by a shorter common name that identifies the package it was defined in, for example \texttt{lsst.meas.base.SdssCentroidAlgorithm} is registered as \texttt{base\_SdssCentroid}.
-This way, measurements produced by each plugin will have consistent, distinct names in the output schema, e.g., \texttt{base\_SdssCentroid\_x}, \texttt{base\_SdssCentroid\_y}, \texttt{base\_SdssCentroid\_flag}.
+Plugins are enabled or disabled in a measurement task via the task's configuration, and each plugin has its own configuration nested within the task configuration.
+When a measurement task is constructed, it constructs instances of its enabled plugins, providing them a schema object that they can use to declare and document their output columns.
+Each plugin is responsible for defining and filling in columns in the output source catalog, and almost all plugins include columns for uncertainties and at least one flag column to report failures.
 
 Measurement plugins often depend on each other, and must be run in a particular order.
-Rather than creating a directed acyclic graph to denote the dependencies, the plugins are batched and and are run in any order within a batch.
+Rather than creating a directed acyclic graph to denote the dependencies, the plugins are batched and are run in any order within a batch.
 The batch order is defined by the \texttt{getExecutionOrder} method, with smaller execution numbers being run first.
 \texttt{BasePlugin} defines a list of named constants for particular cases:
 \begin{enumerate}
@@ -38,27 +26,17 @@ The batch order is defined by the \texttt{getExecutionOrder} method, with smalle
     \item \texttt{SHAPE\_ORDER} for plugins that require a centroid to have been measured
     \item \texttt{FLUX\_ORDER} for plugins that require both a shape and centroid to have been measured.
 \end{enumerate}
+The measurement system also provides a \textit{slot} system for predefined aliases to allow a plugin to get a value without knowing exactly what plugin originally computed that value, e.g., \texttt{slot\_Centroid} could point to \texttt{base\_SdssCentroid}, or some other plugin that measures centroids.
 
-Measurement plugins output their results to a \texttt{SourceCatalog} (TODO: crosslink to afw section!), which has a \textit{slot} system for predefined aliases to allow a plugin to get a value without knowing exactly what plugin originally computed that value, e.g., \texttt{slot\_Centroid} could point to \texttt{base\_SdssCentroid}, or some other plugin that measures centroids.
+While the measurement tasks and plugin interfaces are pure Python, most concrete measurement plugins are implemented in C++, since they need to loop pixels.
 
-\subsubsection{SingleFrameMeasurementTask}
-\label{sec:SingleFrameMeasurementTask}
-
-Single frame measurement requires a catalog of detected source \texttt{Footprints}, which could still be blended, or could have been deblended (TODO: crosslink?).
-When initialized, the task creates a schema from the configured plugins, which defines the contents of the output catalog and cannot be modified after initialization.
-
-Before performing any measurement, this task replaces all sources with noise (via the \texttt{NoiseReplacer}) in the regions defined by their detected \texttt{Footprints}.
-The task then loops over all "parent" sources (those that were not deblended and those that represent the un-deblended state of blends), and then loops over all "children" of parents (if any).
-For each such source, the source footprint is re-inserted into the image, all measurement plugins are run, and the footprint is then replaced with noise again.
-Then, for blended sources, the parent is inserted, measured (running plugins on both the parent and jointly on all the children via \texttt{measureN}), and again removed.
-
-\subsubsection{ForcedMeasurementTask}
-\label{sec:ForcedMeasurementTask}
-
-Forced measurement uses the known pixel position of objects from a reference catalog to constrain measurements on another image.
-Typically only photometric measurements are scientifically useful, as the centroid and shape are defined by the reference catalog, and transformed to the coordinate system of the image being measured on (e.g., shifting to the appropriate x/y origin, or transforming through the respective WCSs).
-Other than this coordinate transformation, forced measurement proceeds much like single frame measurement above.
-Two concrete implementations of the task include \texttt{ForcedPhotCcdTask} for single-visit images and \texttt{ForcedPhotCoaddTask} for coadd patch images, both using the output of a previous single frame measurement run on coadds as the reference catalog.
+When a measurement task is run, it starts by making an empty
+\texttt{SourceCatalog} (from the ``afw.table`` library, see \ref{sec:core}) with the plugin-defined schema and one row for each of the \texttt{Footprint} objects returned by previous detection and deblending tasks.
+It then temporarily replaces all pixels within \texttt{Footprints} by random noise.
+As the task loops over each row in the output catalog, that source's pixels are restored -- either to the original \texttt{Exposure} pixels for isolated or otherwise un-deblended sources, or to the deblender's \texttt{HeavyFootprint} values for deblended children -- and the plugins are called in execution order.
+Each plugin is given the full modified \texttt{Exposure} and a row of the output catalog to fill in.
+Note that plugins are \emph{not} limited to using only the pixels within a \texttt{Footprint}; they get to decide themselves which pixels to use.
+After each source is measured, the task replaces its pixels with noise again, allowing the next source to be measured independently.
 
 \subsubsection{Aperture Corrections}
 \label{sec:apcorr}
@@ -69,17 +47,17 @@ TODO
 
 \label{sec:sky-objects}
 
-\subsubsection{Measurement Plugins}
-
-
 TODO
 
-\input{sections/components/measurement/meas_convolved}
-\input{sections/components/measurement/meas_gaap}
-\input{sections/components/measurement/meas_photometryKron}
-\input{sections/components/measurement/meas_shapeHSM}
-\input{sections/components/measurement/meas_simpleShape}
-\input{sections/components/measurement/meas_trailedSources}
-\input{sections/components/measurement/meas_modelfit}
-\input{sections/components/measurement/meas_multiprofit}
-\input{sections/components/measurement/meas_transiNet}
+\subsubsection{Standard Measurement Plugins}
+
+TODO: highlight important \texttt{meas\_base} algorithms.
+
+\input{sections/components/measurement/gaap}
+\input{sections/components/measurement/kron}
+\input{sections/components/measurement/hsm}
+\input{sections/components/measurement/trailed-sources}
+\input{sections/components/measurement/cmodel}
+\input{sections/components/measurement/multiprofit}
+\input{sections/components/measurement/reliability}
+
