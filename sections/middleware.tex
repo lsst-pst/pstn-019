@@ -83,9 +83,91 @@ TODO: examples of pipeline YAML, pipeline graph diagrams
 
 Algorithmic code below the \texttt{PipelineTask} level is often subdivided into multiple ``subtasks'' that (like \texttt{PipelineTask} itself) inherit from the base \texttt{Task} class, which provides easy access to hierarchical logging, metadata, and configuration.
 
-\subsection{Configuration}
+\subsection{Pipeline Visualization}
+\label{sec:pipeline_visualization}
 
-\input{pex_config}
+Visualizing pipeline execution is crucial for understanding task dependencies, debugging, optimizing workflows, and ensuring correct data flow within the LSST Science Pipelines.
+To support this, \texttt{pipetask build} provides several options for visualizing the pipeline graph--a simplified directed acyclic graph that shows how tasks relate to dataset types, without including data IDs.
+
+A text-based view can be generated using \texttt{pipetask build --show pipeline-graph}, which outputs an ASCII-style diagram.
+This format is especially useful for quick inspection or when working in a terminal-only environment.
+For graphical visualization, the \texttt{--pipeline-dot} and \texttt{--pipeline-mermaid} options export the pipeline graph in Graphviz DOT\footnote{\url{https://www.graphviz.org}} and Mermaid\footnote{\url{https://mermaid.js.org}} formats, respectively.
+The Mermaid format is particularly well-suited for sharing in accessible, web-based contexts.
+
+Unlike DOT files, which typically require rendering with external tools like Graphviz's \texttt{dot}, Mermaid definitions can be directly rendered in Markdown-based platforms such as GitHub, GitLab, some Jupyter environments, and even Slack with the appropriate plugin.
+This makes Mermaid an effective format for generating interactive, easily shareable pipeline graphs that can be directly embedded in documentation, notebooks, or code review tools.
+
+Figure~\ref{fig:pipe_viz} shows a visualization of a subset of two tasks from the \texttt{LSSTComCam/DRP-v2.yaml} pipeline using the Mermaid format.
+The diagram shows the relationships between tasks and their input and output datasets as well as the sequence in which the tasks are expected to run.
+Such visualizations can help uncover misconfigurations, missing inputs, or unexpected data dependencies that might otherwise result in issues such as empty QuantumGraphs or failed pipeline execution.
+
+\begin{figure*}
+    \centering
+    \plotone{figures/middleware/pipe_viz_comcam_subset.pdf}
+    \caption{
+        Example pipeline visualization of four selected tasks from the \texttt{LSSTComCam/DRP-v2.yaml} pipeline in the Mermaid format.
+        The diagram illustrates the flow of datasets between tasks, with dashed lines indicating prerequisite inputs.
+        This visualization helps validate task dependencies and the expected sequence of execution.
+    }
+    \label{fig:pipe_viz}
+\end{figure*}
+
+\subsection{Configuration}
+Pex Config is the foundational configuration system for the LSST Rubin Observatory's ambitious science pipelines.
+It's far more than a simple parameter parser; it's a framework that mediates between diverse configuration sources and the complex software that processes astronomical data.
+At its core, Pex Config functions as an intermediate representation, decoupling the pipelines from the specifics of configuration file formats (like YAML, JSON) and providing a unified, Python-native interface to all configurable parameters.
+This intermediate representation, resembling a Domain Specific Language embedded within Python, also allows leveraging the full power of a programming language for parsing or setting configuration values.
+An example of this can be seen in the following code block which shows a fragment used to configure one of the shape measurement routines.
+This abstraction is critical for maintainability, allowing the underlying file formats and or execution systems to evolve without impacting the pipeline code.
+It also provides a mechanism to deprecate configurables which will change in future versions of the software stack, allowing users an easy migration path.
+
+\begin{minipage}{\columnwidth}
+    \begin{lstlisting}[caption=Code configuration in python, language=python]
+import os.path
+from lsst.utils import getPackageDir
+
+try:
+    location = getPackageDir("meas_extensions_shapeHSM")
+    path = os.path.join(, "config", "enable.py")
+    config.load(path)
+    plugins = config.plugins
+    plugin = plugins["ext_shapeHSM_HsmShapeRegauss"]
+    plugin.deblendNChild = "deblend_nChild"
+    # Enable debiased moments
+    config.plugins.names |= ["ext_shapeHSM_HsmPsfMomentsDebiased"]
+except LookupError as e:
+    print("Cannot enable shapeHSM (%s): disabling HSM shape measurements" % (e,))
+    \end{lstlisting}
+\end{minipage}
+
+The design of Pex Config centers around the concepts of ``Fields'' and ``Config'' objects.
+Fields represent individual configurable values -- things like exposure times, image quality thresholds, or database connection strings.
+Each Field is strongly typed, supporting a variety of data types (such as integers, floats, strings, booleans, and lists).
+Config objects, on the other hand, are containers that group related Fields together, creating logical units of configuration.
+One of the highlights of Pex Config is its composability.
+Config objects can be nested within other Config objects using a special ``ConfigField,'' allowing for the creation of complex, hierarchical configuration trees that mirror the structure of the pipelines themselves.
+This allows for modularity and reuse of configuration components across different parts of the system.
+
+A strength of Pex Config is its flexible application of configuration values.
+Values can be set at multiple stages: via command-line arguments, loaded from configuration files, or defined directly within the pipeline code.
+Importantly, these stages are applied progressively, with later stages overriding earlier ones.
+This allows for a powerful combination of default settings, user-defined customizations, and dynamic adjustments.
+Mechanisms also exist to apply values to all instances of a particular Config object within a tree, simplifying the management of shared parameters and ensuring consistency.
+
+
+Beyond runtime configuration, Pex Config is deeply concerned with data provenance and reproducibility.
+It provides mechanisms for persisting and restoring configuration values, allowing for complete tracking of pipeline parameters used in a particular data processing run.
+Crucially, it also maintains a history of each Field's value, recording when and where it was set -- whether via the command line, a configuration file, or programmatically.
+This detailed history is invaluable for debugging, auditing, and ensuring the reproducibility of scientific results.
+The system also incorporates robust validation mechanisms, enabling checks on individual Fields and groups of values before they are used by the pipelines, preventing errors and ensuring data quality.
+Validation can range from simple type checking, ensuring values fall within acceptable ranges or specific patters, to complex custom functions that enforce specific constraints.
+
+
+Finally, Pex Config is designed with documentation in mind.
+All Fields and Config objects can be richly documented using documentation strings and attributes.
+This documentation structure is not only readable by humans but can also be parsed by automated tools to generate comprehensive documentation pages, eliminating the need for manual documentation creation.
+This ensures that the configuration system is well-documented and easy to understand, even for new developers.
+The system is flexible enough that it has been adopted by the DRAGONS software \citep{2023RNAAS...7..214L}.
 
 \subsection{Instrument Abstractions: Obs Packages}
 \label{sec:obs_packages}
@@ -125,5 +207,3 @@ To perform that standard extraction of metadata each supported instrument must p
 The translator classes can understand evolving data models and allow the standardized metadata to be extracted for the lifetime of an instrument even if headers changed.
 Furthermore, in addition to providing standardized metadata the package can also provide programmatic or per-exposure corrections to data headers prior to calculating the translated metadata.
 This allows files that were written with incorrect headers to be recovered during file ingestion.
-
-\input{pipe_viz}

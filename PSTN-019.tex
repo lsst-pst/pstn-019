@@ -26,7 +26,7 @@
 \input{authors}
 \collaboration{all}{The Rubin Observatory Science Pipelines Team}
 
-\input{abstract}
+\input{sections/abstract}
 
 \keywords{%
     Astrophysics - Instrumentation and Methods for Astrophysics
@@ -36,48 +36,52 @@
     methods: miscellaneous
 }
 
-\input{intro}
-\input{support}
-\input{middleware}
-\input{core}
+\input{sections/intro}
+\input{sections/support}
+\input{sections/middleware}
+\input{sections/core}
 
 \section{Key Algorithmic Components}
+\label{sec:components}
 
 TODO: describe this category: mostly subtasks, some PipelineTasks that aren't really separable from their algorithms.
 
 % Each of these is a subsection.
-\input{isr}
-\input{detection}
-\input{deblending}
-\input{measurement}
-\input{psfs}
-\input{astro_photo_cal}
-\input{schemas}
+\input{sections/components/isr}
+\input{sections/components/detection}
+\input{sections/components/deblending}
+\input{sections/components/measurement}
+\input{sections/components/psfs}
+\input{sections/components/astro_photo_cal}
+\input{sections/components/schemas}
 
 \section{High-level Tasks and Pipelines}
+\label{sec:tasks-and-pipelines}
 
 TODO: summarize packages that provide high-level tasks and pipelines.
 
 % Each of these is a subsection.
-\input{single-frame}
-\input{coaddition-and-objects}
-\input{dia}
-\input{alerts}
-\input{solsys}
-\input{cp_pipe}
-\input{ap_pipe}
-\input{drp_pipe}
+\input{sections/tasks-and-pipelines/single-frame}
+\input{sections/tasks-and-pipelines/coaddition-and-objects}
+\input{sections/tasks-and-pipelines/dia}
+\input{sections/tasks-and-pipelines/alerts}
+\input{sections/tasks-and-pipelines/solsys}
+\input{sections/tasks-and-pipelines/cp_pipe}
+\input{sections/tasks-and-pipelines/ap_pipe}
+\input{sections/tasks-and-pipelines/drp_pipe}
 
 \section{Analysis Tooling}
 \label{sec:analysis}
 
 % Each of these is a subsection.
-\input{display}
-\input{analysis_tools}
-\input{validation}
+\input{sections/analysis/display}
+\input{sections/analysis/analysis_tools}
+\input{sections/analysis/validation}
+\input{sections/analysis/source_injection}
+
 
 % This is a section.
-\input{conclusions}
+\input{sections/conclusions}
 
 \begin{acknowledgments}
 This material is based upon work supported in part by the National Science Foundation through Cooperative Agreement AST-1258333 and Cooperative Support Agreement AST-1202910 managed by the Association of Universities for Research in Astronomy (AURA), and the Department of Energy under Contract No. DE-AC02-76SF00515 with the SLAC National Accelerator Laboratory managed by Stanford University.

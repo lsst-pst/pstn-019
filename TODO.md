@@ -18,3 +18,4 @@ For the particularly big pieces that don't have good external docs to link to, m
 - Periodic logging and deferred string formatting in logging (Fundamentals)
 - Enumeration pytest advantages; we can leave that to pytest docs (Unit Testing and Code Coverage).
 - pex_config (Middleware)
+- Pipeline Visualization (Middleware)
