@@ -44,7 +44,10 @@
 \section{Key Algorithmic Components}
 \label{sec:components}
 
-TODO: describe this category: mostly subtasks, some PipelineTasks that aren't really separable from their algorithms.
+Most of the key algorithms we have implemented for processing Rubin data are used in multiple pipelines, and in many cases an algorithmic component is used multiple times within a single pipeline.
+For the most part, these reusable algorithms are implemented as regular \texttt{Task} objects, and these are combined in higher-level \texttt{PipelineTasks} discussed later in \ref{sec:tasks-and-pipelines}.
+In other cases, the algorithm is inseparable from from its I/O, and is implemented directly as a \texttt{PipelineTask}.
+This section includes examples of both.
 
 % Each of these is a subsection.
 \input{sections/components/isr}
@@ -58,7 +61,8 @@ TODO: describe this category: mostly subtasks, some PipelineTasks that aren't re
 \section{High-level Tasks and Pipelines}
 \label{sec:tasks-and-pipelines}
 
-TODO: summarize packages that provide high-level tasks and pipelines.
+In this section, we describe how the reusable components of \ref{sec:components} are assembled into pipelines for generating nightly alerts immediately from just-observed data, producing cumulative data releases roughly every year, and creating calibrations that are input to both on many cadences in between.
+This also includes some description of algorithmic details that are specific to certain pipelines.
 
 % Each of these is a subsection.
 \input{sections/tasks-and-pipelines/single-frame}
@@ -78,7 +82,6 @@ TODO: summarize packages that provide high-level tasks and pipelines.
 \input{sections/analysis/analysis_tools}
 \input{sections/analysis/validation}
 \input{sections/analysis/source_injection}
-
 
 % This is a section.
 \input{sections/conclusions}

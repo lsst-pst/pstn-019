@@ -2,7 +2,9 @@
 
 ## Globals
 
-- Standardize on OSPRAE vs. "LSST Science Pipelines" throughout.
+- Standardize on OSPRAE vs. "LSST Science Pipelines" throughout.  Pending on Leanne looking into processes for getting feedback on major renaming.
+- Standardize on LSST vs. Rubin where neither is obviously more appropriate than the other.
+- Standardize on how to format section references.
 
 ## Citations/links needed
 

@@ -10,7 +10,13 @@ The LSST Science Pipelines software consists of the building blocks and pipeline
 It has been under development since at least 2004 \citep{2004AAS...20510811A} and has evolved significantly over the years as the project transitioned from prototyping \citep{2010SPIE.7740E..15A} and entered into formal construction \citep{2017ASPC..512..279J}.
 The software is designed to be usable by other optical telescopes and this has been demonstrated with Hyper Suprime Cam on the Subaru Telescope in Hawaii \citep{2018PASJ...70S...5B} and also with data from the Dark Energy Camera (DECam),  the VISTA infrared camera (VIRCAM), the Wide Field Survey Telescope \citep[WFST;][]{2025arXiv250115018C}, and the Gravitational-wave Optical Transient Observer \citep[GOTO;][]{2021PASA...38....4M}.
 
-In this paper we provide an overview of the components of the software system.
-This includes a description of the support libraries and data access abstraction, the pipeline task system, and an overview of the algorithmic components.
-We do not include details of the science validation of the individual algorithms.
+In this paper we provide an overview of the software system, dividing it into four rough tiers:
+\begin{itemize}
+\item low-level utility code and our data access, configuration, and execution frameworks, and our core algorithmic primitives are described in sections \ref{sec:support}, \ref{sec:middleware}, and \ref{sec:core}, respectively;
+\item reusable mid-level algorithmic components are described in \ref{sec:components};
+\item high-level tasks and pipelines are described in \ref{sec:tasks-and-pipelines}, along with some of the details of the algorithms specific to them;
+\item analysis and validation tooling is described in \ref{sec:analysis}.
+\end{itemize}
+There are no sharp boundaries between these tiers; they are better considered to be a loose organizational aid than any kind of formal classification.
+We do not include details of the science validation of the individual algorithms, and do not attempt to cover componets of the system in uniform detail; instead we focus attention on those that are unique or novel or not well described elsewhere.
 The other components of the LSST DMS, such as the workflow system \citep{2022arXiv221115795G,2024EPJWC.29504026K}, the Qserv database \citep{Wang:2011:QDS:2063348.2063364,C15_adassxxxii} and the Rubin Science Platform \citep{LSE-319,2024ASPC..535..227O}, are not covered in this paper.
