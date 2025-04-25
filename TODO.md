@@ -21,3 +21,14 @@ For the particularly big pieces that don't have good external docs to link to, m
 - Enumeration pytest advantages; we can leave that to pytest docs (Unit Testing and Code Coverage).
 - pex_config (Middleware)
 - Pipeline Visualization (Middleware)
+- Amp Offset Correction (ISR)
+
+## Section editing
+
+### ISR
+
+- Effectively has two introductions about what ISR is.
+- Doesn't need an `ip_isr` heading; should just mention that the ISR code lives in the `ip_isr` package
+- Needs to mention both `IsrTask` and `IsrTaskLSST` and say what they're both for, even if we focus our attention on the latter.
+- Amp-offset correction is half of the text (maybe move to appendix?)
+
