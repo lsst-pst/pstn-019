@@ -1,47 +1,36 @@
 \subsection{Source Detection}
 \label{sec:detection}
 
-TODO: this was previously a \texttt{meas\_algorithms} page; move the bits that are not about detection elsewhere.
+In the LSST Science Pipelines, \emph{detection} refers specifically to the process of finding above-threshold regions in images and one or more peaks within them (i.e. \texttt{Footprints}, as described in \ref{sec:core}).
+Before this thresholding, we convolve each image with an approximation of its PSF model, as this is (approximately) optimal for detecting isolated point sources \citep{2018PASJ...70S...5B}.
+After detection, \texttt{Footprints} with multiple peaks are generally deblended (\ref{sec:deblending}) before being measured (\ref{sec:measurement}).
+Our detection algorithms assume the image has already been background-subtracted.
 
-The \texttt{meas\_algorithms} package contains a wide variety of astronomical algorithms.
-We briefly describe some of them here; for the full list of \texttt{Tasks} defined in this module, see the \href{https://pipelines.lsst.io/v/daily/modules/lsst.meas.algorithms/index.html}{full package documentation}.
-
-\begin{itemize}
-    \item \texttt{MeasureApCorrTask} measures aperture corrections on an image (TODO: how? Eli?).
-    \item \texttt{NormalizedCalibrationFluxTask} measures SOMETHING TODO: Eli?
-    \item \texttt{ObjectSizeStarSelectorTask} is used to find likely PSF-like sources to be used to fit a PSF model during initial calibration.
-    \item \texttt{SkyObjectsTask} generates `sky object' \texttt{Footprints} on regions of an image that do not have a \texttt{DETECTED} mask plane set (TODO: link to afw Mask!).
-    \item \texttt{SubtractBackgroundTask} fits and subtracts the background of an image, potentially appending it to an earlier fitted background model.
-    \item \texttt{ScienceSourceSelectorTask} and \texttt{ReferenceSourceSelectorTask} select sources from a catalog given a set of configurable criteria.
-\end{itemize}
-
-This package also contains tools for defining and converting existing third party catalogs to be used as reference catalogs by Science Pipelines code, via \texttt{ConvertReferenceCatalogTask} and its commandline interface \texttt{convertReferenceCatalog}.
-These tools are described in more detail in the \href{https://pipelines.lsst.io/v/daily/modules/lsst.meas.algorithms/creating-a-reference-catalog.html}{documentation for creating an LSST reference catalog}.
+All of our detection tasks are implemented in the \texttt{meas\_algorithms} package.
 
 \subsubsection{SourceDetectionTask}
 \label{sec:SourceDetectionTask}
 
-We detect positive and negative sources on an image with \texttt{SourceDetectionTask} to produce a \texttt{SourceCatalog} of \texttt{Footprints}.
-This task requires that the image be background subtracted to produce good results.
-\texttt{SourceDetectionTask} convolves the image with a Gaussian approximation to the exposure PSF and detects peaks and footprints above a configurable threshold in either signal-to-noise or absolute flux level.
-The detected footprints may be significantly blended, depending on the detection threshold and source density in the input image: in order to separate footprints that contain many peaks, some form of deblending (TODO: section link!) must be performed.
+\texttt{SourceDetectionTask} convolves the image with a Gaussian approximation to the exposure PSF and detects \texttt{Footprints} above a configurable threshold in either signal-to-noise or absolute flux level.
+It can optionally detect negative deviations as well as positive (which is useful when operating on difference images).
+
+A serious challenge for this algorithm in deep or otherwise crowded fields is that noise peaks or below-threshold sources can be pushed above the detection threshold when they land in the wings of brighter neighbors.
+To reduce the number of spurious peaks due to this effect, \texttt{SourceDetectionTask} can optionally perform a \emph{temporary} small-scale background subtraction before looking for peaks (but after finding the above-threshold regions); while the spline and Chebyshev models are not good models for the wings of large objects, they are often better than nothing.
 
 \subsubsection{DynamicDetectionTask}
 \label{sec:DynamicDetectionTask}
 
-The \texttt{DynamicDetectionTask} is a specialized version of \texttt{SourceDetectionTask} that adapts detection thresholds based on the local background and noise.
-This task was initially developed to address detection efficiency issues noted in HSC data.
+The \texttt{DynamicDetectionTask} is a specialized version of \texttt{SourceDetectionTask} that adjusts detection thresholds based on the local background and noise.
+This task was initially developed to address detection efficiency issues noted in HSC data, though to be related to correlations in the noise due to warping.
 First, \texttt{DynamicDetectionTask} detects sources using a lower detection threshold than normal.
 In so doing, we identify regions of the sky which are unlikely to contain real source flux.
-Next, a configurable number of sky objects are placed in these sky regions (1000 by default), and the PSF flux and standard deviation for each of these measurements is calculated.
+Next, a configurable number of sky objects (see ref{sec:sky-objects}) are placed in these sky regions (1000 by default), and the PSF flux and standard deviation for each of these measurements is calculated.
 Using this information, we set the detection threshold such that the standard deviation of the measurements matches the median estimated error.
 
 \subsubsection{MaskStreaksTask}
 \label{sec:MaskStreaksTask}
 
-The \texttt{MaskStreaksTask} adds a STREAK mask plane to the difference images by searching for linear features with a Canny filter and the Kernel-Based Hough Transform \citep{2008PatRe..41..299F}.
-The algorithm is described in more detail in \citet{DMTN-197}.
-We note that \citet{DMTN-197}, written in 2021, includes a section on implementing streak masking during coadd assembly, but does not describe implementing it during difference imaging.
-While it is possible to mask streaks during coadd assembly, on sky regions with many overlapping visits, we find the standard \texttt{CompareWarpAssembleCoaddTask} is sufficient to remove streak artifacts.
-The situation is different in the time domain, i.e., with difference images, and therefore we mask streaks during this step instead.
-This is described in \ref{sec:streaks}.
+Instead looking for astrophysical sources like our other detection tasks, \texttt{MaskStreaksTask} is responsible for identifying and masking pixels affected by streaks (primarily artificial satellites).
+It searches for linear features with a Canny filter and the Kernel-Based Hough Transform \citep{2008PatRe..41..299F}, and operates most effectively on difference images.
+The algorithm is described in more detail in \citet{DMTN-197}, which focuses on its usage on differences between PSF-matched warps and a PSF-matched coadd, as described in \ref{sec:coaddition}.
+This task is also used in traditional difference images, i.e. those formed by subtracting a template coadd from a science images, as described in \ref{sec:dia}.
