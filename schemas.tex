@@ -3,7 +3,7 @@
 
 Pipeline products must be transformed from the internal data model to the public data model defined in \citet{LSE-163}.
 A set of YAML files in the \texttt{pipe\_tasks}\footnote{\url{https://github.com/lsst/pipe\_tasks}} repository are used for transforming the internal pipelines representation of the data to a standardized parquet output format.
-These parquet files are continually validated against an appropriate schema to ensure that the column names and types are correct as the pipelines codebase evolves, through repositories such as \texttt{ci\_imsim}\footnote{\url{https://github.com/lsst/ci\_imsim}} and \texttt{ci\_hsc}\footnote{\url{https://github.com/lsst/ci\_hsc}}.
+These parquet files are continually validated against an appropriate schema to ensure that the column names and types are correct as the pipelines codebase evolves, as described in Section~\ref{sec:validation}.
 For data previews and releases, the parquet files are then ingested into the Qserv database, where the data catalogs are stored.
 
 The public data model is defined by a set of files in the Felis \citep{2024arXiv241209721M} YAML format which describe the schema of a data catalog, including its tables, columns, constraints and metadata.
