@@ -7,6 +7,7 @@ These parquet files are continually validated against an appropriate schema to e
 For data previews and releases, the parquet files are then ingested into the Qserv database, where the data catalogs are stored.
 
 The public data model is defined by a set of files in the Felis \citep{2024arXiv241209721M} YAML format which describe the schema of a data catalog, including its tables, columns, constraints and metadata.
+These are collectively referred to as the Science Data Model (SDM) schemas.
 The YAML files are managed with the \texttt{sdm\_schemas} repository\footnote{\url{https://github.com/lsst/sdm\_schemas}} with all changes validated by GitHub workflows.
 The schemas corresponding to Science Pipelines output are continually evolving with the pipelines codebase, so, for instance, column names and types may be updated to reflect changes to the internal data model.
 Schemas for data previews and releases represent a snapshot of the public data model at the time of the release and would typically only be updated with bug fixes, minor changes, or updates and additions to the metadata.
