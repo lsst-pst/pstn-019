@@ -2,7 +2,10 @@
 
 ## Globals
 
-- Standardize on OSPRAE vs. "LSST Science Pipelines" throughout.
+- Standardize on OSPRAE vs. "LSST Science Pipelines" throughout.  Pending on Leanne looking into processes for getting feedback on major renaming.
+- Standardize on LSST vs. Rubin where neither is obviously more appropriate than the other.
+- Standardize on how to format section references.
+- Standardize or remove references to dataset types.
 
 ## Citations/links needed
 
@@ -18,3 +21,15 @@ For the particularly big pieces that don't have good external docs to link to, m
 - Periodic logging and deferred string formatting in logging (Fundamentals)
 - Enumeration pytest advantages; we can leave that to pytest docs (Unit Testing and Code Coverage).
 - pex_config (Middleware)
+- Pipeline Visualization (Middleware)
+- Amp Offset Correction (ISR)
+
+## Section editing
+
+### ISR
+
+- Effectively has two introductions about what ISR is.
+- Doesn't need an `ip_isr` heading; should just mention that the ISR code lives in the `ip_isr` package
+- Needs to mention both `IsrTask` and `IsrTaskLSST` and say what they're both for, even if we focus our attention on the latter.
+- Amp-offset correction is half of the text (maybe move to appendix?)
+

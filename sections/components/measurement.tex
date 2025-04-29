@@ -1,0 +1,63 @@
+\subsection{Source Measurement}
+\label{sec:measurement}
+
+After sources are \emph{detected} (\ref{sec:detection}) and optionally \emph{deblended} (\ref{sec:deblending}), the source measurement tasks are responsible for applying a suite of measurement \emph{plugins} on the deblended pixels for each source.
+Centroiders, shape measurements, and photometry algorithms are all implemented as measurement plugins.
+
+We also distinguish between measurement on the original detection image (\texttt{SingleFrameMeasurementTask}) vs. measurement on a different image from the original detection (\texttt{ForcedMeasurementTask}).
+Measurement could be performed on a single-visit image, a coadd of multiple images, or a difference of images: from the perspective of a measurement plugin, there is no difference between these cases.
+\textit{Forced measurement} is performed on one image using a ``reference'' catalog of sources that were detected on another image.
+
+The measurement tasks, plugin base classes, and a suite of standard common plugins are defined in the \texttt{meas\_base} package, including (but not limited to):
+
+\subsubsection{Framework Mechanics}
+\label{sec:measurement-interfaces}
+
+Plugins are enabled or disabled in a measurement task via the task's configuration, and each plugin has its own configuration nested within the task configuration.
+When a measurement task is constructed, it constructs instances of its enabled plugins, providing them a schema object that they can use to declare and document their output columns.
+Each plugin is responsible for defining and filling in columns in the output source catalog, and almost all plugins include columns for uncertainties and at least one flag column to report failures.
+
+Measurement plugins often depend on each other, and must be run in a particular order.
+Rather than creating a directed acyclic graph to denote the dependencies, the plugins are batched and are run in any order within a batch.
+The batch order is defined by the \texttt{getExecutionOrder} method, with smaller execution numbers being run first.
+\texttt{BasePlugin} defines a list of named constants for particular cases:
+\begin{enumerate}
+    \item \texttt{CENTROID\_ORDER} for plugins that require only footprints and peaks
+    \item \texttt{SHAPE\_ORDER} for plugins that require a centroid to have been measured
+    \item \texttt{FLUX\_ORDER} for plugins that require both a shape and centroid to have been measured.
+\end{enumerate}
+The measurement system also provides a \textit{slot} system for predefined aliases to allow a plugin to get a value without knowing exactly what plugin originally computed that value, e.g., \texttt{slot\_Centroid} could point to \texttt{base\_SdssCentroid}, or some other plugin that measures centroids.
+
+While the measurement tasks and plugin interfaces are pure Python, most concrete measurement plugins are implemented in C++, since they need to loop pixels.
+
+When a measurement task is run, it starts by making an empty
+\texttt{SourceCatalog} (from the ``afw.table`` library, see \ref{sec:core}) with the plugin-defined schema and one row for each of the \texttt{Footprint} objects returned by previous detection and deblending tasks.
+It then temporarily replaces all pixels within \texttt{Footprints} by random noise.
+As the task loops over each row in the output catalog, that source's pixels are restored -- either to the original \texttt{Exposure} pixels for isolated or otherwise un-deblended sources, or to the deblender's \texttt{HeavyFootprint} values for deblended children -- and the plugins are called in execution order.
+Each plugin is given the full modified \texttt{Exposure} and a row of the output catalog to fill in.
+Note that plugins are \emph{not} limited to using only the pixels within a \texttt{Footprint}; they get to decide themselves which pixels to use.
+After each source is measured, the task replaces its pixels with noise again, allowing the next source to be measured independently.
+
+\subsubsection{Aperture Corrections}
+\label{sec:apcorr}
+
+TODO
+
+\subsubsection{Sky Objects}
+
+\label{sec:sky-objects}
+
+TODO
+
+\subsubsection{Standard Measurement Plugins}
+
+TODO: highlight important \texttt{meas\_base} algorithms.
+
+\input{sections/components/measurement/gaap}
+\input{sections/components/measurement/kron}
+\input{sections/components/measurement/hsm}
+\input{sections/components/measurement/trailed-sources}
+\input{sections/components/measurement/cmodel}
+\input{sections/components/measurement/multiprofit}
+\input{sections/components/measurement/reliability}
+

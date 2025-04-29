@@ -1,6 +1,11 @@
-\subsection{Deblending \footnote{This section assumes that a dection section has already been written. Some changes might be necessary if there are topics not covered in the detection section or topics that are duplicated in this section."}}
+\subsection{Deblending}
 
 \label{sec:deblending}
+
+\emph{Deblending} has become the standard astronomical term for dealing with images where multiple distinct astrophysical sources overlap.
+In the LSST Science Pipelines, it specifically means assigning different fractions of the flux of all of the pixels in a \texttt{Footprint} to each of the peaks in that \texttt{Footprint}, which are then each considered a ``child'' source.
+This fractional flux assignment is very different from creating a ``segmentation map'' that fully assigns each pixel to each child source, as in e.g. Source Extractor \citep{1996A&AS..117..393B}.
+\texttt{HeavyFootprint} (an extension of \texttt{Footprint} that adds a flattened array of pixel values) is used to pass the per-pixel fluxes to downstream algorithms.
 
 Deblending in the science pipelines is performed differently for single-band (visit) image processing vs. multi-band (coadd) image processing.
 This section gives a basic description of each algorithm.
@@ -38,14 +43,14 @@ For LSST-depth coadds this becomes a significant problem, as deep coadds can hav
 
 \begin{figure}
     \centering
-    \plotone{simple_1D_blend.pdf}
+    \plotone{figures/components/deblending/simple_1D_blend.pdf}
     \caption{A 1D slice of two blended Gaussian sources illustrating how symmetry can be utilized to model blended sources.}
     \label{fig:simple_blend}
 \end{figure}
 
 \begin{figure}
     \centering
-    \plotone{complex_1D_blend.pdf}
+    \plotone{figures/components/deblending/complex_1D_blend.pdf}
     \caption{A 1D slice through three aligned Gaussian sources, demonstrating a failure case of relying on symmetry for generating deblender templates. Notice that for sources 2 and 3 the templates are reasonable but due to the inability of source 1 to use symmetry to constrain flux in the blended region, the resulting models for all three sources are poor. This catastrophic "three in a row" problem was part of the motivation for creating \texttt{scarlet} to incorporate spectral information and a more rigorous iterative deblending algorithm.}
     \label{fig:complex_blend}
 \end{figure}
@@ -73,5 +78,5 @@ In order to satisfy the constraint that all pixels in the morphology have the sa
 The initial spectrum of each source is determined using a least squares fit of each monochromatic morphology, convolved with the difference kernel in each band to match the image, for each component.
 It then uses proximal-ADAM \citep[PADAM,][]{2019arXiv191010094M} to iteratively update the spectrum and morphology with the given constraints until convergence or a maximum number of iterations is reached.
 It should be noted that although we do use symmetry to initialize the scarlet models, we do not implement a symmetry constraint and the final models are not guaranteed to be symmetric.
-The models are stored as the \texttt{deepCoadd\_scarletModelData} data product, which contains all of the blends for a single patch.
+The models are stored as the \texttt{object\_model\_data} data product, which contains all of the blends for a single patch.
 Like the single-band deblender, the \texttt{scarlet\_lite} models are only used as templates to redistribute flux from the image and all measurements are performed on the flux redistributed models.
