@@ -1,7 +1,7 @@
 .. image:: https://img.shields.io/badge/pstn--019-lsst.io-brightgreen.svg
    :target: https://pstn-019.lsst.io
-.. image:: https://travis-ci.com/lsst-pst/pstn-019.svg
-   :target: https://travis-ci.com/lsst-pst/pstn-019
+.. image:: https://github.com/lsst-pst/pstn-019/actions/workflows/ci.yaml/badge.svg?branch=main
+   :target: https://github.com/lsst-pst/pstn-019/actions/workflows/ci.yaml
 
 ####################################################
 The Vera C. Rubin Observatory LSST Science Pipelines

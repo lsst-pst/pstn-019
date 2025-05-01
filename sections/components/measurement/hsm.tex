@@ -15,4 +15,12 @@ The PSF moments from this plugin should be used when calculating ellipticity res
 Having the various specializations as distinct plugins allows an object to be measured under different configurations simultaneously and included in the output catalogs.
 
 In addition to the plugins that measure (adaptive) weighted moments, there are also a series of \texttt{HsmShape} plugins to estimate the PSF-corrected ellipticities of objects.
-In particular, the outputs from \texttt{HsmShapeRegaussPlugin} have been used to measure weak gravitation lensing signals in the Hyper Suprime-Cam SSP data \citep{2018PASJ...70S..25M, 2022PASJ...74..421L}.
+In particular, the outputs from \texttt{HsmShapeRegaussPlugin} have been used to measure weak gravitational lensing signals in the Hyper Suprime-Cam SSP data \citep{2018PASJ...70S..25M, 2022PASJ...74..421L}.
+
+In addition to the second moments that characterize the size and ellipticity of the PSF, higher-order moments \textemdash\ those beyond second order \textemdash\ capture more subtle aspects of the PSF shape, such as skewness, kurtosis, and other asymmetric or non-Gaussian features.
+The \texttt{HigherOrderMomentsPSFConfig} is a plugin within \texttt{meas\_extensions\_shapeHSM} to calculate the higher order moments of the PSF models whereas \texttt{HigherOrderMomentsSourcePlugin} calculates that of the sources (and objects).
+The definitions of the higher moments are given in \citet{2023MNRAS.520.2328Z}.
+These moments are measured in normalized coordinates, where the normalized $x$-axis is along the major axis and the normalized $y$-axis along the minor.
+Such a normalization implies that the moments are dependent only on features of the light profile beyond second moments, and does not scale with the flux, position, size or orientation of the object.
+It is designed to be used in conjunction with the \texttt{HsmShapePlugin} and \texttt{HsmPsfMomentsPlugin} plugins, which measure the second moments for the normalization, and provides the HSM adaptive Gaussian kernel.
+By default, we compute the third and fourth order moments of the source and PSF images.
