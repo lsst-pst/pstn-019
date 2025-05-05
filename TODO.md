@@ -6,6 +6,7 @@
 - Standardize on LSST vs. Rubin where neither is obviously more appropriate than the other.
 - Standardize on how to format section references.
 - Standardize or remove references to dataset types.
+- Do we link to Python documentation for code or not (some in at least the `CalibrateImageTask` section).
 
 ## Citations/links needed
 
