@@ -25,7 +25,7 @@ For the particularly big pieces that don't have good external docs to link to, m
 - Pipeline Visualization (Middleware)
 - Amp Offset Correction (ISR)
 
-## Section editing
+## Section editing/writing
 
 ### ISR
 
@@ -34,3 +34,12 @@ For the particularly big pieces that don't have good external docs to link to, m
 - Needs to mention both `IsrTask` and `IsrTaskLSST` and say what they're both for, even if we focus our attention on the latter.
 - Amp-offset correction is half of the text (maybe move to appendix?)
 
+### Object Production
+
+- Needs to be written.
+
+### DIA filtering
+
+- Too much detail on streak-finding
+- Satellite risk to Rubin is sort of out of scope for a software paper.
+- Should cover reliability scoring as well (probably mostly).
