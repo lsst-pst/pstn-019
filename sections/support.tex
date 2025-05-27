@@ -39,4 +39,6 @@ Unit testing and code coverage are critical components of code quality \citep{20
 Every package comes with unit tests written using the standard \texttt{unittest} module.
 We run the tests using \texttt{pytest} \citep{pytest} and this comes with many advantages in that all the tests run in the same process and requiring global parameters to be well understood, tests can be run in parallel in multiple processes, plugins can be enabled to extend testing and record test coverage, and a test report can be created giving details of run times and test failures.
 Coding standards compliance with PEP\,8 \citep{pep8} is enforced using GitHub Actions, the \texttt{ruff} package, and \texttt{pre-commit} checks.
-A Jenkins system provides the team with continuous integration facilities that includes running longer tests with pre-cursor datasets.
+
+A Jenkins system provides the team with continuous integration across multiple packages.
+This includes longer tests (up to a few hours) in which we run complete pipelines on small precursor datasets (typically a few GB) fetched via \texttt{git-lfs}.

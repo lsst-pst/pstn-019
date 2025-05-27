@@ -19,8 +19,6 @@
 
 For the particularly big pieces that don't have good external docs to link to, maybe we make some appendices, so we can include the text without unbalancing the paper structure?
 
-- Periodic logging and deferred string formatting in logging (Fundamentals)
-- Enumeration pytest advantages; we can leave that to pytest docs (Unit Testing and Code Coverage).
 - pex_config (Middleware)
 - Pipeline Visualization (Middleware)
 - Amp Offset Correction (ISR)
@@ -43,3 +41,17 @@ For the particularly big pieces that don't have good external docs to link to, m
 - Too much detail on streak-finding
 - Satellite risk to Rubin is sort of out of scope for a software paper.
 - Should cover reliability scoring as well (probably mostly).
+
+### drp_pipe
+
+- Needs to be written (doesn't need much; note how short cp_pipe and ap_pipe sections are).
+
+### analysis_tools
+
+- Needs a bit more about how it works - builds on PipelineTask + Config, has common plot types, aggregates multiple analyses into metrics bundles, etc.
+- Maybe say something about advantages/differences from faro, since that's also had published descriptions?
+
+### conclusion
+
+- Needs to be written (just a stub at present).
+
