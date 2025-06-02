@@ -22,7 +22,7 @@ This code, run in daytime, clusters newly detected DIAObjects to search for cand
 The high-level procedure is to link DIASource detections within a night (when on-sky motion is approximately linear) into {\em tracklets}, to link these tracklets across multiple nights (into tracks) and to fit the tracks with an orbital model to identify those tracks that are consistent with an asteroid orbit.
 The Rubin implementation of this software (Heinze et al., in prep.) is based on the HelioLinC algorithm \citep{2018AJ....156..135H}, with the key change being that the clustering is performed not on the sky, but in 3D space.
 It is designed to be capable of detecting 95\% of all Solar System objects whose tracklets are observed over three nights within a 15-night window.\footnote{Detailed criteria are specified in the LSST Observatory System Specification (OSS) document \texttt{OSS-REQ-0159} \citep{LSE-30}}.
-\texttt{heliolinx} is written in C++, but provides a Python API including a Task API.
+\texttt{heliolinx} is written in C++, but provides a Python API including a \texttt{Task} API.
 
 Candidate discoveries with high degree of certainty, as well as re-observations of already known objects, are reported to the Minor Planet Center (MPC) using the observation submission pipeline.
 The astrometric and photometric data are converted to the PSV variant of the Astrometric Data Exchange Standard \citep[ADES;][]{2017DPS....4911214C}, and submitted via a HTTPS POST API provided by the MPC.
