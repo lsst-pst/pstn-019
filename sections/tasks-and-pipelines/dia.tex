@@ -28,31 +28,29 @@ Finally, all configured measurement plugins are run, including HSM shape measure
 \subsubsection{Filtering Non-astrophysical DIASources}
 \label{sec:streaks}
 
-After the \texttt{detectAndMeasureDiaSource} step, some bogus DiaSources are expected due to reflective artificial objects orbiting the Earth.
-These may originate from, e.g., satellites or space debris, which are most numerous in low-Earth orbit.
-Objects in this region, with orbital altitude below 2000 km, move fast across the sky and can leave long streaks that cross one or more LSSTCam detectors.
-For more details on how LSSTCam will be affected by bright streaks, see \citet{2020AJ....160..226T,2022A&C....3900584H,2024SPIE13103E..1ZP,2024SPIE13103E..21S,2025arXiv250205418P}.
+A subset of the DIASources detected during \texttt{detectAndMeasureDiaSource} are expected to be non-astrophysical.
+These may be due to a variety of causes, including uncorrected instrument signatures; diffraction spikes and wings of bright stars; unmasked cosmic rays; algorithmic failures in background subtraction or image differencing; and satellites or space debris orbiting the Earth.
+The latter can leave long streaks that cross one or more LSSTCam detectors
+\citep{2020AJ....160..226T,2022A&C....3900584H}.
 
 To reduce the number of DiaSources originating from non-astrophysical sources, we apply a multi-prong approach:
 
-\begin{enumerate}
-\item Satellite catalog cross-reference via \texttt{sattle}.
-This removes known satellites from the DiaSource catalog and Alerts produced by the AP pipeline.
-It is not currently part of the DRP pipeline.
+\begin{itemize}
+\item During detection, we remove sources that have pixel flags characteristic of artifacts and unusable measurements, such as when all of the central pixels of a DIASource are saturated.
 
-\item Long trailed source detection and filtering.
-This is part of \texttt{ap\_association} (Section \ref{sec:association}), and runs in both the AP and DRP pipelines.
-It writes detected trailed DiaSources with lengths exceeding about 12 arcsec in a 30 second exposure to a separate catalog, and removes them from subsequent source association.
+\item In AP, we identify and filter out DIASources that are spatially and temporally coincident with the predicted positions of catalogued artificial satellites.
 
-\item Streak detection and masking.
-This is part of \texttt{meas\_algorithms} and is described in \ref{sec:MaskStreaksTask}.
-It runs during \texttt{detectAndMeasureDiaSource} (Section \ref{sec:detectAndMeasureDiaSource}) in both the AP and DRP pipelines, and creates a STREAK mask plane.
-STREAK mask information is not currently propagated to processed visit images or related catalogs, and it is only available for difference images and related catalogs.
-\end{enumerate}
+\item DIASources with negative forced fluxes on the direct science image characteristic of bad background subtraction are filtered.  This and subsequent catalog filtering is carried out by \texttt{ap\_association.FilterDiaSourceCatalogTask}.
 
-No pixels are altered or redacted as a result of any of the above.
-These approaches are intended to be complementary and enable science users to decide which DIASources to include in their analyses.
-In the future, we aim to also detect and mask glints, and we may need to use active scheduler avoidance for extremely bright satellites \citep{2022ApJ...941L..15H}, which is not part of the Science Pipelines.
+\item Trailed DIASources consistent with a rate of motion greater than 10 degrees per day are filtered.
+
+\item Blank sky sources used for noise estimation are removed from the output catalog.
+
+\end{itemize}
+
+No pixels are altered or redacted during the steps above.
+The machine-learned reliability score (\S\ref{sec:reliability}) provides a further diagnostic that users can apply to remove remaining artifacts.
+These approaches are intended to enable science users to control the tradeoff between completeness and purity during their analysis while ensuring that the pipelines and databases can maintain their required performance.
 
 \subsubsection{Source Association}
 \label{sec:association}
@@ -68,7 +66,7 @@ Both implementations use the Pessimistic Pattern Matcher B \citep{DMTN-031} to s
 DIAObjects and their associated DIASources are stored in the Alert Production Database (APDB; \S\ref{sec:apdb}).
 \end{itemize}
 
-After association, an additional filtering step may be applied to DIASources with no matched DIAObject of Solar System object (\S\ref{sec:solsys}).
+After association, an additional filtering step may be applied to DIASources with no matched DIAObject or Solar System object (\S\ref{sec:solsys}).
 Properties of the source such as its reliability score (\S\ref{sec:reliability}, source flags, or signal-to-noise cuts may be used to drop detections that are likely to be false detections and avoid creating erroneous new DIAObjects.
 
 \subsubsection{Alert Production Database (APDB)}
