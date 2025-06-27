@@ -28,24 +28,12 @@ To inform our ISR approach, we first designed a model of the instrument, display
 This model states the order in which the different known instrumental effects happen, from a photon hitting the CCD to the output ADC unit (ADU) signal.
 In turn, \texttt{isrTaskLSST} in \texttt{ip\_isr} sequentially applies corrections of these effects in the opposite order as their effects occur in the model, as we are attempting to remove the impact of those effects on the image.
 Such corrections are typically done by calling other \texttt{Tasks} (\textit{e.g.} overscan, crosstalk, etc.) also implemented in \texttt{ip\_isr}.
+Not shown in Fig. \ref{fig:isr_model} is a final amplifier offset (amp-offset) correction step.
+The amp-offset correction is applied to the output exposure at the end of \texttt{isrTaskLSST} to remove discontinuities in the background sky level across amplifier boundaries.
+For more details on the amp-offset correction, see Appendix \S\ref{sec:ampoffset}.
 
 Overall, \texttt{isrTaskLSST} takes a \texttt{raw} CCD exposure, and calibration products if available, and outputs a \texttt{Struct} containing the output exposure, the \texttt{post\_isr\_image} output exposure as well as its binned version for easier display, the exposure without interpolation and statistics on the output exposure.
 \texttt{IsrTaskLSSTConfig} defines the configurations used in this \texttt{Task}, with them set by default to their expected values to perform ISR on a typical LSSTCam exposure.
 Configuration parameters starting with \texttt{do} will typically correspond to an ISR step.
 These steps are turned on or off in the pipelines when producing the different calibration products.
 We have also developed \texttt{isrMockLSST} which simulates a raw exposure and corresponding calibration products and is used to test \texttt{isrTaskLSST}.
-
-\subsubsection{Amplifier Offset Correction}
-\label{sec:isr:ampoffset}
-The amplifier offset correction (commonly referred to as amp-offset correction, or pattern continuity correction) runs as part of the instrument signature removal (ISR) process.
-This correction is designed to address systematic discontinuities in background sky levels across amplifier boundaries.
-We believe that these discontinuities arise from electronic biases between adjacent amplifiers, persisting even after the application of dark and flat corrections.
-
-Drawing on the \texttt{PANSTARRS}' Pattern Continuity algorithm \citep{2020ApJS..251....4W}, our method aims to eliminate these offsets, thereby preventing problems such as background over-/under-subtraction at amplifier boundaries caused by discontinuities across the detector.
-
-The amp-offset algorithm initially computes a robust flux difference measure between two narrow strips on opposite sides of each amplifier-amplifier interface.
-Regions containing detected sources, or pixel data which have been masked for other reasons, are not considered.
-These amp-interface differences are stored in an amp-offset matrix; diagonal entries represent the number of neighboring amplifiers, and off-diagonal entries encode information about the associations between amplifiers.
-A complementary interface matrix encodes directional information for these associations.
-Using this information, a least-squares minimization is performed to determine the optimal pedestal value to be added or subtracted to each amp which would reduce the amp-offset between that amplifier and all of its neighboring amplifiers.
-This method is generalized to support 2D amplifier geometries within a detector, as with LSSTCam, incorporating length-based weighting into the matrices to account for amplifiers that are not square.
