@@ -1,4 +1,4 @@
-\section{Solar System Pipelines}
+\subsection{Solar System Pipelines}
 \label{sec:solsys}
 
 \begin{figure}
@@ -34,7 +34,7 @@ Following the replication, the Daily Data Products Pipeline recomputes the absol
 The replicated orbits and computed absolute magnitudes are utilized to predict positions (ephemerides) and magnitudes of solar system objects in subsequent night.
 To enable speedy retrieval (on order of 100msec or less) of all objects in a visit, we precompute on-sky locations of all solar system objects, fit Chebyshev polynomials, and build an efficient HEALpix-based index allowing for fast lookup.
 These ephemerides are then served to association pipelines described in Section~\ref{sec:solar}.
-This element of the pipeline is based on Sorcha (computation; Merritt et al. accepted) and \texttt{mpsky} \citep[fast lookup and serving;][]{mpsky}.
+This element of the pipeline is based on Sorcha \citep[computation;][]{2025arXiv250602804M} and \texttt{mpsky} \citep[fast lookup and serving;][]{mpsky}.
 While still being constructed, a similar service is planned for ``precovery'' -- the association of originally missed observations of solar system objects observed earlier in the survey.
 \\
 
