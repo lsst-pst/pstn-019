@@ -5,9 +5,9 @@
 
 \texttt{CalibrateImageTask}, from the \texttt{pipe\_tasks} package, performs ``single frame processing'' on a post-ISR (\S\ref{sec:isr}) single detector exposure.
 We repair and mask cosmic rays and defects, perform an initial set of detection (\S\ref{sec:detection}) and measurement (\S\ref{sec:measurement}) passes to estimate the image Point Spread Function (PSF), compute an astrometric (\S\ref{sec:astrometryTask}) and photometric (\S\ref{sec:photoCal}) calibration, and compute summary statistics on the resulting nanojansky-calibrated exposure and catalog.
-The primary user-facing outputs of this task are the photometrically calibrated, background-subtracted \texttt{preliminary\_visit\_image}, the calibrated \texttt{preliminary\_visit\_image\_background} that was subtracted from it, and \texttt{single\_visit\_star\_unstandardized}, a catalog of bright point-like sources that were used as inputs to calibration, with only a small number of measurements performed on them.
+The primary user-facing outputs of this task are the photometrically calibrated, background-subtracted \texttt{preliminary\_\-visit\_\-image}, the calibrated \texttt{preliminary\_\-visit\_\-image\_\-background} that was subtracted from it, and \texttt{single\_\-visit\_\-star\_\-unstandardized}, a catalog of bright point-like sources that were used as inputs to calibration, with only a small number of measurements performed on them.
 As this task only processes a single detector, it is used by both DRP (\S\ref{sec:drp_pipe}) and AP (\S\ref{sec:ap_pipe}), though with different configurations (AP is focused on latency, while DRP performs more measurements).
-For more details of the exact steps performed in this task, see the \href{https://pipelines.lsst.io/v/daily/modules/lsst.pipe.tasks/tasks/lsst.pipe.tasks.calibrateImage.CalibrateImageTask.html}{CalibrateImageTask pipelines documentation}.
+For more details of the exact steps performed in this task, see the \href{https://pipelines.lsst.io/v/daily/modules/lsst.pipe.tasks/tasks/lsst.pipe.tasks.calibrateImage.CalibrateImageTask.html}{\texttt{Calibrate\-Image\-Task} pipelines documentation}.
 
 \subsubsection{ReprocessVisitImage}
 \label{sec:ReprocessVisitImage}
