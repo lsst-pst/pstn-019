@@ -41,30 +41,21 @@ After each source is measured, the task replaces its pixels with noise again, al
 \subsubsection{Aperture Corrections}
 \label{sec:apcorr}
 
-TODO
+With many different measures of photometry available for both stars and galaxies, establishing a consistent internal photometric system is a challenge, even before we consider the problem (covered in \S\ref{sec:calibration}) of mapping that system to absolute photometry via an external reference catalog.
 
-% From DP1 release notes:
+In addition, standard PSF modeling (\S\ref{sec:psf_modeling}) generally focuses on the core of the true PSF, which is only adequate for photometry for galaxies and fainter stars (while the wings of the PSF matter for bright galaxies as well, the semi-arbitrary definition of the boundary of such galaxies is typically a bigger source of photometry uncertainty).
 
-Rubin processing uses aperture corrections to ensure that different photometry estimators produce consistent results on point sources.
-These corrections are measured by applying different algorithms to the same set of bright stars on each single-visit image and interpolating the ratio of each algorithm to a standard one (a background-compensated top-hat aperture flux), which is then used for all photometric calibration.
-All fluxes other than the standard algorithm's are then multiplied by the interpolated flux ratio.
-Aperture corrections on co-adds are computed by averaging the single-detector ratios with the same weights that were used to combine images.
+Our solution to both of these problems is \emph{aperture corrections}, in which we apply multiple photometry algorithms to a suite of isolated bright stars on each detector (by default, the same ones used to build the PSF model), compute the ratio of each algorithm to a standard one (a background-compensated top-hat aperture flux), and then interpolate that ratio using Chebyshev polynomials to other positions on the detector.
+The measured fluxes of other objects are then scaled by that interpolated ratio.
+This essentially forces all algorithms to produce the same results (on average) on stars.
 
-This scheme has several problems:
+It is clear that this approach is not exactly correct for galaxies or other extended sources in general, but we believe it is usually better than not correcting the galaxy photometry at all (it is, after all, the right thing to do for barely-resolved galaxies).
 
-\begin{itemize}
-
-    \item These aperture corrections are well-defined for point sources only, but we still apply them for most of our galaxy-focused photometry algorithms (the \texttt{sersic\_*} fluxes are the sole exception), since this at least makes them well-calibrated for poorly-resolved galaxies.
-
-    \item Co-adding apertures with the same weights as the images is only correct in the limit that the images have the same PSF.
-    For fixed-aperture photometry a different combination should be used (and will be used in future data releases, if we use this scheme at all), and for PSF-dependent photometry no formally correct combination is possible.
-
-    \item Ratios of fluxes on even bright stars can be very noisy, and in some cases the aperture correction is a significant fraction of our error budget.
-
-\end{itemize}
-
-Improving our approach to aperture corrections is a research project; we are not happy with the current situation, but have not yet identified a satisfactory alternative.
-
+These scheme has two other serious limitations.
+The first is that many of the measurements we need to correct are noisy, even on bright stars, and the interpolated ratios can add significant uncertainty into the final fluxes.
+The second is that aperture corrections cannot in generally be coadded along with the images (unlike PSF models); they are not a linear function of the data.
+Coadding the ratios *is* a valid first-order approximation in the limit where the photometry does not depend on the PSF and the PSFs of the contributing images are similar, and this is what we do at present, but we cannot currently  quantify the error this approximation introduces.
+Our understanding is that using much larger PSF models is the cleanest solution to these problems, but the additional degrees of freedom that would entail may be hard to constrain with the information available.
 
 \subsubsection{Sky Objects}
 

@@ -1,5 +1,7 @@
 \subsection{PSF Modeling}
 
+\label{sec:psf_modeling}
+
 Point-spread function (PSF) modeling in the LSST Science Pipelines is largely delegated to external libraries, albeit with considerable wrapper code to adapt them to a common interface.
 We use both a heavily modified version of \texttt{PSFEx} \citep{2011ASPC..442..435B} and \texttt{Piff} \citep{2021ascl.soft02024J,2021MNRAS.501.1282J} in our production pipelines.
 \texttt{PSFEx} is faster, and is used in nightly alert processing and as to obtain a preliminary model in data release processing, while \texttt{Piff} is used in a second, more careful round of PSF estimation in data release processing for better accuracy (especially for weak gravitational lensing).

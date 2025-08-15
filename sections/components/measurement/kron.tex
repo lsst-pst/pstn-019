@@ -1,10 +1,8 @@
 \subsubsection{Kron Photometry}
 \label{sec:kron}
 
-Kron photometry \citep{1980ApJS...43..305K} is handled by the \texttt{meas\_extensions\_photometryKron} package.
-The aperture used for the fluxes is $2.5 \times R1$ where $R1$ is the luminosity weighted radius (also called ``first moment'').
-The Kron radius is also available.
-In this case of LSST pipeline output, the Kron flux is not corrected for light that is emitted outside of the Kron aperture.
-While in many cases it will collect the majority of light, it will not be as accurate as the cModel (\S\ref{sec:cmodel}) for science cases requiring total flux.
+The \texttt{meas\_extensions\_photometryKron} implements Kron photometry \citep{1980ApJS...43..305K}.
+Our Kron implementation uses a scaled version of the HSM shapes (See \ref{sec:hsm}) to form an elliptical aperture, and then scales to $2.5 \times R_{\mathrm{text}}$, where $R_{\mathrm{text}}$ is the first radial moment.
 
-TODO
+Our implementation does not correct for the PSF in any way; this means its outputs should only be used for very well-resolved galaxies.
+We do not expect our Kron photometry to be competitive with most of our other galaxy photometry algorithms in robustness or precision, but it may be useful for comparison with external measurements.
