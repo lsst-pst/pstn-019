@@ -1,4 +1,12 @@
 \subsection{\texttt{drp\_pipe}}
 \label{sec:drp_pipe}
 
+The \texttt{drp\_pipe} package defines the pipeline(s) to be used for the annual Data Release Production processing.
+These pipelines include instrument signature removal (\S\ref{sec:isr}), calibration (\S\ref{sec:calibration}), measurement plugins (\S\ref{sec:measurement}), image differencing (\S\ref{sec:dia}), source association (\S\ref{sec:association}), and global calibration (\S\ref{sec:calibration})
+Some of these tasks are shared with the pipelines in \texttt{ap\_pipe}, but are configured to prioritize accuracy over speed.
+
+\texttt{drp\_pipe} currently has pipeline variants for LSSTCam, LSSTComCam, LATISS, the Rubin Observatory simulators, Hyper-SuprimeCam, and the Dark Energy Camera.
+Because these variants serve as testbeds for DRP-specific algorithms and configuration settings, they are, as much as possible, the ``same'' pipeline, differing almost entirely in loading instrument defaults from \texttt{obs} packages (\S\ref{sec:obs_packages}).
+The only other customization is an extra task for handling DECam's inter-chip crosstalk, which does not have an equivalent for Rubin instruments.
+
 TODO

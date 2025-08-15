@@ -1,4 +1,39 @@
 \subsubsection{CModel Galaxy Fitting}
 \label{sec:cmodel}
 
+Composite Model (CModel) is a model fitting approach in which a pure exponential and pure de Vaucouleur are each fit separately, and then their linear combination is fit while the ellipse parameters are held fixed.
+This model aims to approximate (or model) all of the light coming from objects and is implemented in the \texttt{meas\_modelfit} package.
+
+The CModel approach to model-fit galaxy photometry -- also known as the ``Sloan Swindle''' -- is an approximation to bulge+disk or Sersic model fitting that follows the following sequence:
+
+\begin{itemize}
+\item Fit a PSF-convolved elliptical exponential (Sersic n=1) model to the data.
+\item Fit a PSF-convolved elliptical de Vaucouleurs (Sersic n=4) model to the data.
+\item  Holding the positions and ellipses of both models fixed (only allowing the amplitudes to vary),  fit a linear combination of the two models.
+\end{itemize}
+
+ In the limit of pure bulge or pure disk galaxies, this approach yields the same results as a more principled bugle+disk or Sersic fit.
+ For galaxies that are a combination of the two components (or have more complicated morphologies, as of course all real galaxies do), it provides a smooth transition between the two models, and the fraction of flux in each of the two parameters is correlated with Sersic index and the true bulge-disk ratio.
+ Most importantly, this approach yielded good galaxy colors in the SDSS data processing.
+
+ In this implementation of the CModel algorithm, we actually have 4 stages:
+
+ \begin{enumerate}
+
+ \item In the ``initial''' stage, we fit a very approximate PSF-convolved elliptical model, just to provide a good starting point for the subsequence exponential and de Vaucouleur fits.
+ Because we use shapelet/Gaussian approximations to convolved models with the PSF, model evaluation is much faster when only a few Gaussians are used in the approximation, as is done here.
+ In the future, we may also use a simpler PSF approximation in the initial fit, but this is not yet implemented.
+ We also have not yet researched how best to make use of the initial fit (i.e., how does the initial best-fit radius typically relate to the best-fit exponential radius?), or what convergence criteria should be used in the initial fit.
+ Following the initial fit, we also revisit the question of which pixels should be included in the fit.
+
+ \item In the ``exp''' stage, we start with the ``initial'' fit results, and fit an elliptical exponential profile.
+
+ \item In the ``dev'' stage, we start with the ``initial'' fit results, and fit an elliptical de Vaucouleur profile.
+
+ \item Holding the ``exp'' and ``dev'' ellipses fixed, we fit a linear combination of those two profiles.
+
+ \end{enumerate}
+
+ In all of these steps, the centroid is held fixed at a given input value (take from the slot centroid when run by the measurement framework).
+
 TODO
