@@ -58,10 +58,21 @@ Coadding the ratios *is* a valid first-order approximation in the limit where th
 Our understanding is that using much larger PSF models is the cleanest solution to these problems, but the additional degrees of freedom that would entail may be hard to constrain with the information available.
 
 \subsubsection{Sky Objects}
-
 \label{sec:sky-objects}
 
-TODO
+Sky objects are a special class of object that are not detected in the image being measured, but rather placed quasi-randomly in regions that are likely to be free of real sources.
+They're used to measure the sky background and noise properties of the image, and to assist in setting dynamic detection thresholds (see ref{sec:DynamicDetectionTask}).
+After these pseudo-objects are placed, they're measured and processed in the same way as a true object.
+Their measurements are included in output catalogs, with an accompanying flag set to indicate that these are sky objects.
+
+By default, sky objects are placed in regions of the sky whereby no detection footprints or bad pixels are located within an 8-pixel radius.
+To generate initial candidate positions, we use the quasi-random Halton sequence number generator with a seed based on the image ID.
+This is a deterministic sequence that mimics random sampling, but avoids clumping and gaps that can occur with true random sampling.
+Doing so allows us to generate a more unbiased sampling of the entire sky background, often with fewer required sky objects.
+The initial list of candidate positions is normally larger than the requested number of sky objects, by default of order 5 times.
+Attempts are made at placing sky objects iteratively until the requested number of sky objects is reached or the candidate list is exhausted.
+Typically, for visit-level detectors and coadd-level images, we place 100 sky objects.\footnote{When these pseudo-sources are placed into visit-level data, we instead refer to them as sky sources.}
+Within the \texttt{DynamicDetectionTask} a larger number of temporary sky objects (default 1000) are placed in order to generate an updated detection threshold.
 
 \subsubsection{Standard Measurement Plugins}
 
