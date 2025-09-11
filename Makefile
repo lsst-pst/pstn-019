@@ -19,6 +19,7 @@ $(DOCNAME).pdf: $(tex) local.bib authors.tex
 authors.tex:  authors.yaml
 	python3 $(TEXMFHOME)/../bin/db2authors.py -m aas7 > authors.tex
 
+
 .PHONY: clean
 clean:
 	latexmk -c
@@ -26,3 +27,5 @@ clean:
 	rm -f $(DOCNAME).pdf
 
 .FORCE:
+authors.yaml: 
+	python3 $(TEXMFHOME)/../bin/makeAuthorListsFromGoogle.py --signup 4 -p 1CGxjpPuyNJ_gXRHTvkEF0qeI0XedQ-GQgbmyzWFLSUE "PSTN-019!A2:E1000"
