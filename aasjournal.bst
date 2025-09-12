@@ -211,6 +211,13 @@ ENTRY
 
 INTEGERS { output.state before.all mid.sentence after.sentence after.block }
 
+FUNCTION {add.space.if.nonempty}
+{ duplicate$ empty$
+    { pop$ "" }      % if top-of-stack is empty, push empty (no space)
+    { " " * }        % else append a space
+  if$
+}
+
 FUNCTION {init.state.consts}
 { #0 'before.all :=
   #1 'mid.sentence :=
@@ -1596,7 +1603,7 @@ INTEGERS { labnameptr }
 FUNCTION {format.lab.names}
 { 's :=
   #1 'labnameptr :=
-  s labnameptr forname.format.string format.name$ add.blank%first.initial
+  s labnameptr forname.format.string format.name$ add.space.if.nonempty
   s labnameptr surname.format.string format.name$  *
   s num.names$ duplicate$
   #2 >
@@ -1611,7 +1618,7 @@ FUNCTION {format.lab.names}
             }
             { " \& " *
 	      #2 'labnameptr :=
-	      s labnameptr forname.format.string format.name$ add.blank%first.initial
+	      s labnameptr forname.format.string format.name$ add.space.if.nonempty
 	      s labnameptr surname.format.string format.name$  *
               * }
           if$
