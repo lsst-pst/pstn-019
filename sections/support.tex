@@ -2,7 +2,7 @@
 \label{sec:support}
 
 The LSST Science Pipelines software is written in Python with C++ used for high-performance algorithms and for core classes that are usable in both languages.
-We use Python 3 \citep[having ported from python 2,][currently with a minimum version of Python 3.12]{2020ASPC..522..541J}, and the C++ layer can use C++17 features with pybind11 being used to provide the interface from Python to C++.
+We use Python 3 \citep[having ported from python 2,][currently with a minimum version of Python 3.12]{2020ASPC..522..541J}, and the C++ layer can use C++20 features with \texttt{pybind11} being used to provide the interface from Python to C++.
 Additionally, the C++ layer uses \texttt{ndarray} to allow seamless passing of C++ arrays to and from Python \texttt{numpy} arrays.
 This compatibility with \texttt{numpy} is important in that it makes LSST data structures available to standard Python libraries such as Scipy and Astropy \citep{2016SPIE.9913E..0GJ,2018AJ....156..123A}.
 
