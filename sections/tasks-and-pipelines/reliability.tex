@@ -1,8 +1,6 @@
 \subsubsection{Reliability Scoring}
 \label{sec:reliability}
 
-TODO: move this out of the measurement subsection
-
 The \texttt{meas\_transiNet} package determines a numerical score for input cutout images using pre-trained machine-learning models.
 Image differencing may produce false detections, so time-domain surveys chacteristically use machine learning classifiers to distinguish astrophysical sources from artifacts \citep[``Real/Bogus;'' e.g.,][]{2012PASP..124.1175B, 2015AJ....150...82G, 2019MNRAS.489.3582D}.
 
@@ -14,4 +12,4 @@ These images are concatenated, batched into Torch blobs, and passed to the model
 Either CPU or GPU backends may be used for inference.
 The output of the task is a single float ranging from 0--1 for each cutout triplet, with higher values indicating that the DIASource is more likely to be astrophysical.
 These reliability scores are then joined with the DIASource catalogs by a later transformation task.
-Detailed discussion of the model architecture, training, and performance will be presented in T.\ Acero Cuellar et.\ al (in prep.).
+Detailed discussion of the model architecture, training, and performance will be presented in T.\ Acero-Cuellar et al.\ (in prep.).
