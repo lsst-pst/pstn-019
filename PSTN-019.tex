@@ -48,8 +48,8 @@
 \label{sec:components}
 
 Most of the key algorithms we have implemented for processing Rubin data are used in multiple pipelines, and in many cases an algorithmic component is used multiple times within a single pipeline.
-For the most part, these reusable algorithms are implemented as regular \texttt{Task} objects, and these are combined in higher-level \texttt{PipelineTasks} discussed later in \ref{sec:tasks-and-pipelines}.
-In other cases, the algorithm is inseparable from from its I/O, and is implemented directly as a \texttt{PipelineTask}.
+For the most part, these reusable algorithms are implemented as regular \texttt{Task} objects, and these are combined in higher-level \texttt{PipelineTasks} discussed later in \secref{sec:tasks-and-pipelines}.
+In other cases, the algorithm is inseparable from its I/O, and is implemented directly as a \texttt{PipelineTask}.
 This section includes examples of both.
 
 % Each of these is a subsection.
@@ -65,7 +65,7 @@ This section includes examples of both.
 \section{High-level Tasks and Pipelines}
 \label{sec:tasks-and-pipelines}
 
-In this section, we describe how the reusable components of \ref{sec:components} are assembled into pipelines for generating nightly alerts immediately from just-observed data, producing cumulative data releases roughly every year, and creating calibrations that are input to both on many cadences in between.
+In this section, we describe how the reusable components of \secref{sec:components} are assembled into pipelines for generating nightly alerts immediately from just-observed data, producing cumulative data releases roughly every year, and creating calibrations that are input to both on many cadences in between.
 This also includes some description of algorithmic details that are specific to certain pipelines.
 
 % Each of these is a subsection.
@@ -89,7 +89,7 @@ This also includes some description of algorithmic details that are specific to 
 \input{sections/conclusions}
 
 \begin{acknowledgments}
-This material is based upon work supported in part by the National Science Foundation through Cooperative Agreements AST-1258333 and AST-2241526 and Cooperative Support Agreements AST-1202910 and 2211468 managed by the Association of Universities for Research in Astronomy (AURA), and the Department of Energy under Contract No.\ DE-AC02-76SF00515 with the SLAC National Accelerator Laboratory managed by Stanford University.
+This material is based upon work supported in part by the National Science Foundation through Cooperative Agreements AST-1258333 and AST-2241526 and Cooperative Support Agreements AST-1202910 and AST-2211468 managed by the Association of Universities for Research in Astronomy (AURA), and the Department of Energy under Contract No.\ DE-AC02-76SF00515 with the SLAC National Accelerator Laboratory managed by Stanford University.
 Additional Rubin Observatory funding comes from private donations, grants to universities, and in-kind support from LSST-DA Institutional Members.
 This research has made use of NASA's Astrophysics Data System Bibliographic Services.
 \end{acknowledgments}

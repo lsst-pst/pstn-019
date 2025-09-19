@@ -7,23 +7,23 @@ In the nightly alert processing, we expect to be able to use a high-density refe
 In data release processing, a much more sophisticated final astrometric and photometric transform are then fit to catalogs from multiple epochs at once.
 
 The Rubin pipeline uses the Starlink AST library \citep{2016A&C....15...33B} for persisting, composing, and evaluating coordinate transformations.
-We have our own \texttt{Bounded\-Field} class in the \texttt{afw} package for representing (among other things) photometric calibrations, usually with Chebyshev polynomials.
+We have our own class in the \texttt{afw} package for representing (among other things) photometric calibrations, usually with Chebyshev polynomials.
 These can also be multiplied and even mixed with AST-backed transform objects to represent pixel-area corrections.
 
 \subsubsection{Single-Frame Astrometric Calibration}
 \label{sec:astrometryTask}
 
-Single-frame astrometric fits are performed by \texttt{Astrometry\-Task} in \texttt{meas\_astrom}.
+Single-frame astrometric fits are performed by a task in the \texttt{meas\_astrom} package.
 This task matches a catalog of sources detected and measured on an image to a reference catalog and solves for the \textit{World Coordinate System} (WCS) of the image.
 Matching and WCS fitting are performed iteratively, to reject astrometric outliers.
-The matcher is either the optimistic (\texttt{Match\-Optimistic\-BTask}) or pessimistic (\texttt{Match\-Pessimistic\-BTask}) matcher from \citet{2007PASA...24..189T}, with the pessimistic matcher used by default due to better performance on dense fields; see \citep{DMTN-031} for details.
-The WCS fitter can be a simple affine model on top of fixed camera geometry, as in \texttt{Fit\-Affine\-Wcs\-Task}, or a FITS TAN-SIP WCS \citep{2005ASPC..347..491S}, as in \texttt{Fit\-Tan\-Sip\-Wcs\-Task} or \texttt{Fit\-Sip\-Distortion\-Task}.
-We default to fitting the simple affine model because we have good distortion models for most of the instruments we support, often from previous fitting with \texttt{gbdes} (\S\ref{sec:gbdes}), and hence we do not need the extra degrees of freedom provided by a TAN-SIP model.
+The matcher is either the optimistic or pessimistic matcher from \citet{2007PASA...24..189T}, with the pessimistic matcher used by default due to better performance on dense fields; see \citep{DMTN-031} for details.
+The WCS fitter can be a simple affine model on top of fixed camera geometry or a FITS TAN-SIP WCS \citep{2005ASPC..347..491S}.
+We default to fitting the simple affine model because we have good distortion models for most of the instruments we support, often from previous fitting with \texttt{gbdes} \secrefp{sec:gbdes}, and hence we do not need the extra degrees of freedom provided by a TAN-SIP model.
 
 \subsubsection{GBDES}
 \label{sec:gbdes}
 
-The final astrometric solution is fit by \texttt{Gbdes\-Astrometric\-Fit\-Task} in \texttt{drp\_tasks}, which runs the \texttt{wcsfit} fitter from the \texttt{gbdes} package \citep{2022ascl.soft10011B,2017PASP..129g4503B} on the ensemble of images in a given band overlapping with a given tract.
+The final astrometric solution is fit by a task in \texttt{drp\_tasks}, which runs the \texttt{wcsfit} fitter from the \texttt{gbdes} package \citep{2022ascl.soft10011B,2017PASP..129g4503B} on the ensemble of images in a given band overlapping with a given tract.
 This task fits a per-detector polynomial distortion model, a per-exposure polynomial distortion model, and position for all the isolated star sources in the component images.
 This is done by first associating all isolated point sources in the input images and matching them with an external reference catalog.
 The model is then fit by iterating between fitting the per-detector and per-exposure polynomial models, and recalculating the best-fit solution for the object positions.
@@ -31,17 +31,18 @@ The model is then fit by iterating between fitting the per-detector and per-expo
 The task can be configured to fit either a two-parameter (position on the sky) or five-parameter (position, proper motion, and parallax) solution for the input objects.
 Correcting for differential chromatic refraction is another configurable option.
 
-There are also options to run variants of the main \texttt{Gbdes\-Astrometric\-Fit\-Task}: \texttt{Gbdes\-Astrometric\-Multiband\-Fit\-Task} fits images from multiple bands at once, in which case the per-detector distortion model is also per-band; \texttt{Gbdes\-Global\-Astrometric\-Fit\-Task} removes the restriction to a single tract and fits images regardless of their location on the sky by splitting the images into contiguous groups; \texttt{Gbdes\-Global\-Astrometric\-Multiband\-Fit\-Task} combines these two options.
+There are also options to run variants of the main task: one that fits images from multiple bands at once, in which case the per-detector distortion model is also per-band; one that removes the restriction to a single tract and fits images regardless of their location on the sky by splitting the images into contiguous groups; and one that combines these two options.
 
 Lastly, the per-detector polynomial model fit by the task is also used to build a camera distortion model, which can be fed back into single-frame modeling or into the \texttt{gbdes} fit for other data.
-For use in single-frame modeling, the \texttt{Build\-Camera\-From\-Astrometry\-Task} subtask is used to build an \texttt{afw} Camera object out of the native polynomial model.
+For use in single-frame modeling, a subtask is used to build an \texttt{afw} \texttt{Camera} object out of the native polynomial model.
 
+Once the astrometric model has been calculated it is exported into a form understood by the AST library.
 A full description of astrometric calibration in the pipeline is given in \citet{DMTN-266}.
 
 \subsubsection{Single-Frame Photometric Calibration}
 \label{sec:photoCal}
 
-Single frame photometric calibration is performed by \texttt{Photo\-Cal\-Task}, in the \texttt{pipe\_tasks} package.
+Single frame photometric calibration is performed by a task in the \texttt{pipe\_tasks} package.
 The catalog to be calibrated is down-selected to contain only bright ($S/N>10$), well measured, PSF-like sources which are then matched to a reference catalog.
 The matched sources have their instrumental fluxes converted into rough magnitudes, which are iteratively compared with the reference catalog magnitudes using a sigma-clipping algorithm, to fit a single magnitude zero point to the whole image.
 Precomputed color terms can also be applied to the reference catalog fluxes when needed.
@@ -54,18 +55,18 @@ This global calibration algorithm makes use of repeated observations of stars in
 In this way we simultaneously constrain the atmospheric model as well as standardized top-of-atmosphere (TOA) star fluxes over a wide range of star colors, including full chromatic corrections from the instrument and atmosphere.
 
 Running \texttt{fgcmcal} first requires generating a look-up table.
-The input to the look-up table includes the effect of a MODTRAN~\citep{1999SPIE.3756..348B} atmospheric model at the elevation of the observatory, as well as the throughput as a function of wavelength and position from the optics, filters, and detector quantum efficiency.
+The input to the look-up table includes the effect of a MODTRAN \citep{1999SPIE.3756..348B} atmospheric model at the elevation of the observatory, as well as the throughput as a function of wavelength and position from the optics, filters, and detector quantum efficiency.
 The quality of the output (in terms of repeatability of bright isolated stars across a wide range of colors) depends on the knowledge of the instrumental throughput.
 
 The primary goal of \texttt{fgcmcal} is to provide a uniform relative photometric calibration of the survey.
 For ``absolute'' (relative) calibration, a reference catalog can be used as an additional constraint on the fit.
 Thus, the overall throughput output by \texttt{fgcmcal} depends on the reference catalog.
-This can be checked with (e.g.) specific white dwarfs or CALSPEC~\citep{2007ASPC..364..315B} stars in the survey.
+This can be checked with, for example, specific white dwarfs or CALSPEC \citep{2007ASPC..364..315B} stars in the survey.
 However, the relative spatial and chromatic calibration of the \texttt{fgcmcal} calibration means that the absolute calibration reduces to a set of 6 numbers (one for each band, or one overall throughput and 5 absolute colors).
 
 \subsubsection{jointcal}
 \label{sec:jointcal}
 
-\texttt{jointcal} fits both astrometry and photometry across multiple exposures of large mosaic cameras, fitting for both the true star positions/fluxes, and the distortions caused by the telescope and instrument.
+The \texttt{jointcal} packages provides an algorithm that fits both astrometry and photometry across multiple exposures of large mosaic cameras, fitting for both the true star positions/fluxes, and the distortions caused by the telescope and instrument.
 \texttt{jointcal} is no longer used used by the LSST camera pipeline, but is available for use by cameras that are not supported by \texttt{gbdes} and/or \texttt{fgcmcal} (for example, DECam).
 More details on the \texttt{jointcal} algorithm are available in \citet{DMTN-036}.

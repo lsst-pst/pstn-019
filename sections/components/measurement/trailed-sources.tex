@@ -1,11 +1,6 @@
-\subsection{Trailed Sources}
+\subsubsection{Trailed Sources}
 \label{sec:trailed-sources}
-
-TODO: rewrite this to avoid verbatim-copy and check for accuracy.
 
 Implemented in the \texttt{meas\_extensions\_trailed\-Sources} package, this component measures the properties of trailed sources, such as those caused by moving objects like asteroids or satellites.
 It measures the length, angle, flux, centroid, and end points of a trailed source using the \citet{2012PASP..124.1197V} model.
-This plugin is designed to refine the measurements of trail length, angle, and end points from \texttt{NaivePlugin}, and of flux and centroid from previous measurement algorithms.
-\citet{2012PASP..124.1197V} derive a model for the flux in a given image pixel by convolving an axisymmetric Gaussian with a line.
-The model is parameterized by the total flux, trail length, angle from the x-axis, and the centroid.
-The best estimates are computed using a chi-squared minimization.
+This plugin is designed to refine the measurements of trail length, angle, and end points and of flux and centroid from previous measurement algorithms.

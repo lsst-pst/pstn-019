@@ -3,18 +3,16 @@
 
 Image subtraction for transient/variable detection and analysis is implemented in the \texttt{ip\_diffim} package, and is divided into three steps.
 While the image subtraction system could be used to work on other combinations, we primarily focus on subtracting a ``template'' coadd from a single-visit ``science'' image.
-First, the template coadd is warped by \texttt{GetTemplateTask} to the WCS and bounding box of the science image.
-Then the warped template is subtracted from the science image using one of several available algorithms in \texttt{SubtractImagesTask}, which produces a temporary difference image.
-Finally, peaks are detected on the difference image and DIASources (``difference image analysis sources") are measured in \texttt{DetectAndMeasureTask}.
+First, the template coadd is warped to the WCS and bounding box of the science image.
+Then the warped template is subtracted from the science image using one of several available algorithms, which produces a temporary difference image.
+Finally, peaks are detected on the difference image and DIASources (``difference image analysis sources") are measured.
 The final difference image with updated mask planes is written along with the DIASource catalog.
 
 \subsubsection{PSF Matching and Subtraction}
 
-The primary implementation of image subtraction used by \texttt{SubtractImagesTask} is based on \citet{1998ApJ...503..325A}, and uses spatially-varying Gauss-Hermite basis functions for the fit.
+The primary implementation of image subtraction is based on \citet{1998ApJ...503..325A}, and uses spatially-varying Gauss-Hermite basis functions for the fit.
 The PSF-matching kernel can be constructed for either the science or the template image, and the resulting difference image is decorrelated \citet{DMTN-021}.
 Optionally, the science image can be preconvolved with its own PSF before PSF-matching, producing a Score image analogous to \citet{2016ApJ...830...27Z}.
-
-\input{sections/tasks-and-pipelines/reliability}
 
 \subsubsection{DIA Detection and Measurement}
 \label{sec:detectAndMeasureDiaSource}
@@ -25,7 +23,7 @@ Contiguous pixels around each peak that are statistically brighter than the back
 Footprints that contain both a positive and a negative peak are fit as dipoles.
 The dipole fit simultaneously solves for the negative and positive lobe centroids and fluxes using non-linear least squares minimization.
 DiaSources that are not classified as dipoles instead fall back on an SDSS-style centroid \citep{2003AJ....125.1559P}.
-Finally, all configured measurement plugins are run, including HSM shape measurements (Section~\ref{sec:hsm}) and a trailed-source fit.
+Finally, all configured measurement plugins are run, including HSM shape measurements \secrefp{sec:hsm} and a trailed-source fit \secrefp{sec:trailed-sources}.
 
 \subsubsection{Filtering Non-astrophysical DIASources}
 \label{sec:streaks}
@@ -42,7 +40,8 @@ To reduce the number of DiaSources originating from non-astrophysical sources, w
 
 \item In AP, we identify and filter out DIASources that are spatially and temporally coincident with the predicted positions of catalogued artificial satellites.
 
-\item DIASources with negative forced fluxes on the direct science image characteristic of bad background subtraction are filtered.  This and subsequent catalog filtering is carried out by \texttt{ap\_association.FilterDiaSourceCatalogTask}.
+\item DIASources with negative forced fluxes on the direct science image characteristic of bad background subtraction are filtered.
+      This and subsequent catalog filtering is carried out by a task in the \texttt{ap\_association} package.
 
 \item Trailed DIASources consistent with a rate of motion greater than 10 degrees per day are filtered.
 
@@ -51,44 +50,46 @@ To reduce the number of DiaSources originating from non-astrophysical sources, w
 \end{itemize}
 
 No pixels are altered or redacted during the steps above.
-The machine-learned reliability score (\S\ref{sec:reliability}) provides a further diagnostic that users can apply to remove remaining artifacts.
+The machine-learned reliability score \secrefp{sec:reliability} provides a further diagnostic that users can apply to remove remaining artifacts.
 These approaches are intended to enable science users to control the tradeoff between completeness and purity during their analysis while ensuring that the pipelines and databases can maintain their required performance.
+
+\input{sections/tasks-and-pipelines/reliability}
 
 \subsubsection{Source Association}
 \label{sec:association}
 
 The \texttt{ap\_association} package contains multiple tasks for standardizing newly detected DIASources and associating them into ``DIAObjects``.
-Standardization converts the output catalogs from difference imaging to the format specified in \texttt{sdm\_schemas} (\S\ref{sec:schemas}), and applies filtering consistent with \citep{DMTN-199}.
-Once DIASource catalogs are standardized, they are associated to DIAObjects in either of two modes: Data Release Production (DRP) or Alert Production (AP).
+Standardization converts the output catalogs from difference imaging to the format specified in \texttt{sdm\_schemas} \secrefp{sec:schemas}, and applies filtering consistent with \citep{DMTN-199}.
+Once DIASource catalogs are standardized, they are associated to DIAObjects in either of two modes: DRP or AP.
 Both implementations use the Pessimistic Pattern Matcher B \citep{DMTN-031} to score and match DIASources, but differ in how DIAObjects are stored and how visits are ordered.
 
 \begin{itemize}
 \item DRP association loads all DIASource catalogs from a set time period overlapping a single patch at once, and creates new DIAObjects for matched DIASources from all visits simultaneously.
 \item AP association processes a single visit at a time, and creates new DIAObjects incrementally from unassociated DIASources.
-DIAObjects and their associated DIASources are stored in the Alert Production Database (APDB; \S\ref{sec:apdb}).
+DIAObjects and their associated DIASources are stored in the Alert Production Database (APDB; \secref{sec:apdb}).
 \end{itemize}
 
-After association, an additional filtering step may be applied to DIASources with no matched DIAObject or Solar System object (\S\ref{sec:solsys}).
-Properties of the source such as its reliability score (\S\ref{sec:reliability}, source flags, or signal-to-noise cuts may be used to drop detections that are likely to be false detections and avoid creating erroneous new DIAObjects.
+After association, an additional filtering step may be applied to DIASources with no matched DIAObject or Solar System object \secrefp{sec:solsys}.
+Properties of the source such as its reliability score \secrefp{sec:reliability}, source flags, or signal-to-noise cuts may be used to drop detections that are likely to be false detections and avoid creating erroneous new DIAObjects.
 
 \subsubsection{Alert Production Database (APDB)}
 \label{sec:apdb}
 
 The Alert Production Database \citep[APDB;][]{DMTN-293}) supports SQL, Postgres, and Cassandra database formats.
-The previous history of DIAObjects, DIASources, and DiaForcedSources for the region containing the science image is loaded with \texttt{LoadDiaCatalogsTask}, which are passed to \texttt{DiaPipelineTask} for association.
+The previous history of DIAObjects, DIASources, and DiaForcedSources for the region containing the science image are loaded and passed to a task for association.
 Loading is split from the association step to enable preloading of catalogs from the database in Prompt Processing during the interval when the next visit has been scheduled but the images have not yet been taken.
 When AP-style association is run outside of Prompt Processing, it is therefore essential to process all association tasks in strict visit order to prevent loading catalogs from the APDB prematurely and losing DiaObject history in association.
 
 \subsubsection{Alert Generation}
 \label{sec:alerts}
 
-In order to to enable real-time science, the AP pipelines generate alert packets for each detected DIASource.
+In order to enable real-time science, the AP pipelines generate alert packets for each detected DIASource.
 These packets are serialized in Apache Avro\footnote{\url{https://avro.apache.org/}} format and then transmitted to community alert brokers via Kafka for further processing.
 \citet{DMTN-093} provides a high-level overview of the alert system.
 
-Within the pipelines, alert packets are constructed by \texttt{PackageAlertsTask} within \texttt{ap\_association}.
+Within the pipelines, alert packets are constructed  within \texttt{ap\_association}.
 Alert packets contain the triggering DIASource record; the associated DIAObject or SSObject record; up to twelve months of past history from DIASources, DIAForcedSources, and/or upper limits; and cutout images of the science, template, and difference images centered at the position of the cutout.
-Cutouts are provided as FITS images serialized by the astropy \texttt{CCDData} class, and include image, variance, and mask planes along with WCS information and an image of the approximate PSF.
+Cutouts are provided as FITS images serialized by the Astropy \texttt{CCDData} class, and include image, variance, and mask planes along with WCS information and an image of the approximate PSF.
 
 Avro schemas are stored in the \texttt{alert\_packet} package.
 They are derived from the corresponding AP schemas in \texttt{sdm\_schemas} used to instantiate the AP databases.

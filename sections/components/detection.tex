@@ -32,5 +32,5 @@ Using this information, we set the detection threshold such that the standard de
 
 Instead of looking for astrophysical sources like our other detection tasks, \texttt{MaskStreaksTask} is responsible for identifying and masking pixels affected by streaks (primarily artificial satellites).
 It searches for linear features with a Canny filter and the Kernel-Based Hough Transform \citep{2008PatRe..41..299F}, and operates most effectively on difference images.
-The algorithm is described in more detail in \citet{DMTN-197}, which focuses on its usage on differences between PSF-matched warps and a PSF-matched coadd, as described in \secref{sec:coaddition}.
+The algorithm is described in more detail in \citet{DMTN-197}, which focuses on its usage on differences between PSF-matched warps and a PSF-matched coadd, as described in \secref{sec:coaddition-and-objects}.
 This task is also used in traditional difference images, those formed by subtracting a template coadd from a science images, as described in \secref{sec:dia}.

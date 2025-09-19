@@ -1,38 +1,29 @@
 \subsection{Coaddition and Object Tables}
-
-\subsubsection{Coaddition Tasks}
-\label{sec:coaddition}
+\label{sec:coaddition-and-objects}
 
 Coadded images are used as static-sky templates for image subtraction and detecting and measuring faint sources.
 The coaddition process is divided into two main stages: resampling the input images onto a common projection and stacking those resampled images into a single coadd.
 Each stage is implemented via configurable tasks that allow the pipelines to be adapted for different instruments and observing strategies.
-The first step in coaddition is to resample each single-epoch exposure onto a common projection defined by a \texttt{skymap} (see section~\ref{sec:core}), one \texttt{patch} at a time.
-This step is performed by the following \texttt{Tasks}:
-\begin{itemize}
-\item \texttt{MakeDirectWarpTask} performs a straightforward resampling of calibrated exposures.
- \item \texttt{MakePsfMatchedWarpTask} also convolves them to a configurable, common model-PSF.
- This PSF-homogenized variant is useful when the scientific goals require uniform PSF properties across the coadd and is used for artifact rejection during coaddition.
- \end{itemize}
+The first step in coaddition is to resample each single-epoch exposure onto a common projection defined by a \texttt{skymap} (see \secref{sec:core}), one \texttt{patch} at a time.
+The first step is to perform a straightforward resampling of calibrated exposures.
+The second step is to convolve them to a configurable, common model-PSF.
+This PSF-homogenized variant is useful when the scientific goals require uniform PSF properties across the coadd and is used for artifact rejection during coaddition.
 
-All warping tasks use a configurable interpolation kernel. A 5th-order Lanczos kernel is used by default, balancing fidelity and computational efficiency, with a nearest-neighbor kernel for the integer bitmask.
-Input images are geometrically transformed using the World Coordinate System (WCS) and interpolated onto the target projection defined by a tract and patch geometry.
-Each resulting resampled image is called a \texttt{warp}.
+All warping tasks use a configurable interpolation kernel.
+A 5th-order Lanczos kernel is used by default, balancing fidelity and computational efficiency, with a nearest-neighbor kernel for the integer bit mask.
+Input images are geometrically transformed using the WCS and interpolated onto the target projection defined by a tract and patch geometry.
+Each resulting resampled image is called a \emph{warp}.
 
-Once warps are generated, they are stacked into a final coadd by \texttt{AssembleCoaddTask} or one of its subclasses.
-The default implementation, \texttt{CompareWarpAssembleCoaddTask}, performs outlier rejection to remove transient artifacts such as cosmic rays, ghosts, satellite trails, and moving objects.
+Once warps are generated, they are stacked into a final coadd.
+The default implementation performs outlier rejection to remove transient artifacts such as cosmic rays, ghosts, satellite trails, and moving objects.
 The algorithm compares pixel values across epochs and masks those that significantly deviate from the expected distribution.
 The artifact rejection algorithm is detailed in \citet{DMTN-080}.
 By default, weights for stacking are derived from the inverse of the average variance of each warp, with optional filters on PSF quality and seeing.
 The stacked image is accompanied by a mask plane and variance map, and the set of input PSF models is combined into a spatially-varying coadd PSF model (\texttt{CoaddPsf}) to serve as the PSF model for the coadd.
 
-\subsubsection{Object Catalog Production}
-
-Deep object catalogs are generated from coadds by running our detection code (see Section~\ref{sec:detection}) on the coadd from each band independently, and then spatially matching the detected peaks across bands.
+Deep object catalogs are generated from coadds by running our detection code (see \secref{sec:detection}) on the coadd from each band independently, and then spatially matching the detected peaks across bands.
 The combined cross-band \texttt{Footprint} objects are formed from the union of the per-band ones.
-These are then passed to our multi-band deblender (see Section~\ref{sec:multiband_deblending}).
+These are then passed to our multi-band deblender (see \secref{sec:multiband_deblending}).
 
-While a few of our measurement codes can then run natively on multiple bands together (e.g. the galaxy fitting codes described in Section~\ref{sec:multiprofit}), for most algorithms we obtain consistent cross-band measurements in two phases:
-
-- we measure on each band independently (albeit using the multi-band deblender outputs);
-- for each object, we select a \emph{reference} as the first in an ordered sequence (e.g. ``irzygu'') that meets a signal-to-noise threshold;
-- we measure again in each band in forced photometry mode, holding the position and (when relevant) shape fixed to the values measured in that object's reference band.
+While a few of our measurement codes can then run natively on multiple bands together (e.g., the galaxy fitting codes described in \secref{sec:multiprofit}), for most algorithms we obtain consistent cross-band measurements in two phases.
+First we measure on each band independently (albeit using the multi-band deblender outputs); then we measure again in each band in forced photometry mode, holding the position and (when relevant) shape fixed to the values measured in that object's reference band.

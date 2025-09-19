@@ -4,7 +4,7 @@
 \texttt{meas\_extensions\_gaap} implements the Gaussian Aperture and PSF photometry (GAaP) algorithm \citep{2008A&A...482.1053K}.
 It is an aperture photometry algorithm designed to obtain consistent colors of extended objects (i.e., galaxies).
 This is done by weighting each (pre-seeing) region of a galaxy by the same pre-defined 2D Gaussian function in all the bands and is thus largely insensitive to the seeing conditions in the different bands.
-In practice, this is done by first convolving each object by a kernel (using the same tools described in \S\ref{sec:dia}) so that the PSF is Gaussian and is larger by about 15\% (this is configurable).
+In practice, this is done by first convolving each object by a kernel (using the same tools described in \secref{sec:dia}) so that the PSF is Gaussian and is larger by about 15\% (this is configurable).
 As a second step, each Gaussianized object is then weighted with a Gaussian aperture so that the effective pre-seeing Gaussian aperture is the same for all objects in all the bands.
 The plugin is configured to use a series of circular Gaussian apertures, an elliptical Gaussian aperture (optionally) that matches the shape of the object in the reference band.
 
@@ -16,4 +16,4 @@ However, because only per-pixel noise variance is tracked, the noise treatment i
 See \citet{DMTN-190} for more details on the implementation details.
 
 Note that this measurements from this plugin do not produce total fluxes, but should only be used to obtain colors.
-For total fluxes, measurements from \texttt{cModel} or \texttt{MultiProFit} (c.f., \S\ref{sec:multiprofit}) are recommended.
+For total fluxes, measurements from \texttt{cModel} \secrefp{sec:cmodel} or \texttt{MultiProFit} \secrefp{sec:multiprofit} are recommended.

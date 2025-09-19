@@ -6,9 +6,10 @@ We use Python 3 \citep[having ported from python 2,][currently with a minimum ve
 Additionally, the C++ layer uses \texttt{ndarray} to allow seamless passing of C++ arrays to and from Python \texttt{numpy} arrays.
 This compatibility with \texttt{numpy} is important in that it makes LSST data structures available to standard Python libraries such as Scipy and Astropy \citep{2016SPIE.9913E..0GJ,2018AJ....156..123A}.
 
-Although all the software uses the \texttt{lsst} namespace, the code base is split into individual Python products in the LSST GitHub organization\footnote{\url{https://github.com/lsst}} that can be installed independently and which declare their own dependencies.
+Although all the software uses the \texttt{lsst} namespace, the code base is split into individual Python products in the LSST GitHub organization\footnote{All repositories can be found at \url{https://github.com/lsst} and we do not give individual URLs to each package in this paper.} that can be installed independently and which declare their own dependencies.
 These dependencies are managed using the ``Extended Unix Product System'' \citep[EUPS;][]{EUPS,2018SPIE10707E..09J} where
 most of the products are built using the SCons system \citep{2005Scons1377085} with LSST-specific extensions provided in the \texttt{sconsUtils} package enforcing standard build rules and creating the necessary Python package metadata files.
+The naming convention is that if a package is named \texttt{some\_name} then in Python it will be imported as \texttt{lsst.some.name}.
 
 For logging we always use standard Python logging with an additional \texttt{VERBOSE} log level between \texttt{INFO} and \texttt{DEBUG} to provide additional non-debugging detail that can be enabled during batch processing.
 This verbose logging is used for periodic logging where long-lived analysis tasks are required to issue a log message every 10 minutes to indicate to the batch system that they are still alive and actively performing work.
