@@ -1,7 +1,7 @@
 \subsection{Source Measurement}
 \label{sec:measurement}
 
-After sources are \emph{detected} (\ref{sec:detection}) and optionally \emph{deblended} (\ref{sec:deblending}), the source measurement tasks are responsible for applying a suite of measurement \emph{plugins} on the deblended pixels for each source.
+After sources are \emph{detected} \secrefp{sec:detection} and optionally \emph{deblended} \secrefp{sec:deblending}, the source measurement tasks are responsible for applying a suite of measurement \emph{plugins} on the deblended pixels for each source.
 Centroiders, shape measurements, and photometry algorithms are all implemented as measurement plugins.
 
 We also distinguish between measurement on the original detection image (\texttt{SingleFrameMeasurementTask}) vs. measurement on a different image from the original detection (\texttt{ForcedMeasurementTask}).
@@ -13,7 +13,7 @@ The measurement tasks, plugin base classes, and a suite of standard common plugi
 \subsubsection{Framework Mechanics}
 \label{sec:measurement-interfaces}
 
-Plugins are enabled or disabled in a measurement task via the task's configuration, and each plugin has its own configuration nested within the task configuration.
+Plugins are enabled or disabled in a measurement task via the task's configuration (see \secref{sec:appendix_config} for an example), and each plugin has its own configuration nested within the task configuration.
 When a measurement task is constructed, it constructs instances of its enabled plugins, providing them a schema object that they can use to declare and document their output columns.
 Each plugin is responsible for defining and filling in columns in the output source catalog, and almost all plugins include columns for uncertainties and at least one flag column to report failures.
 

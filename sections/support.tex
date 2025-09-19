@@ -42,3 +42,10 @@ Coding standards compliance with PEP\,8 \citep{pep8} is enforced using GitHub Ac
 
 A Jenkins system provides the team with continuous integration across multiple packages.
 This includes longer tests (up to a few hours) in which we run complete pipelines on small precursor datasets (typically a few GB) fetched via \texttt{git-lfs}.
+
+\subsubsection{Installation}
+
+Where possible, individual packages can be installed from PyPI but that is mostly limited to packages that do not have any C++ code due to limitations in Python packaging allowing packages to link directly against shared libraries from other packages.
+To install the full set of pipelines software we provide an installation script that installs the appropriate Conda environment and then downloads the binaries (Linux x86\_64, Linux aarch64, or macOS Apple Silcon) from our artifact server.
+As mentioned above it is also possible to install a Docker container with everything pre-installed.
+For developers we also provide a script to build and install the software directly from the Git repositories.

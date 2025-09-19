@@ -1,4 +1,4 @@
-\documentclass[twocolumn,longbib]{aastex7}
+\documentclass[twocolumn]{aastex7}
 \usepackage{listings}
 \lstset{
   basicstyle=\ttfamily\footnotesize,  % Use a monospace font
@@ -14,6 +14,8 @@
   stringstyle=\color{red}\ttfamily
 }
 
+\providecommand{\secref}[1]{\hyperref[#1]{\S\ref{#1}}}
+\providecommand{\secrefp}[1]{(\secref{#1})}
 
 \shorttitle{The LSST Science Pipelines}
 \shortauthors{Rubin Observatory Data Management Pipeline Developers}

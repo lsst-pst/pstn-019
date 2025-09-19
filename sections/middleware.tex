@@ -77,7 +77,7 @@ A deep coadd on a patch of sky would not have \texttt{exposure} dimensions at al
 \subsection{Pipelines and Tasks}
 
 The data dimensions system also plays a fundamental role in how the LSST processing pipelines are assembled and run; high-level pieces of algorithmic code called \texttt{PipelineTasks} declare the dimensions of their units of work (``quanta''), their inputs, and their outputs, allowing a directed acyclic graph (a "quantum graph") describing the processing to be assembled from a YAML declaration of the tasks to be run, their configuration, and a Butler database query.
-Quantum graphs can range in size from a few tens of quanta (e.g., for the nightly processing performed on a single detector image) to millions (for a piece of the yearly data release pipelines), and serve as the common interface for multiple execution systems, including the low-latency nightly Prompt Processing framework \citep{DMTN-219} and the Batch Processing System \citep[BPS;][]{2022arXiv221115795G}, which adapts quantum graphs for execution at scale by third-party workflow management systems like HTCondor \citep{2024zndo..14238973H}, Parsl \citep{10.1145/3307681.3325400}, and PanDA \citep{2024EPJWC.29504026K}.
+Quantum graphs can range in size from a few tens of quanta (e.g., for the nightly processing performed on a single detector image) to millions (for a piece of the yearly data release pipelines), and serve as the common interface for multiple execution systems, including the low-latency nightly Prompt Processing framework \citep{DMTN-219} and the Batch Processing System \citep[BPS;][]{2022arXiv221115795G}, which adapts quantum graphs for execution at scale by third-party workflow management systems like HTCondor \citep{2022zndo...2579447H}, Parsl \citep{10.1145/3307681.3325400}, and PanDA \citep{2024EPJWC.29504026K}.
 
 Algorithmic code below the \texttt{PipelineTask} level is often subdivided into multiple ``subtasks'' that (like \texttt{PipelineTask} itself) inherit from the base \texttt{Task} class, which provides easy access to hierarchical logging, metadata, and configuration.
 
@@ -106,6 +106,7 @@ It is also possible to visualize quantum graphs, which include the actual data f
 \end{figure*}
 
 \subsection{Configuration}
+\label{sec:config}
 The \texttt{pex\_config} package provides the foundational configuration system for running large scale processing campaigns with the science pipelines.
 It's far more than a simple parameter parser; it's a framework that mediates between diverse configuration sources and the complex software that processes astronomical data.
 At its core, \texttt{pex\_config} functions as an intermediate representation, decoupling the pipelines from the specifics of configuration file formats (like YAML, JSON) and providing a unified, Python-native interface to all configurable parameters.
