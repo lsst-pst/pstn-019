@@ -9,6 +9,8 @@ In data release processing, a much more sophisticated final astrometric and phot
 The Rubin pipeline uses the Starlink AST library \citep{2016A&C....15...33B} for persisting, composing, and evaluating coordinate transformations.
 We have our own class in the \texttt{afw} package for representing (among other things) photometric calibrations, usually with Chebyshev polynomials.
 These can also be multiplied and even mixed with AST-backed transform objects to represent pixel-area corrections.
+Our coordinate transforms are not exactly representable via the FITS WCS standard \citep{2002A&A...395.1061G}, which has no way to describe a chain of composed transforms.
+For public data releases, we approximate these transforms via a FITS TAN-SIP WCS \citep{2005ASPC..347..491S} for convenience, but precision astrometry should always use the exact composed transformation.
 
 \subsubsection{Single-Frame Astrometric Calibration}
 \label{sec:astrometryTask}
@@ -17,7 +19,7 @@ Single-frame astrometric fits are performed by a task in the \texttt{meas\_astro
 This task matches a catalog of sources detected and measured on an image to a reference catalog and solves for the \textit{World Coordinate System} (WCS) of the image.
 Matching and WCS fitting are performed iteratively, to reject astrometric outliers.
 The matcher is either the optimistic or pessimistic matcher from \citet{2007PASA...24..189T}, with the pessimistic matcher used by default due to better performance on dense fields; see \citep{DMTN-031} for details.
-The WCS fitter can be a simple affine model on top of fixed camera geometry or a FITS TAN-SIP WCS \citep{2005ASPC..347..491S}.
+The WCS fitter can be a simple affine model on top of fixed camera geometry or a FITS TAN-SIP WCS.
 We default to fitting the simple affine model because we have good distortion models for most of the instruments we support, often from previous fitting with \texttt{gbdes} \secrefp{sec:gbdes}, and hence we do not need the extra degrees of freedom provided by a TAN-SIP model.
 
 \subsubsection{GBDES}
