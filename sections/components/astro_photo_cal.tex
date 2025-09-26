@@ -1,10 +1,10 @@
 \subsection{Astrometric and Photometric Calibration}
 \label{sec:calibration}
 
-Astrometric and photometric calibration in data release processing is performed in two very different steps.
+Astrometric and photometric calibration in data release processing are both  performed in each of two very different steps.
 First, astrometric and photometric solutions for each detector are fit independently to a reference catalog, which is sufficient to enable matching and filtering for more sophisticated later algorithms and validation.
 In the nightly alert processing, we expect to be able to use a high-density reference catalog produced by the most recent Rubin data release, and these single-detector fits represent the final calibrations.
-In data release processing, a much more sophisticated final astrometric and photometric transform are then fit to catalogs from multiple epochs at once.
+In data release processing, much more sophisticated final astrometric and photometric transforms are then fit to catalogs from multiple epochs at once.
 
 The Rubin pipeline uses the Starlink AST library \citep{2016A&C....15...33B} for persisting, composing, and evaluating coordinate transformations.
 We have our own class in the \texttt{afw} package for representing (among other things) photometric calibrations, usually with Chebyshev polynomials.

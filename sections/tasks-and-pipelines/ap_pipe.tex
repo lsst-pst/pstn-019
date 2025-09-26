@@ -3,7 +3,7 @@
 
 The \texttt{ap\_pipe} package defines the pipeline(s) to be used for real-time Alert Production processing \citep{DMTN-219}.
 These pipelines include instrument signature removal \secrefp{sec:isr}, calibration \secrefp{sec:calibration}, measurement plugins \secrefp{sec:measurement}, image differencing \secrefp{sec:dia}, source association \secrefp{sec:association}, and alert generation \secrefp{sec:alerts}.
-Some of these tasks are shared with the pipelines in \texttt{drp\_pipe}, but are configured to prioritize speed over strict quality; for example, they use a minimal set of measurement plugins.
+Some of these tasks are shared with the pipelines in \texttt{drp\_pipe} \secrefp{sec:drp_pipe}, but are configured to prioritize speed over strict quality; for example, they use a minimal set of measurement plugins.
 
 \texttt{ap\_pipe} currently has pipeline variants for LSSTCam, LSSTComCam, LATISS, the Rubin Observatory simulators, Hyper-SuprimeCam, and the Dark Energy Camera.
 Because these variants serve as testbeds for AP-specific algorithms and configuration settings, they are, as much as possible, the ``same'' pipeline, differing almost entirely in loading instrument defaults from \texttt{obs} packages \secrefp{sec:obs_packages}.

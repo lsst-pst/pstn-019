@@ -1,12 +1,10 @@
 \subsection{Coaddition and Object Tables}
 \label{sec:coaddition-and-objects}
 
-Coadded images are used as static-sky templates for image subtraction and detecting and measuring faint sources.
-The coaddition process is divided into two main stages: resampling the input images onto a common projection and stacking those resampled images into a single coadd.
+Coadded images are used both as static-sky templates for image subtraction and for detecting and measuring faint objects.
+The coaddition process is divided into two main stages: resampling the input images onto a common projection (``warping'') defined by a \texttt{skymap} \secrefp{sec:core} and stacking those resampled images into a single coadd.
 Each stage is implemented via configurable tasks that allow the pipelines to be adapted for different instruments and observing strategies.
-The first step in coaddition is to resample each single-epoch exposure onto a common projection defined by a \texttt{skymap} (see \secref{sec:core}), one \texttt{patch} at a time.
-The first step is to perform a straightforward resampling of calibrated exposures.
-The second step is to convolve them to a configurable, common model-PSF.
+An optional intermediate step can also be used to convolve the warped images to a configurable, common model-PSF.
 This PSF-homogenized variant is useful when the scientific goals require uniform PSF properties across the coadd and is used for artifact rejection during coaddition.
 
 All warping tasks use a configurable interpolation kernel.
