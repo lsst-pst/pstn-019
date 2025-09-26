@@ -8,7 +8,7 @@ We also distinguish between measurement on the original detection image vs. meas
 Measurement could be performed on a single-visit image, a coadd of multiple images, or a difference of images: from the perspective of a measurement plugin, there is no difference between these cases.
 \textit{Forced measurement} is performed on one image using a ``reference'' catalog of sources that were detected on another image.
 
-The measurement tasks, plugin base classes, and a suite of standard common plugins are defined in the \texttt{meas\_base} package, including (but not limited to):
+The measurement tasks, plugin base classes, and a suite of standard common plugins are defined in the \texttt{meas\_base} package, as described in \secref{sec:standard-plugins}.
 
 \subsubsection{Framework Mechanics}
 \label{sec:measurement-interfaces}
@@ -75,8 +75,11 @@ Typically, for visit-level detectors and coadd-level images, we place 100 sky ob
 Within the \texttt{DynamicDetectionTask} a larger number of temporary sky objects (default 1000) are placed in order to generate an updated detection threshold.
 
 \subsubsection{Standard Measurement Plugins}
+\label{sec:standard-plugins}
 
-The \texttt{meas\_base} package includes a suite of standard measurement plugins for doing SDSS shape measurements, circular aperture photometry, and PSF-weighted photometry.
+The \texttt{meas\_base} package includes a suite of standard measurement plugins.
+These include second moment shapes (\texttt{base\_SdssShape}) and adaptive centroids (\texttt{base\_SdssCentroid}), circular aperture photometry (\texttt{base\_CircularApertureFlux}), PSF-weighted photometry (\text{base\_PsfFlux}), and many others.
+It also includes utility plugins that transform pixel bitmask values into catalog flags (\texttt{base\_PixelFlags}) and apply coordinate transforms to centroids for use in forced photometry.
 The algorithms are described in detail in \citet{2018PASJ...70S...5B}.
 There are also numerous extension plugins available in other pipeline packages described in the following sections.
 
