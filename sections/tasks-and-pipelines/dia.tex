@@ -22,7 +22,7 @@ Otherwise, the difference image is smoothed with a Gaussian of the same width as
 Contiguous pixels around each peak that are statistically brighter than the background are grouped into source footprints, and any overlapping footprints are merged.
 Footprints that contain both a positive and a negative peak are fit as dipoles.
 The dipole fit simultaneously solves for the negative and positive lobe centroids and fluxes using non-linear least squares minimization.
-DiaSources that are not classified as dipoles instead fall back on an SDSS-style centroid \citep{2003AJ....125.1559P}.
+DiaSources that are not classified as dipoles instead fall back on the \texttt{base\_SdssCentroid} \secrefp{sec:standard-plugins}.
 Finally, all configured measurement plugins are run, including HSM shape measurements \secrefp{sec:hsm} and a trailed-source fit \secrefp{sec:trailed-sources}.
 
 \subsubsection{Filtering Non-astrophysical DIASources}
