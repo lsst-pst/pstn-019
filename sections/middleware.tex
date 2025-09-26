@@ -111,10 +111,9 @@ It is also possible to visualize quantum graphs, which include the actual data f
 \subsection{Configuration}
 \label{sec:config}
 The \texttt{pex\_config} package provides the foundational configuration system for running large scale processing campaigns with the science pipelines.
-It's far more than a simple parameter parser; it's a framework that mediates between diverse configuration sources and the complex software that processes astronomical data.
-At its core, \texttt{pex\_config} functions as an intermediate representation, decoupling the pipelines from the specifics of configuration file formats (like YAML, JSON) and providing a unified, Python-native interface to all configurable parameters.
-This intermediate representation, resembling a Domain Specific Language embedded within Python, also allows leveraging the full power of a programming language for parsing or setting configuration values, and includes provenance through parameter history and also configuration validation of both types and values.
-The system is flexible enough that it has been adopted by the DRAGONS software \citep{2023RNAAS...7..214L}.
+\texttt{pex\_config} is built resembling a Domain Specific Language embedded within Python, in which configuration options are defined via Python classes  and values are set via snippets of Python code.
+This leverages the full power of a programming language for parsing and setting configuration values, while also supporting interoperability with standard text formats (e.g. JSON, YAML), import-time plugin extensibility, provenance through parameter change history, and validation of both types and values.
+The system can be installed and used on its own, and been adopted by the DRAGONS software \citep{2023RNAAS...7..214L}.
 A more detailed description of how the configuration system works is provided in Appendix~\ref{sec:appendix_config}.
 
 \subsection{Instrument Abstractions: Obs Packages}
