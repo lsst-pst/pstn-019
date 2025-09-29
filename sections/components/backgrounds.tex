@@ -5,14 +5,9 @@ Our low-level background subtraction algorithms (in the \texttt{meas\_algorithms
 The bin averages can then be interpolated via Akima splines or approximated by Chebyshev polynomials.
 
 This code is run and re-run in many different configurations in many different contexts.
+For example, it is the first step run after instrument signature removal \secrefp{sec:isr} on each detector in both the nightly and data release pipelines.
+In a full DRP it is also run across a full visit to remove large-scale background features \citep{2019PASJ...71..114A}.
+We sometimes also run background subtraction on coadds before detecting objects on them, especially when only full-visit backgrounds were subtracted from the input images.
 
-\begin{itemize}
-\item It is the first step run after Instrument Signature Removal (\S\ref{sec:ip_isr}) on each detector in both the nightly and data release pipelines.
-\item In our most advanced configurations of the data release pipelines, we replace these original per-detector backgrounds with new backgrounds fit across the full visit \citep{2019PASJ...71..114A}.
-These are configured to subtract the background on large scales, to preserve low surface-brightness features as much as possible.
-\item We sometimes run another round of background subtraction on coadds before detecting objects on them, especially when only full-visit backgrounds were subtracted from the input images.
-Unfortunately we have found that running background subtraction with a fairly small spatial scale (e.g. 256-pixel bins) -- which intentionally oversubtracts bright stars and low surface-brightness features -- is necessary for the best photometry on most objects, but we prefer to subtract the small-scale background as late as possible in order to allow it to be easily restored for other science cases.
-\end{itemize}
-
-In addition, we routinely run background subtraction as a small tweak every time we run detection (\S\ref{sec:detection}).
+In addition, we routinely run background subtraction as a small tweak every time we run detection \secrefp{sec:detection}.
 We \emph{define} our background to be the sum of all light that we do not consider part of a detection, which means it needs to be adjusted when the detection threshold changes (e.g. when we detect fainter objects on coadds).

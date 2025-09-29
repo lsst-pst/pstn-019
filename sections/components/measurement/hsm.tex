@@ -1,26 +1,18 @@
 \subsubsection{HSM Shapes}
 \label{sec:hsm}
 
-The \texttt{meas\_extensions\_shapeHSM} package contains the plugins to measure the shapes of objects.
-The plugins measure the moments of the sources and PSFs with adaptive Gaussian weights.
-The algorithm was initially described in \citet{2003MNRAS.343..459H} and was modified later in \citet{2005MNRAS.361.1287M}.
-The implementation of these algorithms lives within the \texttt{hsm} module of the GalSim package \citep{2015A&C....10..121R}.
-\texttt{meas\_extensions\_shapeHSM} now interacts directly with the Python layer of GalSim to make the measurements.
+The \texttt{meas\_extensions\_shapeHSM} package contains plugins that measure the shapes of objects.
 
-The base plugin for measuring moments is the \texttt{HsmMomentsPlugin} and is the parent class of the \texttt{HsmSourceMomentsPlugin} and \texttt{HsmPsfMomentsPlugin} which are specialized to measure on the sources (and objects) and PSFs respectively.
-\texttt{HsmSourceMomentsRoundPlugin} is a further specialized plugin that measures the moments with circular Gaussian weights instead of the elliptical ones in \texttt{HsmSourceMomentsPlugin}.
-The \texttt{HsmPsfMomentsDebiasedPlugin} adds noise to the PSF image to degrade it to have the same signal-to-noise ratio (SNR) as the source image.
-This makes the ellipticity calculated from this plugin have the same bias as the source ellipticity
-The PSF moments from this plugin should be used when calculating ellipticity residuals so the bias is largely cancelled.
-Having the various specializations as distinct plugins allows an object to be measured under different configurations simultaneously and included in the output catalogs.
+This includes a suite of PSF-uncorrected shapes (for both objects and the PSF models) and a suite of PSF-corrected shapes intended for use in weak gravitational lensing.
+These are all based on the adaptive Gaussian-weighted moments algorithm described by \citet{2002AJ....123..583B} (the \texttt{base\_SdssShape} algorithm described in \secref{sec:standard-plugins} is another implementation of this algorithm).
+The implementation of these algorithms lives within the \texttt{hsm} module of the \textsc{GalSim} package \citep{2015A&C....10..121R}.
 
-In addition to the plugins that measure (adaptive) weighted moments, there are also a series of \texttt{HsmShape} plugins to estimate the PSF-corrected ellipticities of objects.
-In particular, the outputs from \texttt{HsmShapeRegaussPlugin} have been used to measure weak gravitational lensing signals in the Hyper Suprime-Cam SSP data \citep{2018PASJ...70S..25M, 2022PASJ...74..421L}.
+The PSF-uncorrected shapes include a variant that uses circular (rather than elliptical) Gaussian weights and another that adds noise to the PSF model image to match the noise in the data.
+Both of these play important roles in measuring PSF model quality by comparing the shapes of stars to the shapes of the PSF model at the positions of those stars.
+
+In addition to the plugins that measure (adaptive) weighted moments, there are also a series of plugins to estimate the PSF-corrected ellipticities of objects.
+These are described more fully \citet{2003MNRAS.343..459H} in \citet{2005MNRAS.361.1287M}.
+While no longer state-of-the-art in weak lensing, these algorithms are, fast, robust, and easy to use, as long as their biases are characterized via simulations \citep{2018PASJ...70S..25M, 2022PASJ...74..421L}.
 
 In addition to the second moments that characterize the size and ellipticity of the PSF, higher-order moments \textemdash\ those beyond second order \textemdash\ capture more subtle aspects of the PSF shape, such as skewness, kurtosis, and other asymmetric or non-Gaussian features.
-The \texttt{HigherOrderMomentsPSFConfig} is a plugin within \texttt{meas\_extensions\_shapeHSM} to calculate the higher order moments of the PSF models whereas \texttt{HigherOrderMomentsSourcePlugin} calculates that of the sources (and objects).
 The definitions of the higher moments are given in \citet{2023MNRAS.520.2328Z}.
-These moments are measured in normalized coordinates, where the normalized $x$-axis is along the major axis and the normalized $y$-axis along the minor.
-Such a normalization implies that the moments are dependent only on features of the light profile beyond second moments, and does not scale with the flux, position, size or orientation of the object.
-It is designed to be used in conjunction with the \texttt{HsmShapePlugin} and \texttt{HsmPsfMomentsPlugin} plugins, which measure the second moments for the normalization, and provides the HSM adaptive Gaussian kernel.
-By default, we compute the third and fourth order moments of the source and PSF images.

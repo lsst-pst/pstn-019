@@ -1,26 +1,26 @@
 \subsection{Source Measurement}
 \label{sec:measurement}
 
-After sources are \emph{detected} (\ref{sec:detection}) and optionally \emph{deblended} (\ref{sec:deblending}), the source measurement tasks are responsible for applying a suite of measurement \emph{plugins} on the deblended pixels for each source.
+After sources are \emph{detected} \secrefp{sec:detection} and optionally \emph{deblended} \secrefp{sec:deblending}, the source measurement tasks are responsible for applying a suite of measurement \emph{plugins} on the deblended pixels for each source.
 Centroiders, shape measurements, and photometry algorithms are all implemented as measurement plugins.
 
-We also distinguish between measurement on the original detection image (\texttt{SingleFrameMeasurementTask}) vs. measurement on a different image from the original detection (\texttt{ForcedMeasurementTask}).
+We also distinguish between measurement on the original detection image vs. measurement on a different image from the original detection.
 Measurement could be performed on a single-visit image, a coadd of multiple images, or a difference of images: from the perspective of a measurement plugin, there is no difference between these cases.
 \textit{Forced measurement} is performed on one image using a ``reference'' catalog of sources that were detected on another image.
 
-The measurement tasks, plugin base classes, and a suite of standard common plugins are defined in the \texttt{meas\_base} package, including (but not limited to):
+The measurement tasks, plugin base classes, and a suite of standard common plugins are defined in the \texttt{meas\_base} package, as described in \secref{sec:standard-plugins}.
 
 \subsubsection{Framework Mechanics}
 \label{sec:measurement-interfaces}
 
-Plugins are enabled or disabled in a measurement task via the task's configuration, and each plugin has its own configuration nested within the task configuration.
+Plugins are enabled or disabled in a measurement task via the task's configuration (see \secref{sec:appendix_config} for an example), and each plugin has its own configuration nested within the task configuration.
 When a measurement task is constructed, it constructs instances of its enabled plugins, providing them a schema object that they can use to declare and document their output columns.
 Each plugin is responsible for defining and filling in columns in the output source catalog, and almost all plugins include columns for uncertainties and at least one flag column to report failures.
 
 Measurement plugins often depend on each other, and must be run in a particular order.
 Rather than creating a directed acyclic graph to denote the dependencies, the plugins are batched and are run in any order within a batch.
 The batch order is defined by the \texttt{getExecutionOrder} method, with smaller execution numbers being run first.
-\texttt{BasePlugin} defines a list of named constants for particular cases:
+The base class defines a list of named constants for particular cases:
 \begin{enumerate}
     \item \texttt{CENTROID\_ORDER} for plugins that require only footprints and peaks
     \item \texttt{SHAPE\_ORDER} for plugins that require a centroid to have been measured
@@ -28,10 +28,10 @@ The batch order is defined by the \texttt{getExecutionOrder} method, with smalle
 \end{enumerate}
 The measurement system also provides a \textit{slot} system for predefined aliases to allow a plugin to get a value without knowing exactly what plugin originally computed that value, e.g., \texttt{slot\_Centroid} could point to \texttt{base\_SdssCentroid}, or some other plugin that measures centroids.
 
-While the measurement tasks and plugin interfaces are pure Python, most concrete measurement plugins are implemented in C++, since they need to loop pixels.
+While the measurement tasks and plugin interfaces are pure Python, most concrete measurement plugins are implemented in C++, since they need to loop over pixels.
 
 When a measurement task is run, it starts by making an empty
-\texttt{SourceCatalog} (from the ``afw.table`` library, see \ref{sec:core}) with the plugin-defined schema and one row for each of the \texttt{Footprint} objects returned by previous detection and deblending tasks.
+\texttt{SourceCatalog} (from the ``afw.table`` library, see \secref{sec:core}) with the plugin-defined schema and one row for each of the \texttt{Footprint} objects returned by previous detection and deblending tasks.
 It then temporarily replaces all pixels within \texttt{Footprints} by random noise.
 As the task loops over each row in the output catalog, that source's pixels are restored -- either to the original \texttt{Exposure} pixels for isolated or otherwise un-deblended sources, or to the deblender's \texttt{HeavyFootprint} values for deblended children -- and the plugins are called in execution order.
 Each plugin is given the full modified \texttt{Exposure} and a row of the output catalog to fill in.
@@ -41,9 +41,9 @@ After each source is measured, the task replaces its pixels with noise again, al
 \subsubsection{Aperture Corrections}
 \label{sec:apcorr}
 
-With many different measures of photometry available for both stars and galaxies, establishing a consistent internal photometric system is a challenge, even before we consider the problem (covered in \S\ref{sec:calibration}) of mapping that system to absolute photometry via an external reference catalog.
+With many different measures of photometry available for both stars and galaxies, establishing a consistent internal photometric system is a challenge, even before we consider the problem (covered in \secref{sec:calibration}) of mapping that system to absolute photometry via an external reference catalog.
 
-In addition, standard PSF modeling (\S\ref{sec:psf_modeling}) generally focuses on the core of the true PSF, which is only adequate for photometry for galaxies and fainter stars (while the wings of the PSF matter for bright galaxies as well, the semi-arbitrary definition of the boundary of such galaxies is typically a bigger source of photometry uncertainty).
+In addition, standard PSF modeling \secrefp{sec:psf_modeling} generally focuses on the core of the true PSF, which is only adequate for photometry for galaxies and fainter stars (while the wings of the PSF matter for bright galaxies as well, the semi-arbitrary definition of the boundary of such galaxies is typically a bigger source of photometry uncertainty).
 
 Our solution to both of these problems is \emph{aperture corrections}, in which we apply multiple photometry algorithms to a suite of isolated bright stars on each detector (by default, the same ones used to build the PSF model), compute the ratio of each algorithm to a standard one (a background-compensated top-hat aperture flux), and then interpolate that ratio using Chebyshev polynomials to other positions on the detector.
 The measured fluxes of other objects are then scaled by that interpolated ratio.
@@ -51,17 +51,17 @@ This essentially forces all algorithms to produce the same results (on average) 
 
 It is clear that this approach is not exactly correct for galaxies or other extended sources in general, but we believe it is usually better than not correcting the galaxy photometry at all (it is, after all, the right thing to do for barely-resolved galaxies).
 
-These scheme has two other serious limitations.
+This scheme has two other serious limitations.
 The first is that many of the measurements we need to correct are noisy, even on bright stars, and the interpolated ratios can add significant uncertainty into the final fluxes.
-The second is that aperture corrections cannot in generally be coadded along with the images (unlike PSF models); they are not a linear function of the data.
-Coadding the ratios *is* a valid first-order approximation in the limit where the photometry does not depend on the PSF and the PSFs of the contributing images are similar, and this is what we do at present, but we cannot currently  quantify the error this approximation introduces.
+The second is that aperture corrections cannot in general be coadded along with the images (unlike PSF models); they are not a linear function of the data.
+Coadding the ratios \emph{is} a valid first-order approximation in the limit where the photometry does not depend on the PSF and the PSFs of the contributing images are similar, and this is what we do at present, but we cannot currently  quantify the error this approximation introduces.
 Our understanding is that using much larger PSF models is the cleanest solution to these problems, but the additional degrees of freedom that would entail may be hard to constrain with the information available.
 
 \subsubsection{Sky Objects}
 \label{sec:sky-objects}
 
 Sky objects are a special class of object that are not detected in the image being measured, but rather placed quasi-randomly in regions that are likely to be free of real sources.
-They're used to measure the sky background and noise properties of the image, and to assist in setting dynamic detection thresholds (see ref{sec:DynamicDetectionTask}).
+They're used to measure the sky background and noise properties of the image, and to assist in setting dynamic detection thresholds (see \secref{sec:DynamicDetectionTask}).
 After these pseudo-objects are placed, they're measured and processed in the same way as a true object.
 Their measurements are included in output catalogs, with an accompanying flag set to indicate that these are sky objects.
 
@@ -75,8 +75,13 @@ Typically, for visit-level detectors and coadd-level images, we place 100 sky ob
 Within the \texttt{DynamicDetectionTask} a larger number of temporary sky objects (default 1000) are placed in order to generate an updated detection threshold.
 
 \subsubsection{Standard Measurement Plugins}
+\label{sec:standard-plugins}
 
-TODO: highlight important \texttt{meas\_base} algorithms.
+The \texttt{meas\_base} package includes a suite of standard measurement plugins.
+These include second moment shapes (\texttt{base\_SdssShape}) and adaptive centroids \citep[\texttt{base\_SdssCentroid}]{2003AJ....125.1559P}, circular aperture photometry (\texttt{base\_CircularApertureFlux}), PSF-weighted photometry (\text{base\_PsfFlux}), and many others.
+It also includes utility plugins that transform pixel bitmask values into catalog flags (\texttt{base\_PixelFlags}) and apply coordinate transforms to centroids for use in forced photometry.
+The algorithms are described in detail in \citet{2018PASJ...70S...5B}.
+There are also numerous extension plugins available in other pipeline packages described in the following sections.
 
 \input{sections/components/measurement/gaap}
 \input{sections/components/measurement/kron}
@@ -84,4 +89,3 @@ TODO: highlight important \texttt{meas\_base} algorithms.
 \input{sections/components/measurement/trailed-sources}
 \input{sections/components/measurement/cmodel}
 \input{sections/components/measurement/multiprofit}
-\input{sections/components/measurement/reliability}

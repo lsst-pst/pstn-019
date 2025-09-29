@@ -3,9 +3,9 @@
 
 The \texttt{meas\_modelfit} package's CModel algorithm is a reimplemention of the SDSS galaxy-model fitting approach, in which we fit a PSF-convolved elliptical exponential profile and de Vaucouleurs profile to each object separately, and then fit a linear combination of the two with the ellipse parameters held fixed.
 This is not as principled as a true bulge-disk decomposition, in which both models are fit simultaneously, but since each fit has fewer degrees of freedom, it can nevertheless work better on low signal-to-noise or poorly-resolved galaxies, where the degeneracies in a bulge-disk decomposition might otherwise lead to completely unphysical parameters.
-In fact, in practice, CModel is better though of as a crude single-Sersic fit than a kind of decomposition.
+In practice, CModel is better thought of as a crude substitute for a single-Sersic fit than a kind of decomposition.
 
 Because these are PSF-convolved models, we expect CModel to provide decent photometry (including for colors) on both small and well-resolved objects.
 At present, CModel flux uncertainties are known to be severely underestimated; at least some of this is due to the fact that the ellipse parameter uncertainties cannot easily be propagated into the flux uncertainties in the final fit.
 
-The CModel code is essentially unchanged from the version used in the HSC pipelines; and additional details can be found in \citet{2018PASJ...70S...5B}.
+The CModel code is essentially unchanged from the version used in the HSC pipelines, and additional details can be found in \citet{2018PASJ...70S...5B}.

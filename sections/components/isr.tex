@@ -1,39 +1,9 @@
 \subsection{Instrument Signature Removal}
 \label{sec:isr}
 
-Raw images from charge-coupled devices (CCDs) contain instrumental effects, such as dark currents, clocking artifacts, or crosstalk between neighboring amplifiers, that can be removed in the data processing.
+Raw images from charge-coupled devices (CCDs) contain instrumental effects, such as dark currents, tree-rings \citep{2020JATIS...6a1005P}, brighter-fatter \citep{2024PASP..136d5003B}, amplifier offsets, clocking artifacts, or crosstalk between neighboring amplifiers, that can be removed in the data processing.
 In the Rubin pipeline, this step is called Instrument Signature Removal (ISR) and is the first processing applied to a raw CCD exposure.
-The package performing the ISR on an exposure, called \texttt{ip\_isr}, is detailed below in \S\ref{sec:ip_isr}: it is a critical package for Data Release Production (DRP) pipelines used to process LSST images and requires calibration products produced and verified by \texttt{cp\_pipe} and \texttt{cp\_verify} respectively as described in \S\ref{sec:calib_pipe}.
-For further information about the life cycle of a calibration product and the procedures it entails, see \citet{DMTN-222}.
-A general overview of the ISR steps (based on the model in Fig.~\ref{fig:isr_model}) and calibration products production (including generation, verification, certification, approval, and distribution) is given in \citet{2025JATIS..11a1209P}.
-
-We note that we focus here on our approach to performing ISR on data from LSST cameras only (LSSTCam, LSSTComCam, and LATISS), although we also provide calibration pipelines for other cameras such as DECam and HSC using a different ISR approach.
-
-\subsubsection{ISR package}
-\label{sec:ip_isr}
-
-Exposures from LSST cameras are affected by instrumental effects, ranging from well-known CCD effects like dark currents or bias levels to effects more recently characterized like tree-rings (see \citet{2017JInst..12C5015P,2020JATIS...6a1005P,2023PASP..135k5003E,2015JInst..10C8010O,2016ApJ...825...61O} for more details on tree rings in LSSTCam and their impact on science) or the Brighter-Fatter effect as discussed in \citet{2024PASP..136d5003B}.
-Correcting for these effects requires specific calibrations, which we refer to as calibration products.
+The package performing the ISR on an exposure, called \texttt{ip\_isr}, is a critical package for pipelines used to process LSST images and requires calibration products produced and verified by pipelines from the \texttt{cp\_pipe} and \texttt{cp\_verify} packages as described in \secref{sec:calib_pipe}.
+For further information about the life cycle of a calibration product and the procedures it entails, see \citet{DMTN-222} and \citet{SITCOMTN-086}.
 In LSST cameras, calibration products typically are a combined bias, a combined dark, a Photon Transfer Curve (PTC), a crosstalk matrix, a list of defects, and a look-up table of non-linearity parameters.
-The meaning of these calibration products and the details on the Rubin Observatory's ISR and calibration approach can be found in \citet{2025JATIS..11a1209P} and \citet{SITCOMTN-086}.
-\begin{figure}
-    \plotone{figures/components/isr/calibration_boxes_detector_model.pdf}
-    \caption{Schematic of the instrument model for detector effects in LSST cameras which \texttt{isrTaskLSST} is based on at the time of publication.
-    More details about the model can be found in \citet{SITCOMTN-086} and \citet{ 2025JATIS..11a1209P}.}
-    \label{fig:isr_model}
-\end{figure}
-
-The \texttt{ip\_isr} package\footnote{\url{https://github.com/lsst/ip_isr}} contains the codes needed to remove instrument signatures in exposures from LSST cameras and to produce calibration products.
-To inform our ISR approach, we first designed a model of the instrument, displayed in Fig. \ref{fig:isr_model}, based on our knowledge of the hardware and electronics.
-This model states the order in which the different known instrumental effects happen, from a photon hitting the CCD to the output ADC unit (ADU) signal.
-In turn, \texttt{isrTaskLSST} in \texttt{ip\_isr} sequentially applies corrections of these effects in the opposite order as their effects occur in the model, as we are attempting to remove the impact of those effects on the image.
-Such corrections are typically done by calling other \texttt{Tasks} (\textit{e.g.} overscan, crosstalk, etc.) also implemented in \texttt{ip\_isr}.
-Not shown in Fig. \ref{fig:isr_model} is a final amplifier offset (amp-offset) correction step.
-The amp-offset correction is applied to the output exposure at the end of \texttt{isrTaskLSST} to remove discontinuities in the background sky level across amplifier boundaries.
-For more details on the amp-offset correction, see Appendix \S\ref{sec:ampoffset}.
-
-Overall, \texttt{isrTaskLSST} takes a \texttt{raw} CCD exposure, and calibration products if available, and outputs a \texttt{Struct} containing the output exposure, the \texttt{post\_isr\_image} output exposure as well as its binned version for easier display, the exposure without interpolation and statistics on the output exposure.
-\texttt{IsrTaskLSSTConfig} defines the configurations used in this \texttt{Task}, with them set by default to their expected values to perform ISR on a typical LSSTCam exposure.
-Configuration parameters starting with \texttt{do} will typically correspond to an ISR step.
-These steps are turned on or off in the pipelines when producing the different calibration products.
-We have also developed \texttt{isrMockLSST} which simulates a raw exposure and corresponding calibration products and is used to test \texttt{isrTaskLSST}.
+A general overview of the ISR steps and calibration products production (including generation, verification, certification, approval, and distribution) is given in \citet{2025JATIS..11a1209P}.
