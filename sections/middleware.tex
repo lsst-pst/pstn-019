@@ -68,14 +68,14 @@ The data coordinate locates the dataset in the dimensional space where dimension
 Some commonly used dimensions are listed in Table~\ref{tab:dims}.
 Each dataset is uniquely located by specifying its dataset type, its run collection, and its coordinates, with Butler refusing to accept another dataset that matches all three of those values.
 The dataset type defines the relevant dimensions (such as whether this is referring to observations or a sky map) and the associated Python type representing the dataset.
-The run collection can be thought of as a or logical grouping of datasets created by the same batch operation, but does not have to correspond to any physical structure in a file system.
+The run collection can be thought of as a logical grouping of datasets created by the same batch operation, but does not have to correspond to any physical structure in a file system.
 
 As a concrete example, the file from one detector of an LSSTCam observation taken sometime in 2025 could have a data coordinate of \texttt{instrument="LSSTCam", detector=42, exposure=2025080300100} and be associated with a \texttt{raw} dataset type.
 The \texttt{exposure} record itself implies other information such as the physical filter and the time of observation.
 A deep coadd on a patch of sky would not have \texttt{exposure} dimensions at all and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, band="r", skymap="something"}, which would tell you exactly where it is located in the sky and in what waveband since you can calculate it from the tract, patch, band and skymap.
 
 Projects can use different sets of dimension definitions, called ``universes``, and the butler's database schema is derived from those definitions (so changing the dimension universe used by a butler repository is possible, but not undertaken lightly, as it constitutes a schema migration).
-Downstream science code generally needs to make assumptions about what is in the dimension universe (e.g. whether a \texttt{detector} concept exists, and if so, whether \emph{implies} a \texttt{band} or can be associated with any \texttt{band}), which can limit its reusability.
+Downstream science code generally needs to make assumptions about what is in the dimension universe (e.g. whether a \texttt{detector} concept exists, and if so, whether it \emph{implies} a \texttt{band} or can be associated with any \texttt{band}), which can limit its reusability.
 
 \subsection{Pipelines and Tasks}
 
@@ -113,7 +113,7 @@ It is also possible to visualize quantum graphs, which include the actual data f
 The \texttt{pex\_config} package provides the foundational configuration system for running large scale processing campaigns with the science pipelines.
 \texttt{pex\_config} is built resembling a Domain Specific Language embedded within Python, in which configuration options are defined via Python classes  and values are set via snippets of Python code.
 This leverages the full power of a programming language for parsing and setting configuration values, while also supporting interoperability with standard text formats (e.g. JSON, YAML), import-time plugin extensibility, provenance through parameter change history, and validation of both types and values.
-The system can be installed and used on its own, and been adopted by the DRAGONS software \citep{2023RNAAS...7..214L}.
+The system can be installed and used on its own, and has been adopted by the DRAGONS software \citep{2023RNAAS...7..214L}.
 A more detailed description of how the configuration system works is provided in Appendix~\ref{sec:appendix_config}.
 
 \subsection{Instrument Abstractions: Obs Packages}
