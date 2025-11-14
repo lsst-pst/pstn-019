@@ -3,8 +3,8 @@
 \label{sec:deblending}
 
 \emph{Deblending} has become the standard astronomical term for dealing with images where multiple distinct astrophysical sources overlap.
-In the LSST Science Pipelines, it specifically means assigning different fractions of the flux of all of the pixels in a \texttt{Footprint} to each of the peaks in that \texttt{Footprint}, which are then each considered a ``child'' source.
-This fractional flux assignment is very different from creating a ``segmentation map'' that fully assigns each pixel to each child source, as done by, for example, Source Extractor \citep{1996A&AS..117..393B}.
+In the LSST Science Pipelines, it specifically means assigning fractions of the flux from all pixels in a \texttt{Footprint} to each of the peaks within that \texttt{Footprint}, with each peak then considered a ``child'' source.
+This fractional flux assignment is very different from creating a ``segmentation map'', which fully assigns each pixel to each child source, as done by, for example, Source Extractor \citep{1996A&AS..117..393B}.
 \texttt{HeavyFootprint} (an extension of \texttt{Footprint} that adds a flattened array of pixel values) is used to pass the per-pixel fluxes to downstream algorithms.
 
 Deblending in the science pipelines is performed differently for single-band (visit) image processing vs.\ multi-band (coadd) image processing.
