@@ -3,7 +3,7 @@
 
 Raw images from charge-coupled devices (CCDs) contain instrumental effects, such as dark currents, tree-rings \citep{2020JATIS...6a1005P}, brighter-fatter \citep{2024PASP..136d5003B}, amplifier offsets, clocking artifacts, or crosstalk between neighboring amplifiers, that can be removed in the data processing.
 In the Rubin pipeline, this step is called Instrument Signature Removal (ISR) and is the first processing applied to a raw CCD exposure.
-The package that performs ISR on an exposure, called \texttt{ip_isr}, is a critical component of the pipelines used to process LSST images and requires calibration products produced and verified by the \texttt{cp_pipe} and \texttt{cp_verify} packages, as described in \secref{sec:calib_pipe}”
+The package that performs ISR on an exposure, called \texttt{ip\_isr}, is a critical component of the pipelines used to process LSST images and requires calibration products produced and verified by the \texttt{cp\_pipe} and \texttt{cp\_verify} packages, as described in \secref{sec:calib_pipe}.
 For further information about the production and  life cycle of a calibration product, and the associated procedures, see \citet{DMTN-222} and \citet{SITCOMTN-086}.
 In LSST cameras, calibration products typically include a combined bias, a combined dark, a Photon Transfer Curve (PTC), a crosstalk matrix, a list of defects, and a look-up table of non-linearity parameters.
 A general overview of the ISR steps and calibration products production (including generation, verification, certification, approval, and distribution) is given in \citet{2025JATIS..11a1209P}.
