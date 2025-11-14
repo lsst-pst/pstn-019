@@ -12,12 +12,12 @@ These include (but are not limited to):
     This includes the \texttt{Footprint} class, which combines a \texttt{SpanSet} with a list of peaks to represent either a single source detection or a group of blended sources.
 \item \texttt{afw.image} centers around the \texttt{Exposure} class, which combines an image (\texttt{Image}), bitmask (\texttt{Mask}), and variance image with the many objects used to astrophysically characterize an observation or coadd (PSF, WCS, aperture corrections, etc).
 \item \texttt{afw.table} holds data structures for tabular data, with both row- and column-based views.  The \texttt{afw.table.io} package defines a framework for persisting arbitrary objects to a series of FITS binary table HDUs, which is used in the on-disk form of the \texttt{Exposure} class.
-\item \texttt{afw.cameraGeom} provides a hierarchical description of large-format photometric cameras (like LSSTCam, HSC, or DECam), including optical distortions, focal plane layouts, and amplifier regions.
+\item \texttt{afw.cameraGeom} provides a hierarchical description of large-format photometric cameras, such as LSSTCam, HSC, or DECam, including optical distortions, focal plane layouts, and amplifier regions.
 \end{itemize}
-Most of the algorithms and data structures in \texttt{afw} are implemented there directly, and often represent evolutions of concepts first developed in the SDSS \emph{Photo} pipeline or the Pan-STARRS Image Processing Pipelines.
+Most of the algorithms and data structures in  \texttt{afw}  are implemented  directly within it, and often reflect the evolution of concepts originally developed in the SDSS \emph{Photo} pipeline or the Pan-STARRS Image Processing Pipelines.
 Others delegate to third-party libraries, particularly Eigen (linear algebra), the Gnu Scientific Library (interpolation, random numbers), Boost (image iterators and geometry), CFITSIO (image and table I/O) and Starlink AST \citep[coordinate systems and transforms;][]{2016A&C....15...33B}.
 
-Even lower-level data structures are defined in a handful of packages just below \texttt{afw}.
+Lower-level data structures are defined in a handful of packages just below \texttt{afw}.
 The \texttt{sphgeom} package is used for spherical geometry calculations, sky-based regions, and hierarchical sky pixelization schemes, while \texttt{geom} provides simple 2-d Euclidean \texttt{Point}, \texttt{Extent}, and \texttt{Box} types in both integer- and floating-point variants.
 \texttt{geom} also includes linear transforms and (for historical reasons) its own angle-manipulation and sky coordinate type.
 
