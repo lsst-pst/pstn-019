@@ -4,12 +4,13 @@
 
 Point-spread function (PSF) modeling in the LSST Science Pipelines is largely delegated to external libraries, albeit with considerable wrapper code to adapt them to a common interface.
 We use both a heavily modified version of \texttt{PSFEx} \citep{2011ASPC..442..435B,2013ascl.soft01001B} and \texttt{Piff} \citep{2021ascl.soft02024J,2021MNRAS.501.1282J} in our production pipelines.
-\texttt{PSFEx} is faster, and is used in nightly alert processing and to obtain a preliminary model in data release processing, while \texttt{Piff} is used in a second, more careful round of PSF estimation in data release processing for better accuracy (especially for weak gravitational lensing).
+\texttt{PSFEx} is faster and is used in nightly alert processing  as well as to obtain a preliminary model in data release processing.
+\texttt{Piff} is then used in a second, more detailed round of PSF estimation during data release processing to achieve better accuracy, especially for weak gravitational lensing.
 
 \subsubsection{PSFEx}\label{sec:meas_extensions_psfex}
 
 The \texttt{meas\_extensions\_psfex} package provides an interface to our own library version of the \texttt{PSFEx} command-line tool.
-At its core is a task which prepares these selected stars for input into \texttt{PSFEx}, calls into the library, and converts the output into an LSST-specific PSF object.
+At its core is a task which prepares selected stars for input into \texttt{PSFEx}, invokes the library, and converts the resulting model into an LSST-specific PSF object.
 Key parameters such as spatial interpolation order and oversampling ratio are controlled via configuration.
 
 For each CCD in the focal plane, \texttt{PSFEx} independently models the PSF as a linear combination of basis vectors and captures spatial variation using polynomial interpolation.
@@ -21,7 +22,7 @@ A special task offers a built-in mechanism for star selection using strict cuts 
 The \texttt{meas\_extensions\_piff} package is a wrapper around the \texttt{Piff} package.
 \texttt{Piff} is a modular package that supports various PSF models, interpolation schemes, and coordinate systems.
 It can operate on a per-CCD basis or over the full field of view.
-The implementation within  \texttt{meas\_extensions\_piff} does not exploit the full modularity of \texttt{Piff}; instead, it closely follows the method used for cosmic shear analysis like in DES \citep{2021MNRAS.501.1282J,2025OJAp....8E..26S}, but it has been designed to make it easy to add support for more options as needed.
+The implementation within  \texttt{meas\_extensions\_piff} does not exploit the full modularity of \texttt{Piff}; instead, it closely follows the method used for cosmic shear analysis, such as that in DES \citep{2021MNRAS.501.1282J,2025OJAp....8E..26S}, however it has been designed to make it easy to add support for more options as needed.
 
 The PSF model utilized is a \texttt{PixelGrid}, and the interpolation is performed using \texttt{BasisPolynomial} interpolation \citep{2021MNRAS.501.1282J}.
 Modeling is executed per CCD and can employ either pixel or sky coordinates.
@@ -29,6 +30,6 @@ A key difference from \texttt{PSFex} is that  \texttt{Piff} implements outlier r
 
 Most of the configuration described here is adjustable through configuration.
 Some important features that were implemented by \citet{2021MNRAS.501.1282J} and \citet{2025OJAp....8E..26S} have not yet been enabled but will be available in the near future.
-\citet{2021MNRAS.501.1282J} configure \texttt{Piff} to fit in sky coordinates with a world-coordinate system transform (WCS) that includes CCD distortions such as tree rings.
+\citet{2021MNRAS.501.1282J} configure \texttt{Piff} to fit in sky coordinates with a world-coordinate system (WCS) transform that includes CCD distortions such as tree rings.
 \texttt{meas\_extensions\_piff} is capable of doing the same, but our astrometric models do not yet include CCD distortions, and hence thus far we have not used this approach in our production configuration, as it doesn't significantly improve the quality of the PSF models.
 Additionally, although \citet{2025OJAp....8E..26S} incorporated a color correction to account for chromatic effects on the PSF, this correction has not yet been implemented in  \texttt{meas\_extensions\_piff}.

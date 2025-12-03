@@ -6,4 +6,5 @@ They set ISR (see \secref{sec:isr}) configuration parameters needed for each cal
 In some cases, configurations also specify whether to combine exposures (for bias or dark exposures for instance) and to bin exposures to support diagnostic displays.
 
 Once calibration products are produced, they are ``verified'' (see \citet{DMTN-222} for more details) using \texttt{cp\_verify} pipelines by checking they pass metrics defined in \citet{DMTN-101}.
-In this case, verify configuration parameters enable all corrections in the ISR task up to and including the application of the correction being verified. As a result, the calibration products can then be certified to be available in the Butler and used to ISR an exposure.
+In this case, verify configuration parameters enable all corrections in the ISR task up to and including the application of the correction being verified. 
+As a result, the calibration products can then be certified to be available in the Butler and used for ISR of an exposure.

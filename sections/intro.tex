@@ -1,19 +1,21 @@
 \section{Introduction}
 \label{sec:intro}
 
-The NSF-DOE Vera C.\ Rubin Observatory will be performing the 10-year Legacy Survey of Space and Time \citep[LSST;][]{2019ApJ...873..111I} starting in 2025.
+The NSF-DOE Vera C.\ Rubin Observatory will be performing the 10-year Legacy Survey of Space and Time \citep[LSST;][]{2019ApJ...873..111I} starting in 2026.
 Rubin Observatory is located on Cerro Pachon in Chile and consists of the 8.4\,m Simonyi Survey Telescope \citep{2022SPIE12182E..0WT} with the 3.2-gigapixel LSSTCam survey camera \citep{10.71929/rubin/2571927,2024SPIE13096E..1SR} performing the main survey and the Rubin Auxiliary Telescope \citep{2020SPIE11452E..0UI} providing supplementary atmospheric calibration data using the LATISS instrument \citep{10.71929/rubin/2571930}.
-The Data Management System \citep[DMS;][]{2022arXiv221113611O} is designed to handle the flow of data from the telescope, approaching 20\,TB per night, in order to issue alerts and to prepare annual data releases.
-A central component of the DMS is the LSST Science Pipelines software that provides the algorithms and frameworks required to process the data from the LSST and generate the coadds, difference images, and catalogs to the user community for scientific analysis.
+The Data Management System \citep[DMS;][]{2022arXiv221113611O} is designed to handle the flow of data from the telescope, approaching 20\,TB per night.
+It produces the prompt data products, including alerts, and  prepares annual data releases.
+A central component of the DMS is the LSST Science Pipelines software, which provides the algorithms and frameworks required to process LSST data  and produce science-ready data products, including coadds, difference images, and catalogs.
 
 The LSST Science Pipelines software consists of the building blocks and pipeline infrastructure required to construct high performance pipelines to process the data from the LSST.
 It has been under development since at least 2004 \citep{2004AAS...20510811A} and has evolved significantly over the years as the project transitioned from prototyping \citep{2010SPIE.7740E..15A} and entered into formal construction \citep{2017ASPC..512..279J}.
-The software is designed to be usable by other optical telescopes and this has been demonstrated with the processing of data releases from Hyper Suprime-Cam on the Subaru Telescope in Hawaii \citep{2022PASJ...74..247A}, along with additional instruments used for internal testing and from plugins developed by the community.
+The software is designed to be usable by other optical telescopes, a capability that has been demonstrated with the processing of data from Hyper Suprime-Cam on the Subaru Telescope in Hawaii \citep{2022PASJ...74..247A} as well as data from additional instruments used for internal testing.
+There have also been plugins developed by the community for other instruments.
 It was used to make the first public data release from Rubin Observatory, the LSST Data Preview 1 \citep{RTN-095,10.71929/rubin/2570308}, which consisted of data from the LSST Commissioning Camera \citep[LSSTComCam;][]{10.71929/rubin/2561361,2022SPIE12184E..0JS}.
 
 In this paper we provide an overview of the software system, dividing it into four rough tiers:
 \begin{itemize}
-\item low-level utility code and our data access, configuration, and execution frameworks, and our core algorithmic primitives are described in sections \ref{sec:support}, \ref{sec:middleware}, and \ref{sec:core}, respectively;
+\item low-level utility code, along with the data access, configuration, and execution frameworks, and the core algorithmic primitives, are described in sections \ref{sec:support}, \ref{sec:middleware}, and \ref{sec:core}, respectively;
 \item reusable mid-level algorithmic components are described in \ref{sec:components};
 \item high-level tasks and pipelines are described in \secref{sec:tasks-and-pipelines}, along with some of the details of the algorithms specific to them;
 \item analysis and validation tooling is described in \secref{sec:analysis}.

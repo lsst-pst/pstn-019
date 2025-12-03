@@ -18,6 +18,7 @@ These C++ log messages are forwarded to Python rather than being issued from an 
 Finally, we also provide some LSST-specific exceptions that can be thrown from C++ code and caught in Python.
 
 As of September 2025, the Science Pipelines software is nearly 750,000 lines of Python and 220,000 lines of C++.
+For the purposes of this count, the Science Pipelines are defined as the \texttt{lsst\_distrib} metapackage and do not include code from third-party packages nor from the Solar System Pipeline (see \secref{sec:solsys}).
 The number of lines in the pipelines code as a function of time is given in Fig.~\ref{fig:pipe-loc}.
 
 \begin{figure}
@@ -28,6 +29,7 @@ Line counts include comments but not blank lines. Python interfaces are implemen
 \end{figure}
 
 \subsection{Python environment}
+\label{ssec:python}
 
 An important aspect of running a large data processing campaign is to ensure that the software environment is well defined.
 We define a base python environment using conda-forge via a meta package named \texttt{rubin-env}\footnote{\url{https://github.com/conda-forge/rubinenv-feedstock}}.
@@ -48,5 +50,5 @@ This includes longer tests (up to a few hours) in which we run complete pipeline
 
 Where possible, individual packages can be installed from PyPI but that is mostly limited to packages that do not have any C++ code due to limitations in Python packaging allowing packages to link directly against shared libraries from other packages.
 To install the full set of pipelines software we provide an installation script that installs the appropriate Conda environment and then downloads the binaries (Linux x86\_64, Linux aarch64, or macOS Apple Silicon) from our artifact server.
-As mentioned above it is also possible to install a Docker container with everything pre-installed.
+As mentioned in \S~\ref{ssec:python} it is also possible to install a Docker container with everything pre-installed.
 For developers we also provide a script to build and install the software directly from the Git repositories.
