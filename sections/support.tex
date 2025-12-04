@@ -34,7 +34,7 @@ Line counts include comments but not blank lines. Python interfaces are implemen
 An important aspect of running a large data processing campaign is to ensure that the software environment is well defined.
 We define a base python environment using conda-forge via a meta package named \texttt{rubin-env}\footnote{\url{https://github.com/conda-forge/rubinenv-feedstock}}.
 This specifies all the software needed to build and run the science pipelines software.
-A Docker container is built for each software release and the fully-specified versions of all software are recorded to ensure repeatability.
+A Docker OCI image is built for each software release and the fully-specified versions of all software are recorded to ensure repeatability.
 
 \subsection{Unit Testing and Code Coverage}
 

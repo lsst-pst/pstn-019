@@ -1,7 +1,7 @@
 \subsection{Solar System Pipelines}
 \label{sec:solsys}
 
-\begin{figure}
+\begin{figure*}
 \begin{center}
 \plotone{figures/tasks-and-pipelines/solsys/solarsystempipeline.pdf}
 
@@ -14,7 +14,7 @@ All timings denote design goals.
 }
 
 \end{center}
-\end{figure}
+\end{figure*}
 The Solar System Pipeline (SSP; Figure~\ref{fig:ssp}) suite is responsible for (i) discovering previously unknown solar system objects by linking together observations (usually DIASources) unattributable to static (non-moving) sources, (ii) reporting these to the Minor Planet Center (MPC), (iii) computing basic physical characteristics such as absolute magnitudes and slope parameters for all asteroids where sufficient data is available, and (iv) using the orbits received from the MPC to associate their apparitions in the DIASource tables (both in real-time and as precovery).
 Unlike the other packages described in this paper the Solar System Pipeline is not installed as part of the standard science pipelines software via the \texttt{lsst\_distrib} metapackage.
 
