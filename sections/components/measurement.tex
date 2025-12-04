@@ -4,7 +4,7 @@
 After sources are \emph{detected} \secrefp{sec:detection} and optionally \emph{deblended} \secrefp{sec:deblending}, the source measurement tasks are responsible for applying a suite of measurement \emph{plugins} on the deblended pixels for each source.
 Centroiders, shape measurements, and photometry algorithms are all implemented as measurement plugins.
 
-We also distinguish between measurement on the original detection image vs. measurement on a different image from the original detection.
+We also distinguish between measurement on the original detection image vs. measurement on another image using that original detection.
 Measurement could be performed on a single-visit image, a coadd of multiple images, or a difference of images: from the perspective of a measurement plugin, there is no difference between these cases.
 \textit{Forced measurement} is performed on one image using a ``reference'' catalog of sources that were detected on another image.
 
