@@ -8,7 +8,7 @@ Unlike most of the rest of the codebase, these packages can be individually inst
 
 Early in the development of the LSST Science Pipelines software it was decided that the algorithmic code should be written without knowing where files came from, what format they were written in, where the outputs are going to be written, or how they are going to be stored.
 All that the algorithmic code needs to know is the relevant data model and the Python type.
-To meet these requirements we developed a library called the Data Butler \citep[see e.g.,][]{2022SPIE12189E..11J,2023arXiv230303313L}.
+To meet these requirements we developed a library called the Data Butler \citep[see e.g.,][]{2022SPIE12189E..11J,2025ASPC..538..142L}.
 
 The Butler internally is implemented as a registry, a database keeping track of datasets, and a datastore, a storage system that can map a Butler dataset to a specific collection of bytes.
 A datastore is usually a file store (including POSIX file system, S3 object stores, or WebDAV) but it is also possible to store metrics directly into the Sasquatch metrics service \citep{SQR-068,2024SPIE13101E..1MF}.
@@ -80,7 +80,7 @@ Downstream science code generally needs to make assumptions about what is in the
 \subsection{Pipelines and Tasks}
 
 The data dimensions system also plays a fundamental role in how the LSST processing pipelines are assembled and run; high-level pieces of algorithmic code called \texttt{PipelineTasks} declare the dimensions of their units of work (``quanta''), their inputs, and their outputs, allowing a directed acyclic graph (a "quantum graph") describing the processing to be assembled from a YAML declaration of the tasks to be run, their configuration, and a Butler database query.
-Quantum graphs can range in size from a few tens of quanta (e.g., for the nightly processing performed on a single detector image) to millions (for a piece of the yearly data release pipelines), and serve as the common interface for multiple execution systems, including the low-latency nightly Prompt Processing framework \citep{DMTN-219} and the Batch Processing System \citep[BPS;][]{2022arXiv221115795G}, which adapts quantum graphs for execution at scale by third-party workflow management systems like HTCondor \citep{2022zndo...2579447H}, Parsl \citep{10.1145/3307681.3325400}, and PanDA \citep{2024EPJWC.29504026K}.
+Quantum graphs can range in size from a few tens of quanta (e.g., for the nightly processing performed on a single detector image) to millions (for a piece of the yearly data release pipelines), and serve as the common interface for multiple execution systems, including the low-latency nightly Prompt Processing framework \citep{DMTN-219} and the Batch Processing System \citep[BPS;][]{2025ASPC..538..325G}, which adapts quantum graphs for execution at scale by third-party workflow management systems like HTCondor \citep{2022zndo...2579447H}, Parsl \citep{10.1145/3307681.3325400}, and PanDA \citep{2024EPJWC.29504026K}.
 
 Algorithmic code below the \texttt{PipelineTask} level is often subdivided into multiple ``subtasks'' that (like \texttt{PipelineTask} itself) inherit from the base \texttt{Task} class, which provides easy access to hierarchical logging, metadata, and configuration.
 
@@ -146,7 +146,7 @@ There are currently project-supported \texttt{obs} packages for:
 
 All of these instruments use the default dimension universe.
 
-Additionally, teams outside the project have developed \texttt{obs} packages to support Subaru's Prime Focus Spectrograph \citep{2020SPIE11447E..7VW}, VISTA's VIRCAM \citep{2015A&A...575A..25S},
+Additionally, teams outside the project have developed \texttt{obs} packages to support Subaru's Prime Focus Spectrograph \citep{2024SPIE13096E..05T}, VISTA's VIRCAM \citep{2015A&A...575A..25S},
 the Wide Field Survey Telescope \citep[WFST;][]{2025arXiv250115018C}, and the Gravitational-wave Optical Transient Observer \citep[GOTO;][]{2021PASA...38....4M}.
 SPHEREx \citep{2020SPIE11443E..0IC} uses the pipeline middleware but has developed pipeline tasks without the Rubin C++ dependencies and so does not use an \texttt{obs} package.
 Most of these projects have made small changes to the default dimension universe to better represent their data model.
