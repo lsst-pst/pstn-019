@@ -99,7 +99,9 @@ It is also possible to visualize quantum graphs, which include the actual data f
 
 \begin{figure*}
     \centering
-    \plotone{figures/middleware/pipe_viz_comcam_subset.pdf}
+    % \plotone{figures/middleware/pipe_viz_comcam_subset.pdf}
+    % Use includegraphics to force more width for the figure.
+    \includegraphics[width=\textwidth]{figures/middleware/pipe_viz_comcam_subset.pdf}
     \caption{
         Example pipeline visualization of four selected tasks from the \texttt{LSSTComCam/DRP-v2.yaml} pipeline generated using Mermaid.
         The diagram illustrates the flow of datasets between tasks, with dashed lines indicating prerequisite inputs.
