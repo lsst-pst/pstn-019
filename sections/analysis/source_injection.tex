@@ -4,15 +4,17 @@
 The \texttt{source\_injection} package contains tools designed to assist in the injection of synthetic sources into scientific imaging.
 Source injection is a powerful tool for testing the algorithmic performance of the LSST Science Pipelines, generating measurements on synthetic sources where the truth is known and facilitating subsequent quality assurance checks.
 Synthetic source generation and injection capability is provided by the \textsc{GalSim} software package \citep{2015A&C....10..121R}.
-An example showcasing the injection of a series of synthetic Sérsic sources into an HSC i-band image is shown in Figure \ref{fig:source_injection_example}.
+An example showcasing the injection of a series of synthetic sources from the DC2 catalog \citep{2021ApJS..253...31L} into an LSSTComCam coadd image from DP1 \citep{10.71929/rubin/2570313} is shown in Figure~\ref{fig:source_injection_example}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{figures/analysis/source_injection/t9813p42i_zoom_sersic_pre_injection}
-    \includegraphics[width=\linewidth]{figures/analysis/source_injection/t9813p42i_zoom_sersic_post_injection}
+    \includegraphics[width=\linewidth]{figures/analysis/source_injection/coadd_5063_gri_lsstRGB_3sigma}
+    \includegraphics[width=\linewidth]{figures/analysis/source_injection/coadd_5063_gri_lsstRGB_3sigma_inj}
+    \includegraphics[width=\linewidth]{figures/analysis/source_injection/coadd_5063_gri_lsstRGB_3sigma_diff}
     \caption{
-        An HSC i-band cutout from tract 9813, patch 42, showing before (top) and after (bottom) the injection of a series of synthetic Sérsic sources.
-        Images are ~100 arcseconds on the short axis, log scaled across the central 99.5\% flux range, and smoothed with a Gaussian kernel of FWHM 3 pixels.
+      A LSSTComCam Data Preview 1 cutout from a deep coadd image \citep{10.71929/rubin/2570313} at tract 5063 patch 34, with sources injected from the DC2 catalog \citep{2021ApJS..253...31L}.
+      The top panel is the original image and the middle panel shows the image with the injected sources.
+      The bottom panel shows the difference between the two images.
     }
     \label{fig:source_injection_example}
 \end{figure}
@@ -20,7 +22,7 @@ An example showcasing the injection of a series of synthetic Sérsic sources int
 Synthetic sources can be injected into any imaging data product output by the LSST Science Pipelines, including visit-level exposure-type or visit-type datasets (i.e., datasets with the dimension \texttt{exposure} or \texttt{visit}), or into a coadd-level coadded dataset.
 
 Each task operates similarly: read in an injection catalog containing the parameters of the sources to be injected, generate sources using \textsc{GalSim}, and inject them into the input image.
-An additonal mask plane (\texttt{INJECTED} by default) is appended to the image mask to identify pixels which have been touched by injected sources.
+An additional mask plane (\texttt{INJECTED} by default) is appended to the image mask to identify pixels which have been touched by injected sources.
 Optional modifications to the noise profiles of injected sources and the variance plane of the image can also be performed.
 
 Once source injection has completed, the source injection task will output two dataset types: an injected image, and an associated injected catalog.
