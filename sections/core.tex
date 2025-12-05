@@ -14,8 +14,8 @@ These include (but are not limited to):
 \item \texttt{afw.table} holds data structures for tabular data, with both row- and column-based views.  The \texttt{afw.table.io} package defines a framework for persisting arbitrary objects to a series of FITS binary table HDUs, which is used in the on-disk form of the \texttt{Exposure} class.
 \item \texttt{afw.cameraGeom} provides a hierarchical description of large-format photometric cameras, such as LSSTCam, HSC, or DECam, including optical distortions, focal plane layouts, and amplifier regions.
 \end{itemize}
-Most of the algorithms and data structures in  \texttt{afw}  are implemented  directly within it, and often reflect the evolution of concepts originally developed in the SDSS \emph{Photo} pipeline or the Pan-STARRS Image Processing Pipelines.
-Others delegate to third-party libraries, particularly Eigen (linear algebra), the Gnu Scientific Library (interpolation, random numbers), Boost (image iterators and geometry), CFITSIO (image and table I/O) and Starlink AST \citep[coordinate systems and transforms;][]{2016A&C....15...33B}.
+Most of the algorithms and data structures in  \texttt{afw}  are implemented  directly within it, and often reflect the evolution of concepts originally developed in the SDSS \emph{Photo} pipeline \citep{2002AJ....123..485S} or the Pan-STARRS Image Processing Pipelines \citep{2020ApJS..251....3M}.
+Others delegate to third-party libraries, particularly Eigen (linear algebra), the Gnu Scientific Library (interpolation, random numbers), Boost (image iterators and geometry), CFITSIO \citep[image and table I/O;][]{2010ascl.soft10001P} and Starlink AST \citep[coordinate systems and transforms;][]{2016A&C....15...33B}.
 
 Lower-level data structures are defined in a handful of packages just below \texttt{afw}.
 The \texttt{sphgeom} package is used for spherical geometry calculations, sky-based regions, and hierarchical sky pixelization schemes, while \texttt{geom} provides simple 2-d Euclidean \texttt{Point}, \texttt{Extent}, and \texttt{Box} types in both integer- and floating-point variants.
@@ -29,7 +29,7 @@ Another small set of core packages sits just above \texttt{afw}:
 \begin{itemize}
 \item \texttt{skymap} defines interfaces and a few implementations of our system for mapping the sky onto a set of slightly-overlapping image-friendly projections and tiles for coaddition.
 Each distinct projection in a skymap is called a \texttt{tract}, and each \texttt{tract} is further divided into multiple \texttt{patches}.
-\item \texttt{shapelet} includes optimizated evaluation of Gauss-Hermite and Gauss-Laguerre functions and their derivatives.
+\item \texttt{shapelet} includes optimized evaluation of Gauss-Hermite and Gauss-Laguerre functions and their derivatives.
 \end{itemize}
 
 A substantial fraction of our core packages predate the now-ubiquitous Astropy package, and in some cases we now prefer to use Astropy types in \emph{most} new code (date/time representations and tables in particular) and especially public interfaces, following the recommendations from \citet{2016SPIE.9913E..0GJ}.

@@ -6,7 +6,7 @@ First, astrometric and photometric solutions for each detector are fit independe
 In the nightly alert processing, we expect to be able to use a high-density reference catalog produced by the most recent Rubin data release, and these single-detector fits represent the final calibrations.
 In data release processing, much more sophisticated final astrometric and photometric transforms are then fit to catalogs from multiple epochs at once.
 
-The Rubin pipeline uses the Starlink AST library \citep{2016A&C....15...33B} for persisting, composing, and evaluating coordinate transformations.
+The LSST Science Pipelines use the Starlink AST library \citep{2016A&C....15...33B} for persisting, composing, and evaluating coordinate transformations.
 We have our own class in the \texttt{afw} package for representing (among other things) photometric calibrations, usually with Chebyshev polynomials.
 These can also be multiplied and even mixed with AST-backed transform objects to represent pixel-area corrections.
 Our coordinate transforms are not exactly representable via the FITS WCS standard \citep{2002A&A...395.1061G}, which has no way to describe a chain of composed transforms.
