@@ -40,7 +40,9 @@ A Docker OCI image \citep{merkel2014docker} is built for each software release a
 
 Unit testing and code coverage are critical components of code quality \citep{2018SPIE10707E..09J}.
 Every package comes with unit tests written using the standard Python \texttt{unittest} module.
-We run the tests using \texttt{pytest} \citep{pytest} and this comes with many advantages in that all the tests run in the same process and requiring global parameters to be well understood, tests can be run in parallel in multiple processes, plugins can be enabled to extend testing and record test coverage, and a test report can be created giving details of run times and test failures.
+We run the tests using \texttt{pytest} \citep{pytest} and this comes with many advantages over our original approach of running each test file independently.
+For example, running all the tests in a single process can indicate places where global state is being used unexpectedly, and randomizing the testing order can also reveal issues.
+Additionally tests can be run in parallel in multiple processes, plugins can be enabled to extend testing options and record test coverage, and a test report can be created giving details of run times and test failures.
 Coding standards compliance with PEP\,8 \citep{pep8} is enforced using GitHub Actions, the \texttt{ruff} package, and \texttt{pre-commit} checks.
 
 A Jenkins system \citep{2018SPIE10707E..09J,DMTN-327} provides the team with continuous integration across multiple packages.
@@ -50,5 +52,5 @@ This includes longer tests (up to a few hours) in which we run complete pipeline
 
 Where possible, individual packages can be installed from the Python Package Index (PyPI)\footnote{For example, the Data Butler is on PyPI at \url{https://pypi.org/project/lsst-daf-butler/}. To simplify discoverability and prevent namespace confusion, Rubin packages on PyPI include the \texttt{lsst-} prefix in the package name (for example \texttt{lsst-daf-butler} and \texttt{lsst-pipe-base} coresponding to the EUPS names of \texttt{daf\_butler} and \texttt{pipe\_base}).} but that is mostly limited to packages, such as pipeline middleware packages, that do not have any C++ code due to limitations in Python packaging allowing packages to link directly against shared libraries from other packages.
 To install the full set of pipelines software we provide an installation script that installs the appropriate Conda environment and then downloads the binaries (Linux x86\_64, Linux aarch64, or macOS Apple Silicon) from our artifact server.
-As mentioned in \secref{ssec:python} it is also possible to install a Docker container with everything pre-installed.
+As mentioned in \secref{ssec:python} it is also possible to run a Docker container with everything pre-installed.
 For developers we also provide a script to build and install the software directly from the Git repositories.

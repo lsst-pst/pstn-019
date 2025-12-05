@@ -29,7 +29,7 @@ Another small set of core packages sits just above \texttt{afw}:
 \begin{itemize}
 \item \texttt{skymap} defines interfaces and a few implementations of our system for mapping the sky onto a set of slightly-overlapping image-friendly projections and tiles for coaddition.
 Each distinct projection in a skymap is called a \texttt{tract}, and each \texttt{tract} is further divided into multiple \texttt{patches}.
-\item \texttt{shapelet} includes optimizated evaluation of Gauss-Hermite and Gauss-Laguerre functions and their derivatives.
+\item \texttt{shapelet} includes optimized evaluation of Gauss-Hermite and Gauss-Laguerre functions and their derivatives.
 \end{itemize}
 
 A substantial fraction of our core packages predate the now-ubiquitous Astropy package, and in some cases we now prefer to use Astropy types in \emph{most} new code (date/time representations and tables in particular) and especially public interfaces, following the recommendations from \citet{2016SPIE.9913E..0GJ}.
