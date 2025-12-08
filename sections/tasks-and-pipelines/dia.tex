@@ -11,7 +11,7 @@ The final difference image with updated mask planes is written along with the DI
 \subsubsection{PSF Matching and Subtraction}
 
 The primary implementation of image subtraction is based on \citet{1998ApJ...503..325A}, and uses spatially-varying Gauss-Hermite basis functions for the fit.
-The PSF-matching kernel can be constructed for either the science or the template image, and the resulting difference image is decorrelated \citet{DMTN-021}.
+The PSF-matching kernel can be constructed for either the science or the template image, and the resulting difference image is decorrelated \citep{DMTN-021}.
 Optionally, the science image can be preconvolved with its own PSF before PSF-matching, producing a Score image analogous to \citet{2016ApJ...830...27Z}.
 
 \subsubsection{DIA Detection and Measurement}
@@ -22,7 +22,7 @@ Otherwise, the difference image is smoothed with a Gaussian of the same width as
 Contiguous pixels around each peak that are statistically brighter than the background are grouped into source footprints, and any overlapping footprints are merged.
 Footprints that contain both a positive and a negative peak are fit as dipoles.
 The dipole fit simultaneously solves for the negative and positive lobe centroids and fluxes using non-linear least squares minimization.
-DiaSources that are not classified as dipoles instead fall back on the \texttt{base\_SdssCentroid} \secrefp{sec:standard-plugins}.
+DIASources that are not classified as dipoles instead fall back on the \texttt{base\_SdssCentroid} \secrefp{sec:standard-plugins}.
 Finally, all configured measurement plugins are run, including HSM shape measurements \secrefp{sec:hsm} and a trailed-source fit \secrefp{sec:trailed-sources}.
 
 \subsubsection{Filtering Non-astrophysical DIASources}
@@ -33,7 +33,7 @@ These may be due to a variety of causes, including uncorrected instrument signat
 The latter can leave long streaks that cross one or more LSSTCam detectors
 \citep{2020AJ....160..226T,2022A&C....3900584H}.
 
-To reduce the number of DiaSources originating from non-astrophysical sources, we apply a multi-prong approach:
+To reduce the number of DIASources originating from non-astrophysical sources, we apply a multi-prong approach:
 
 \begin{itemize}
 \item During detection, we remove sources that have pixel flags characteristic of artifacts and unusable measurements, such as when all of the central pixels of a DIASource are saturated.
@@ -45,7 +45,7 @@ To reduce the number of DiaSources originating from non-astrophysical sources, w
 
 \item Trailed DIASources consistent with a rate of motion greater than 10 degrees per day are filtered.
 
-\item Blank sky sources used for noise estimation are removed from the output catalog.
+\item Blank sky sources \secrefp{sec:sky-objects} used for noise estimation are removed from the output catalog.
 
 \end{itemize}
 
@@ -75,10 +75,11 @@ Properties of the source such as its reliability score \secrefp{sec:reliability}
 \subsubsection{Alert Production Database (APDB)}
 \label{sec:apdb}
 
-The Alert Production Database \citep[APDB;][]{DMTN-293}) supports SQL, Postgres, and Cassandra database formats.
-The previous history of DIAObjects, DIASources, and DiaForcedSources for the region containing the science image are loaded and passed to a task for association.
+The Alert Production Database \citep[APDB;][]{DMTN-293} supports SQLite, PostgreSQL, and Apache Cassandra database formats.
+SQLite and PostgreSQL are used for testing only, a more scalable Cassandra database is used in production.
+The previous history of DIAObjects, DIASources, and DIAForcedSources for the region containing the science image are loaded and passed to a task for association.
 Loading is split from the association step to enable preloading of catalogs from the database in Prompt Processing during the interval when the next visit has been scheduled but the images have not yet been taken.
-When AP-style association is run outside of Prompt Processing, it is therefore essential to process all association tasks in strict visit order to prevent loading catalogs from the APDB prematurely and losing DiaObject history in association.
+When AP-style association is run outside of Prompt Processing, it is therefore essential to process all association tasks in strict visit order to prevent loading catalogs from the APDB prematurely and losing DIAObject history in association.
 
 \subsubsection{Alert Generation}
 \label{sec:alerts}
@@ -87,7 +88,7 @@ In order to enable real-time science, the AP pipelines generate alert packets fo
 These packets are serialized in Apache Avro\footnote{\url{https://avro.apache.org/}} format and then transmitted to community alert brokers via Kafka for further processing.
 \citet{DMTN-093} provides a high-level overview of the alert system.
 
-Within the pipelines, alert packets are constructed  within \texttt{ap\_association}.
+Within the pipelines, alert packets are constructed within and published by \texttt{ap\_association}.
 Alert packets contain the triggering DIASource record; the associated DIAObject or SSObject record; up to twelve months of past history from DIASources, DIAForcedSources, and/or upper limits; and cutout images of the science, template, and difference images centered at the position of the cutout.
 Cutouts are provided as FITS images serialized by the Astropy \texttt{CCDData} class, and include image, variance, and mask planes along with WCS information and an image of the approximate PSF.
 

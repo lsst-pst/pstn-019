@@ -1,7 +1,7 @@
 \subsection{\texttt{ap\_pipe}}
 \label{sec:ap_pipe}
 
-The \texttt{ap\_pipe} package defines the pipeline(s) to be used for real-time Alert Production processing \citep{DMTN-219}.
+The \texttt{ap\_pipe} package defines the pipeline(s) to be used for real-time Alert Production processing.
 These pipelines include instrument signature removal \secrefp{sec:isr}, calibration \secrefp{sec:calibration}, measurement plugins \secrefp{sec:measurement}, image differencing \secrefp{sec:dia}, source association \secrefp{sec:association}, and alert generation \secrefp{sec:alerts}.
 Some of these tasks are shared with the pipelines in \texttt{drp\_pipe} \secrefp{sec:drp_pipe}, but are configured to prioritize speed over strict quality; for example, they use a minimal set of measurement plugins.
 
