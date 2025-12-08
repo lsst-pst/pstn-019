@@ -11,8 +11,11 @@ These dependencies are managed using the ``Extended Unix Product System'' \citep
 most of the products are built using the SCons system \citep{2005Scons1377085} with LSST-specific extensions provided in the \texttt{sconsUtils} package enforcing standard build rules and creating the necessary Python package metadata files.
 The naming convention is that if a package is named \texttt{some\_name} then in Python it will be imported as \texttt{lsst.some.name}.
 
-For logging we always use standard Python logging with an additional \texttt{VERBOSE} log level between \texttt{INFO} and \texttt{DEBUG} to provide additional non-debugging detail that can be enabled during batch processing.
+For logging we always use standard Python logging but include an additional \texttt{VERBOSE} log level between \texttt{INFO} and \texttt{DEBUG} to provide additional non-debugging detail that can be enabled during batch processing, and also a \texttt{TRACE} log level to support very detailed debug logging.
 This verbose logging is used for periodic logging where long-lived analysis tasks are required to issue a log message every 10 minutes to indicate to the batch system that they are still alive and actively performing work.
+Orthogonally to the \texttt{TRACE} logging level there is also the ability to enable loggers named \texttt{TRACEn}, where \texttt{n} is an integer, and we can enable these loggers at \texttt{DEBUG} log level to provide more and more detail as the number increases.
+Finally, we use \texttt{timer} loggers for each task to simplify the collection of runtime performance metrics.
+
 For logging from C++ we use Log4CXX wrapped in the \texttt{lsst.log} package to make it look more like standard Python logging, whilst also supporting deferred string formatting such that log messages are only formed if the log message level is sufficient for the message to be logged.
 These C++ log messages are forwarded to Python rather than being issued from an independent logging stream.
 Finally, we also provide some LSST-specific exceptions that can be thrown from C++ code and caught in Python.
@@ -43,7 +46,7 @@ Every package comes with unit tests written using the standard Python \texttt{un
 We run the tests using \texttt{pytest} \citep{pytest} and this comes with many advantages over our original approach of running each test file independently.
 For example, running all the tests in a single process can indicate places where global state is being used unexpectedly, and randomizing the testing order can also reveal issues.
 Additionally tests can be run in parallel in multiple processes, plugins can be enabled to extend testing options and record test coverage, and a test report can be created giving details of run times and test failures.
-Coding standards compliance with PEP\,8 \citep{pep8} is enforced using GitHub Actions, the \texttt{ruff} package, and \texttt{pre-commit} checks.
+Coding standards compliance with PEP\,8 \citep{pep8} is enforced using GitHub Actions, with \texttt{ruff} or \texttt{flake8}, and for some package, \texttt{pre-commit} checks.
 
 A Jenkins system \citep{2018SPIE10707E..09J,DMTN-327} provides the team with continuous integration across multiple packages.
 This includes longer tests (up to a few hours) in which we run complete pipelines on small precursor datasets (typically a few GB) fetched via \texttt{git-lfs}.

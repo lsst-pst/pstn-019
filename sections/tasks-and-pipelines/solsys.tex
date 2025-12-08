@@ -26,7 +26,7 @@ It is designed to be capable of detecting 95\% of all Solar System objects whose
 \texttt{heliolinx} is written in C++, but provides a Python API including a standard \texttt{Task} API.
 
 Candidate discoveries with a high degree of certainty, as well as re-observations of already known objects, are reported to the Minor Planet Center (MPC) using the observation submission pipeline.
-The astrometric and photometric data are converted to the PSV variant of the Astrometric Data Exchange Standard \citep[ADES;][]{2017DPS....4911214C}, and submitted via a HTTPS POST API provided by the MPC.
+The astrometric and photometric data are converted to the PSV variant of the Astrometric Data Exchange Standard \citep[ADES;][]{2017DPS....4911214C}, and submitted to the MPC.
 
 Following processing and validation of newly reported candidates, they're added to the MPC's central database.
 This database, including the table of orbits as well as observations, is replicated using PostgreSQL logical replication.

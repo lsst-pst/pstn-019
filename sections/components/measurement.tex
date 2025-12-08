@@ -28,7 +28,7 @@ The base class defines a list of named constants for particular cases:
 \end{enumerate}
 The measurement system also provides a \textit{slot} system for predefined aliases to allow a plugin to get a value without knowing exactly what plugin originally computed that value, e.g., \texttt{slot\_Centroid} could point to \texttt{base\_SdssCentroid}, or some other plugin that measures centroids.
 
-While the measurement tasks and plugin interfaces are pure Python, most concrete measurement plugins are implemented in C++, since they need to loop over pixels.
+While the measurement tasks and plugin interfaces are Python, most concrete measurement plugins are implemented in C++, since they need to loop over pixels.
 
 When a measurement task is run, it starts by making an empty
 \texttt{SourceCatalog} (from the ``afw.table`` library, see \secref{sec:core}) with the plugin-defined schema and one row for each of the \texttt{Footprint} objects returned by previous detection and deblending tasks.
