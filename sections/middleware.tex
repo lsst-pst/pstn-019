@@ -8,7 +8,7 @@ Unlike most of the rest of the codebase, these packages can be individually inst
 
 Early in the development of the LSST Science Pipelines software it was decided that the algorithmic code should be written without knowing where files came from, what format they were written in, where the outputs are going to be written, or how they are going to be stored.
 All that the algorithmic code needs to know is the relevant data model and the Python type.
-To meet these requirements we developed a library called the Data Butler \citep[see e.g.,][]{2022SPIE12189E..11J,2025ASPC..538..142L}, generally referred to as simply the Butler.
+To meet these requirements we developed a library called the Data Butler \citep[see e.g.,][]{2022SPIE12189E..11J,2025ASPC..538..142L}, generally referred to as simply the Butler, with the source code in a package named \texttt{daf\_butler}.
 
 Internally, the Butler is implemented as a registry, a database keeping track of datasets, and a datastore, a storage system that can map a Butler dataset to a specific collection of bytes.
 A datastore is usually a file store (including POSIX file system, S3 object stores, or WebDAV) but it is also possible to store metrics directly into the Sasquatch metrics service \citep{SQR-068,2024SPIE13101E..1MF}.
@@ -72,7 +72,7 @@ The run collection can be thought of as a logical grouping of datasets created b
 
 As a concrete example, the file from one detector of an LSSTCam observation taken sometime in 2025 could have a data coordinate of \texttt{instrument="LSSTCam", detector=42, exposure=2025080300100} and be associated with a \texttt{raw} dataset type.
 The \texttt{exposure} record itself implies other information such as the physical filter and the time of observation.
-A deep coadd on a patch of sky would not have \texttt{exposure} dimensions aand would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, band="r", skymap="lsst\_cells\_v1"}, which would tell you exactly where it is located in the sky and in what waveband since you can calculate it from the tract, patch, band and skymap.
+A deep coadd on a patch of sky would not have \texttt{exposure} dimensions and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, band="r", skymap="lsst\_cells\_v1"}, which would tell you exactly where it is located in the sky and in what waveband since you can calculate it from the tract, patch, band and skymap, where the skymap defines how tract and patch correspond to regions on the sky
 
 Projects can use different sets of dimension definitions, called ``universes``, and the Butler's database schema is derived from those definitions (so changing the dimension universe used by a Butler repository is possible, but not undertaken lightly, as it constitutes a schema migration).
 Downstream science code generally needs to make assumptions about what is in the dimension universe (e.g. whether a \texttt{detector} concept exists and, if so, whether it \emph{implies} a \texttt{band} or can be associated with any \texttt{band}), which can limit its reusability.
@@ -140,7 +140,7 @@ By convention we define the instrument class and associated configuration in \te
 There are currently project-supported \texttt{obs} packages for:
 
 \begin{itemize}
-\item LSSTCam \citep{10.71929/rubin/2571927,2024SPIE13096E..1SR,2010SPIE.7735E..0JK}, LATISS \citep{10.71929/rubin/2571930,2020SPIE11452E..0UI}, and associated Rubin Observatory test stands, calibration instruments, and simulators.
+\item LSSTCam \citep{10.71929/rubin/2571927,2024SPIE13096E..1SR,2010SPIE.7735E..0JK}, LSSTComCam \citep{10.71929/rubin/2561361}, LATISS \citep{10.71929/rubin/2571930,2020SPIE11452E..0UI}, and associated Rubin Observatory test stands, calibration instruments, and simulators.
 \item Hyper-SuprimeCam (HSC) on the Subaru telescope \citep{2018PASJ...70S...1M}.
 \item The Dark Energy Camera (DECam) on the CTIO Blanco telescope \citep{2015AJ....150..150F,2008SPIE.7014E..0ED}.
 \item Canada-France-Hawaii Telescope's MegaPrime \citep{2003SPIE.4841...72B}.
