@@ -11,7 +11,7 @@ The final difference image with updated mask planes is written along with the DI
 \subsubsection{PSF Matching and Subtraction}
 
 The primary implementation of image subtraction is based on \citet{1998ApJ...503..325A}, and uses spatially-varying Gauss-Hermite basis functions for the fit.
-The PSF-matching kernel can be constructed for either the science or the template image, and the resulting difference image is decorrelated \citet{DMTN-021}.
+The PSF-matching kernel can be constructed for either the science or the template image, and the resulting difference image is decorrelated \citep{DMTN-021}.
 Optionally, the science image can be preconvolved with its own PSF before PSF-matching, producing a Score image analogous to \citet{2016ApJ...830...27Z}.
 
 \subsubsection{DIA Detection and Measurement}
@@ -45,7 +45,7 @@ To reduce the number of DIASources originating from non-astrophysical sources, w
 
 \item Trailed DIASources consistent with a rate of motion greater than 10 degrees per day are filtered.
 
-\item Blank sky sources used for noise estimation are removed from the output catalog.
+\item Blank sky sources \secrefp{sec:sky-objects} used for noise estimation are removed from the output catalog.
 
 \end{itemize}
 
@@ -88,7 +88,7 @@ In order to enable real-time science, the AP pipelines generate alert packets fo
 These packets are serialized in Apache Avro\footnote{\url{https://avro.apache.org/}} format and then transmitted to community alert brokers via Kafka for further processing.
 \citet{DMTN-093} provides a high-level overview of the alert system.
 
-Within the pipelines, alert packets are constructed  within \texttt{ap\_association}.
+Within the pipelines, alert packets are constructed within and published by \texttt{ap\_association}.
 Alert packets contain the triggering DIASource record; the associated DIAObject or SSObject record; up to twelve months of past history from DIASources, DIAForcedSources, and/or upper limits; and cutout images of the science, template, and difference images centered at the position of the cutout.
 Cutouts are provided as FITS images serialized by the Astropy \texttt{CCDData} class, and include image, variance, and mask planes along with WCS information and an image of the approximate PSF.
 

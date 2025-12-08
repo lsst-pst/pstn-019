@@ -47,7 +47,7 @@ A datastore is usually a file store (including POSIX file system, S3 object stor
 %% All data must appear between the \startdata and \enddata commands
 \startdata
 \texttt{instrument} &  Instrument.  \\
-\texttt{band} & Waveband of interest.  \\
+\texttt{band} & Waveband of interest (e.g., \emph{r})  \\
 \texttt{physical\_filter} &  Filter used for the exposure. \\
 \texttt{day\_obs} & The observing day. \\
 \texttt{group} &  Group identifier. \\
@@ -66,7 +66,7 @@ A datastore is usually a file store (including POSIX file system, S3 object stor
 A core concept of the Butler is that every dataset must be given what we call a ``data coordinate.''
 The data coordinate locates the dataset in a dimensional space, where dimensions are defined in terms that scientists understand.
 Some commonly used dimensions are listed in Table~\ref{tab:dims}.
-Each dataset and its location is uniquely identified by specifying its dataset type, its run collection, and its coordinates, with Butler refusing to accept another dataset that matches all three of those values.
+Each dataset is uniquely identified by specifying its dataset type, its run collection, and its coordinates, with Butler refusing to accept another dataset that matches all three of those values.
 The dataset type defines the relevant dimensions (such as whether this is referring to observations or a sky map) and the associated Python type representing the dataset.
 The run collection can be thought of as a logical grouping of datasets created by the same batch operation, but does not have to correspond to any physical structure in a file system.
 
@@ -104,7 +104,7 @@ It is also possible to visualize quantum graphs, which include the actual data f
     \includegraphics[width=\textwidth]{figures/middleware/pipe_viz_comcam_subset.pdf}
     \caption{
         Example pipeline visualization of two selected tasks from the \texttt{LSSTComCam/DRP-v2.yaml} pipeline.
-        The diagram illustrates the flow of datasets between tasks, with dashed lines indicating prerequisite inputs.
+        The diagram illustrates the flow of datasets between tasks, with dashed lines indicating prerequisite calibration inputs.
         This visualization helps validate task dependencies and the expected sequence of execution.
     }
     \label{fig:pipe_viz}
@@ -123,7 +123,7 @@ A more detailed description of how the configuration system works is provided in
 
 The Butler and pipeline construction code know nothing about the specifics of a particular instrument.
 In the default dimension universe there is an \texttt{instrument} dimension that includes a field containing the full name of a Python \texttt{Instrument} class.
-This class, which uses a standard interface, is used by the system to isolate the instrument-specific from the pipeline-generic.
+This class, which is required to implement a specific interface, is used by the system to isolate the instrument-specific from the pipeline-generic.
 Some of the responsibilities are:
 
 \begin{itemize}
