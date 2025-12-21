@@ -2,9 +2,11 @@
 \label{sec:calib_pipe}
 
 The high-level pipelines to build calibration products (\texttt{cp}) for the LSST cameras are defined in \texttt{cp\_pipe}.
-They set ISR (see \secref{sec:isr}) configuration parameters needed for each calibration product, by enabling all the sequential steps of the ISR task up to the step before the correction being generated.
+They set ISR (see \secref{sec:isr}) configuration parameters needed for each calibration product, consisting of all the sequential steps of the ISR task up to the step before the correction being generated.
 In some cases, configurations also specify whether to combine exposures (for bias or dark exposures for instance) and to bin exposures to support diagnostic displays.
+In LSST cameras, calibration products typically include a combined bias, a combined dark, a Photon Transfer Curve (PTC), a crosstalk matrix, a list of defects, and a look-up table of non-linearity parameters.
 
-Once calibration products are produced, they are ``verified'' (see \citet{DMTN-222} for more details) using \texttt{cp\_verify} pipelines by checking they pass metrics defined in \citet{DMTN-101}.
-In this case, verify configuration parameters enable all corrections in the ISR task up to and including the application of the correction being verified. 
+Once calibration products are produced, they are ``verified'' (see \citet{DMTN-222} and \citet{SITCOMTN-086} for more details) using \texttt{cp\_verify} pipelines by checking they pass metrics defined in \citet{DMTN-101}.
+In this case, verify configuration parameters enable all corrections in the ISR task up to and including the application of the correction being verified.
 As a result, the calibration products can then be certified to be available in the Butler and used for ISR of an exposure.
+A general overview of the ISR steps and calibration products production (including generation, verification, certification, approval, and distribution) is given in \citet{2025JATIS..11a1209P}.

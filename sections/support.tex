@@ -11,44 +11,49 @@ These dependencies are managed using the ``Extended Unix Product System'' \citep
 most of the products are built using the SCons system \citep{2005Scons1377085} with LSST-specific extensions provided in the \texttt{sconsUtils} package enforcing standard build rules and creating the necessary Python package metadata files.
 The naming convention is that if a package is named \texttt{some\_name} then in Python it will be imported as \texttt{lsst.some.name}.
 
-For logging we always use standard Python logging with an additional \texttt{VERBOSE} log level between \texttt{INFO} and \texttt{DEBUG} to provide additional non-debugging detail that can be enabled during batch processing.
+For logging we always use standard Python logging but include an additional \texttt{VERBOSE} log level between \texttt{INFO} and \texttt{DEBUG} to provide additional non-debugging detail that can be enabled during batch processing, and also a \texttt{TRACE} log level to support very detailed debug logging.
 This verbose logging is used for periodic logging where long-lived analysis tasks are required to issue a log message every 10 minutes to indicate to the batch system that they are still alive and actively performing work.
+Orthogonally to the \texttt{TRACE} logging level there is also the ability to enable loggers named \texttt{TRACEn}, where \texttt{n} is an integer, and we can enable these loggers at \texttt{DEBUG} log level to provide more and more detail as the number increases.
+Finally, we use \texttt{timer} loggers for each task to simplify the collection of runtime performance metrics.
+
 For logging from C++ we use Log4CXX wrapped in the \texttt{lsst.log} package to make it look more like standard Python logging, whilst also supporting deferred string formatting such that log messages are only formed if the log message level is sufficient for the message to be logged.
 These C++ log messages are forwarded to Python rather than being issued from an independent logging stream.
 Finally, we also provide some LSST-specific exceptions that can be thrown from C++ code and caught in Python.
 
-As of September 2025, the Science Pipelines software is nearly 750,000 lines of Python and 220,000 lines of C++.
+As of November 2025, the Science Pipelines software is more than 800,000 lines of Python and approximately 220,000 lines of C++.
 For the purposes of this count, the Science Pipelines are defined as the \texttt{lsst\_distrib} metapackage and do not include code from third-party packages nor from the Solar System Pipeline (see \secref{sec:solsys}).
 The number of lines in the pipelines code as a function of time is given in Fig.~\ref{fig:pipe-loc}.
 
 \begin{figure}
 \plotone{figures/support/fig-pipe-loc}
 \caption{The number of lines of code comprising the LSST Science Pipelines software as a function of year.
-Line counts include comments but not blank lines. Python interfaces are implemented using \texttt{pybind11} and that is counted as C++ code. For the purposes of this count Science pipelines software is defined as the \texttt{lsst\_distrib} metapackage and does not include code from third party packages or code from the solar system pipeline.}
+Line counts include comments but not blank lines. Python interfaces are implemented using \texttt{pybind11} and those are counted as C++ code. For the purposes of this count, Science Pipelines software is defined as the \texttt{lsst\_distrib} metapackage and does not include code from third party packages or code from the Solar System pipeline.}
 \label{fig:pipe-loc}
 \end{figure}
 
-\subsection{Python environment}
+\subsection{Python Environment}
 \label{ssec:python}
 
 An important aspect of running a large data processing campaign is to ensure that the software environment is well defined.
-We define a base python environment using conda-forge via a meta package named \texttt{rubin-env}\footnote{\url{https://github.com/conda-forge/rubinenv-feedstock}}.
-This specifies all the software needed to build and run the science pipelines software.
-A Docker container is built for each software release and the fully-specified versions of all software are recorded to ensure repeatability.
+We define a base Python environment using conda-forge via a meta package named \texttt{rubin-env}\footnote{\url{https://github.com/conda-forge/rubinenv-feedstock}}.
+This specifies all the software needed to build and run the Science Pipelines software.
+A Docker OCI image \citep{merkel2014docker} is built for each software release and the fully-specified versions of all software are recorded to ensure repeatability.
 
 \subsection{Unit Testing and Code Coverage}
 
 Unit testing and code coverage are critical components of code quality \citep{2018SPIE10707E..09J}.
-Every package comes with unit tests written using the standard \texttt{unittest} module.
-We run the tests using \texttt{pytest} \citep{pytest} and this comes with many advantages in that all the tests run in the same process and requiring global parameters to be well understood, tests can be run in parallel in multiple processes, plugins can be enabled to extend testing and record test coverage, and a test report can be created giving details of run times and test failures.
-Coding standards compliance with PEP\,8 \citep{pep8} is enforced using GitHub Actions, the \texttt{ruff} package, and \texttt{pre-commit} checks.
+Every package comes with unit tests written using the standard Python \texttt{unittest} module.
+We run the tests using \texttt{pytest} \citep{pytest} and this comes with many advantages over our original approach of running each test file independently.
+For example, running all the tests in a single process can indicate places where global state is being used unexpectedly, and randomizing the testing order can also reveal issues.
+Additionally tests can be run in parallel in multiple processes, plugins can be enabled to extend testing options and record test coverage, and a test report can be created giving details of run times and test failures.
+Coding standards compliance with PEP\,8 \citep{pep8} is enforced using GitHub Actions, with \texttt{ruff} or \texttt{flake8}, and for some package, \texttt{pre-commit} checks.
 
-A Jenkins system provides the team with continuous integration across multiple packages.
+A Jenkins system \citep{2018SPIE10707E..09J,DMTN-327} provides the team with continuous integration across multiple packages.
 This includes longer tests (up to a few hours) in which we run complete pipelines on small precursor datasets (typically a few GB) fetched via \texttt{git-lfs}.
 
 \subsubsection{Installation}
 
-Where possible, individual packages can be installed from PyPI but that is mostly limited to packages that do not have any C++ code due to limitations in Python packaging allowing packages to link directly against shared libraries from other packages.
+Where possible, individual packages can be installed from the Python Package Index (PyPI)\footnote{For example, the Data Butler is on PyPI at \url{https://pypi.org/project/lsst-daf-butler/}. To simplify discoverability and prevent namespace confusion, Rubin packages on PyPI include the \texttt{lsst-} prefix in the package name (for example \texttt{lsst-daf-butler} and \texttt{lsst-pipe-base} coresponding to the EUPS names of \texttt{daf\_butler} and \texttt{pipe\_base}).} but that is mostly limited to packages, such as pipeline middleware packages, that do not have any C++ code due to limitations in Python packaging allowing packages to link directly against shared libraries from other packages.
 To install the full set of pipelines software we provide an installation script that installs the appropriate Conda environment and then downloads the binaries (Linux x86\_64, Linux aarch64, or macOS Apple Silicon) from our artifact server.
-As mentioned in \S~\ref{ssec:python} it is also possible to install a Docker container with everything pre-installed.
+As mentioned in \secref{ssec:python} it is also possible to run a Docker container with everything pre-installed.
 For developers we also provide a script to build and install the software directly from the Git repositories.
