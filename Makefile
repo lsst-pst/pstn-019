@@ -14,7 +14,7 @@ endif
 export TEXMFHOME ?= lsst-texmf/texmf
 
 $(DOCNAME).pdf: $(tex) local.bib authors.tex
-	latexmk -bibtex -xelatex -f $(DOCNAME)
+	latexmk -bibtex -xelatex -e '$$xdvipdfmx=q/xdvipdfmx -E -V 7 -o %D %O %S/' -f $(DOCNAME)
 
 authors.tex:  authors.yaml
 	python3 $(TEXMFHOME)/../bin/db2authors.py -m aas7 > authors.tex
@@ -27,5 +27,5 @@ clean:
 	rm -f $(DOCNAME).pdf
 
 .FORCE:
-authors.yaml: 
+authors.yaml:
 	python3 $(TEXMFHOME)/../bin/makeAuthorListsFromGoogle.py --signup 4 -p 1CGxjpPuyNJ_gXRHTvkEF0qeI0XedQ-GQgbmyzWFLSUE "PSTN-019!A2:E1000"
