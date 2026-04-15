@@ -1,22 +1,19 @@
 \section{Pipeline Configuration}
 \label{sec:appendix_config}
 
-An example of a pipeline configuration can be seen in the following code block which shows a fragment used to configure one of the shape measurement routines.
+An example of a pipeline configuration can be seen in the following code block which shows a fragment used to configure one of the shape measurement routines, edited slightly for clarity.
 This abstraction is critical for maintainability, allowing the underlying file formats and or execution systems to evolve without impacting the pipeline code.
 It also provides a mechanism to deprecate configuration settings which will change in future versions of the software stack, allowing users an easy migration path.
 
 \begin{minipage}{\columnwidth}
     \begin{lstlisting}[caption=Code configuration in python, language=python]
-import os.path
-from lsst.utils import getPackageDir
-
+pkg = "meas_extensions_shapeHsm"
+uri = f"eups://{pkg}/config/enable.py"
 try:
-    location = getPackageDir("meas_extensions_shapeHSM")
+    config.load(uri)
 except LookupError as e:
-    print(f"Cannot enable shapeHSM ({e})")
+    print(f"Cannot enable shapeHSM {e}")
 else:
-    path = os.path.join(location, "config", "enable.py")
-    config.load(path)
     plugins = config.plugins
     plugin = plugins["ext_shapeHSM_HsmShapeRegauss"]
     plugin.deblendNChild = "deblend_nChild"
