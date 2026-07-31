@@ -11,6 +11,7 @@ These include (but are not limited to):
 \item \texttt{afw.detection} contains threshold-based detection on images and point-spread function (PSF) model interfaces.
     This includes the \texttt{Footprint} class, which combines a \texttt{SpanSet} with a list of peaks to represent either a single source detection or a group of blended sources.
 \item \texttt{afw.image} centers around the \texttt{Exposure} class, which combines an image (\texttt{Image}), bitmask (\texttt{Mask}), and variance image with the many objects used to astrophysically characterize an observation or coadd (PSF, WCS, aperture corrections, etc).
+      From DP2 on we have moved away from using these classes in user-facing code, preferring targeted Python types for different image types.
 \item \texttt{afw.table} holds data structures for tabular data, with both row- and column-based views.  The \texttt{afw.table.io} package defines a framework for persisting arbitrary objects to a series of FITS binary table HDUs, which is used in the on-disk form of the \texttt{Exposure} class.
 \item \texttt{afw.cameraGeom} provides a hierarchical description of large-format photometric cameras, such as LSSTCam, HSC, or DECam, including optical distortions, focal plane layouts, and amplifier regions.
 \end{itemize}
