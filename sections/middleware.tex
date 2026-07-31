@@ -165,4 +165,4 @@ This allows files that were written with incorrect headers to be recovered durin
 
 For DP2 we modified our file serialization system to make the files more approachable for external users and to improve performance when requesting subsets of a file from an object store.\citep{DMTN-339}
 Additionally, as part of this work we changed the Python types such that a deep coadd and a visit image now have different specialized types and we are no longer trying to fit every image into a single type.
-This separation of data model from serialization gives us the flexibility to adopt different file formats in the future if the community begins to migrate from FITS to ASDF, for example, and will allow us to do format conversion on demand in the future (we currently support lossless conversion between FITS, HDF5, and JSON).
+This separation of data model from serialization outputs gives us the flexibility to adopt different file formats in the future if the community begins to migrate from FITS to ASDF, for example, and will allow us to do format conversion on demand in the future (we currently support lossless conversion between FITS, HDF5, and JSON).
