@@ -33,10 +33,14 @@ jobs:
         run: |
           docker run --rm -v `pwd`:/workspace -w /workspace lsstsqre/lsst-texmf:latest sh -c 'make'
 
+      - name: Install pandoc for lander
+        run: |
+          sudo apt-get install pandoc
+
       - name: Landing page upload
         if: ${{ github.event_name == 'push' }}
         env:
           LTD_PASSWORD: ${{ secrets.LTD_PASSWORD }}
           LTD_USERNAME: ${{ secrets.LTD_USERNAME }}
         run: |
-          lander --upload --pdf PSTN-019.pdf --lsstdoc PSTN-019.tex --ltd-product pstn-019
+          lander --upload --pdf PSTN-019.pdf --lsstdoc PSTN-019.tex --ltd-product pstn-019 --abstract "The NSF-DOE Vera C. Rubin Observatory is executing the Legacy Survey of Space and Time (LSST) as its prime mission,  producing a series of data releases over the ten-year survey. The LSST Science Pipelines Software will be used to create these data releases and to perform the nightly prompt processing and alert production. This paper provides an overview of the LSST Science Pipelines Software, describing the components and their integration into pipelines that generate science-ready data products."
