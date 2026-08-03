@@ -2,11 +2,11 @@
 \label{sec:calibration}
 
 Astrometric and photometric calibration in data release processing are both  performed in each of two very different steps.
-First, astrometric and photometric solutions for each detector are fit independently to a reference catalog, which is sufficient for matching and filtering in subsequent, more sophisticated algorithms and validation.
+First, astrometric and photometric solutions for each detector are fit independently to a reference catalog \citep{DMTN-277}, which is sufficient for matching and filtering in subsequent, more sophisticated algorithms and validation.
 In the nightly alert processing, we expect to be able to use a high-density reference catalog produced by the most recent Rubin data release, and these single-detector fits represent the final calibrations.
 In data release processing, much more sophisticated final astrometric and photometric transforms are then fit to catalogs from multiple epochs at once.
 
-The Rubin pipeline uses the Starlink AST library \citep{2016A&C....15...33B} for persisting, composing, and evaluating coordinate transformations.
+The LSST Science Pipelines use the Starlink AST library \citep{2016A&C....15...33B} for persisting, composing, and evaluating coordinate transformations.
 We have our own class in the \texttt{afw} package for representing (among other things) photometric calibrations, usually with Chebyshev polynomials.
 These can also be multiplied and even mixed with AST-backed transform objects to represent pixel-area corrections.
 Our coordinate transforms are not exactly representable via the FITS WCS standard \citep{2002A&A...395.1061G}, which has no way to describe a chain of composed transforms.
@@ -25,7 +25,7 @@ We default to fitting the simple affine model because we have good distortion mo
 \subsubsection{GBDES}
 \label{sec:gbdes}
 
-The final astrometric solution is fit by a task in \texttt{drp\_tasks}, which runs the \texttt{wcsfit} fitter from the \texttt{gbdes} package \citep{2022ascl.soft10011B,2017PASP..129g4503B} on the ensemble of images in a given band overlapping with a given tract.
+The final astrometric solution in DRP is fit by a task in \texttt{drp\_tasks}, which runs the \texttt{wcsfit} fitter from the \texttt{gbdes} package \citep{2022ascl.soft10011B,2017PASP..129g4503B} on the ensemble of images in a given band overlapping with a given tract.
 This task fits a per-detector polynomial distortion model, a per-exposure polynomial distortion model, and position for all the isolated star sources in the component images.
 This is done by first associating all isolated point sources in the input images and matching them with an external reference catalog.
 The model is then fit by iterating between fitting the per-detector and per-exposure polynomial models, and recalculating the best-fit solution for the object positions.
@@ -52,7 +52,7 @@ Precomputed color terms can also be applied to the reference catalog fluxes when
 \subsubsection{FGCM}
 \label{sec:fgcmcal}
 
-Global photometric calibration is computed via the Forward Global Calibration Method~\citep[FGCM][]{2018AJ....155...41B}, as adapted for LSST \citep{SITCOMTN-086}.
+Global photometric calibration for DRP is computed via the Forward Global Calibration Method~\citep[FGCM][]{2018AJ....155...41B}, as adapted for LSST \citep{SITCOMTN-086}.
 This global calibration algorithm makes use of repeated observations of stars in all $ugrizy$ bands, combining a forward model of the atmospheric parameters with instrumental throughputs measured with auxiliary information.
 In this way we simultaneously constrain the atmospheric model as well as standardized top-of-atmosphere (TOA) star fluxes over a wide range of star colors, including full chromatic corrections from the instrument and atmosphere.
 
