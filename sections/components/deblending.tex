@@ -6,6 +6,7 @@
 In the LSST Science Pipelines, it specifically means assigning fractions of the flux from all pixels in a \texttt{Footprint} to each of the peaks within that \texttt{Footprint}, with each peak then considered a ``child'' source.
 This fractional flux assignment is very different from creating a ``segmentation map'', which fully assigns each pixel to each child source, as done by, for example, Source Extractor \citep{1996A&AS..117..393B}.
 \texttt{HeavyFootprint} (an extension of \texttt{Footprint} that adds a flattened array of pixel values) is used to pass the per-pixel fluxes to downstream algorithms.
+\textbf{These \texttt{HeavyFootprint}s can also be serialized to FITS tables and are a convenient way to analyze detected sources without needing to carry the full image around.}
 
 Deblending in the science pipelines is performed differently for single-band (visit) image processing vs.\ multi-band (coadd) image processing.
 For single-band images we use a modified version of the SDSS deblender \citep{rhldeblend} from the \texttt{meas\_deblender} package.

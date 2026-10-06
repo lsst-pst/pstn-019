@@ -3,12 +3,13 @@
 
 Coadded images are used both as static-sky templates for image subtraction and for detecting and measuring faint objects.
 The coaddition process is divided into two main stages: resampling the input images onto a common projection (``warping'') defined by a \texttt{skymap} \secrefp{sec:core} and stacking those resampled images into a single coadd.
+\textbf{By default we choose a sky map where the pixel scale matches the nominal detector pixel scale, although the sky map definition is fully configurable.}
 Each stage is implemented via configurable tasks that allow the pipelines to be adapted for different instruments and observing strategies.
 An optional intermediate step can also be used to convolve the warped images to a configurable, common model-PSF.
 This PSF-homogenized variant is useful when the scientific goals require uniform PSF properties across the coadd and is used for artifact rejection during coaddition.
 
 All warping tasks use a configurable interpolation kernel.
-A 5th-order Lanczos kernel is used by default, balancing fidelity and computational efficiency, with a nearest-neighbor kernel for the integer bit mask.
+A 5th-order Lanczos kernel is used by default, balancing fidelity and computational efficiency \textbf{whilst also ensuring we conserve flux by normalizing the warping kernel by its per-output-pixel sum}, with a nearest-neighbor kernel for the integer bit mask.
 Input images are geometrically transformed using the WCS and interpolated onto the target projection defined by a tract and patch geometry.
 Each resulting resampled image is called a \emph{warp}.
 

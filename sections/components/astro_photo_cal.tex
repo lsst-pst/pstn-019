@@ -55,6 +55,7 @@ Precomputed color terms can also be applied to the reference catalog fluxes when
 Global photometric calibration for DRP is computed via the Forward Global Calibration Method~\citep[FGCM][]{2018AJ....155...41B}, as adapted for LSST \citep{SITCOMTN-086}.
 This global calibration algorithm makes use of repeated observations of stars in all $ugrizy$ bands, combining a forward model of the atmospheric parameters with instrumental throughputs measured with auxiliary information.
 In this way we simultaneously constrain the atmospheric model as well as standardized top-of-atmosphere (TOA) star fluxes over a wide range of star colors, including full chromatic corrections from the instrument and atmosphere.
+\textbf{The software is designed to be able to track changes in telescope components over time such as the primary mirror emissivity.}
 
 Running \texttt{fgcmcal} first requires generating a look-up table.
 The input to the look-up table includes the effect of a MODTRAN \citep{1999SPIE.3756..348B} atmospheric model at the elevation of the observatory, as well as the throughput as a function of wavelength and position from the optics, filters, and detector quantum efficiency.
