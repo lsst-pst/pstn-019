@@ -97,6 +97,14 @@ For LSST-depth coadds this becomes a significant problem, as deep coadds can hav
     \label{fig:complex_blend}
 \end{figure}
 
+
+\begin{figure*}[htb]
+  \centering
+  \includegraphics[width=\linewidth]{figures/sample_blend}
+  \caption{Example multi-object blend. The top row shows the observed multiband image (panel a) followed by the scarlet lite models of the four brightest sources (panels b through e). The bottom row shows the residual image when the scarlet lite models are subtracted from the observation (panel f) followed by the flux-conserved models (panels g through j), created by using the scarlet lite models as templates to re-distribute flux from the observation so that the total flux is conserved. The flux-conserved models, injected in a noise-replaced image, are what the science pipelines use for measurement.}
+  \label{fig:sample_blend}
+\end{figure*}
+
 \subsection{Multi-band Deblending}
 \label{sec:multiband_deblending}
 
@@ -122,3 +130,4 @@ It then uses proximal-\textsc{Adam} \citep[\textsc{PAdam};][]{2019arXiv191010094
 It should be noted that although we do use symmetry to initialize the scarlet models, we do not implement a symmetry constraint and the final models are not guaranteed to be symmetric.
 The models are stored as the \texttt{object\_model\_data} data product, which contains all of the blends for a single patch.
 Like the single-band deblender, the \texttt{scarlet\_lite} models are only used as templates to redistribute flux from the image and all measurements are performed on the flux redistributed models.
+\textbf{An example of the deblender output for a DP2 field is shown in Figure \ref{fig:sample_blend}.}
