@@ -11,6 +11,7 @@ This PSF-homogenized variant is useful when the scientific goals require uniform
 All warping tasks use a configurable interpolation kernel.
 A 5th-order Lanczos kernel is used by default, balancing fidelity and computational efficiency \textbf{whilst also ensuring we conserve flux by normalizing the warping kernel by its per-output-pixel sum}, with a nearest-neighbor kernel for the integer bit mask.
 Input images are geometrically transformed using the WCS and interpolated onto the target projection defined by a tract and patch geometry.
+\textbf{The input WCS includes camera distortions, at the level of about 0.2\% across the focal plane, as well as corrections for atmospheric distortions.\citep{DMTN-324}}
 Each resulting resampled image is called a \emph{warp}.
 
 Once warps are generated, they are stacked into a final coadd.
