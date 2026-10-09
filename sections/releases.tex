@@ -1,0 +1,29 @@
+\section{Pipeline Releases}
+
+{\bfseries
+
+During the project construction phase we made releases approximately every six months.
+We never formally used semantic versioning for these release since there were many changes during the six months that would all inevitably correspond to a major release.
+For people who wish to keep up with software developments we also make weekly releases available.
+These releases are time-boxed and whatever state the software is in on the day of release is part of the release.
+The main constraint on making a release is whether every CI package passes tests, and this is generally true because merges are gated on Jenkins builds being successful.
+The community are always able to try the weekly releases with the caveat that they get much less testing than the formal releases.
+
+During operations our plan is to make new formal software releases with each data release.
+We will make the initial release branch during the first stage of production and backport fixes from our main as each stage is completed.
+This means that when a data release is made the core of the associated pipeline software is many months older than the main development branch.
+
+The large gaps between releases mean that normal software deprecation cycles where one warns in one release and then removes in a later release, leading to potentially 2-year delays between deciding to deprecate and removing the code, are not really feasible.
+Our main focus is supporting a data release and so whilst we do use deprecation cycles of a few months, we use the weekly releases to publicize deprecations in conjunction with announcements on the Rubin Community web site.
+
+Algorithms are selected based on their speed, robustness, and performance against the Science Requirements Document (SRD) metrics \citep{LPM-17}.
+These metrics are evaluated via regular regression tests.
+A small test set is run through the alert and data release production pipelines nightly, a medium test set runs biweekly, and a data release production-sized test set runs annually.
+
+There is no control for implementing new algorithms as pipeline tasks in the pipelines, as long as they meet our criteria in the development guide \citep{RubinDevGuide}.
+However, there are strict controls over which algorithms are used by each of the alert production and data release production pipelines by default.
+Before swapping one algorithm, configuration, or behavior change in as the DRP or AP pipeline default, the proposer must demonstrate that the change performs better on the SRD metrics, runtime metrics, and robustness (no runtime or algorithmic failures) on the biweekly-regression-test-sized dataset.
+The proposer presents their proposal including the resulting metrics comparison in either the Pipelines Team Meeting, on the pipelines Slack channel, or in an RFC.\footnote{See \url{https://developer.lsst.io/communications/rfc.html} for an overview of the RFC process.}
+If the PR is from the community and the author doesn't have access to this dataset or other Rubin resources, a DM team member will shepherd the PR through the controls and review process for them.
+
+}
