@@ -3,18 +3,18 @@
 {\bfseries
 
 During the project construction phase we made releases approximately every six months.
-We never formally used semantic versioning for these release since there were many changes during the six months that would all inevitably correspond to a major release.
+We never formally used semantic versioning for these releases since there were many changes during the six months that would all inevitably correspond to a major release.
 For people who wish to keep up with software developments we also make weekly releases available.
 These releases are time-boxed and whatever state the software is in on the day of release is part of the release.
 The main constraint on making a release is whether every CI package passes tests, and this is generally true because merges are gated on Jenkins builds being successful.
-The community are always able to try the weekly releases with the caveat that they get much less testing than the formal releases.
+The community are always able to try the weekly releases with the caveat that they get much less testing and characterization than the formal releases.
 
 During operations our plan is to make new formal software releases with each data release.
-We will make the initial release branch during the first stage of production and backport fixes from our main as each stage is completed.
+We will make the initial release branch during the first stage of production and backport fixes from our main branch as each stage is completed.
 This means that when a data release is made the core of the associated pipeline software is many months older than the main development branch.
 
 The large gaps between releases mean that normal software deprecation cycles where one warns in one release and then removes in a later release, leading to potentially 2-year delays between deciding to deprecate and removing the code, are not really feasible.
-Our main focus is supporting a data release and so whilst we do use deprecation cycles of a few months, we use the weekly releases to publicize deprecations in conjunction with announcements on the Rubin Community web site.
+Our main focus is supporting a data release and so whilst we do use deprecation cycles of a few months, we use the weekly releases to publicize deprecations in conjunction with announcements on the Rubin Community forum.
 
 Algorithms are selected based on their speed, robustness, and performance against the Science Requirements Document (SRD) metrics \citep{LPM-17}.
 These metrics are evaluated via regular regression tests.
