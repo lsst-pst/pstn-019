@@ -50,7 +50,7 @@ A datastore is usually a file store (including POSIX file system, S3 object stor
 \texttt{band} & Waveband of interest (e.g., \emph{r})  \\
 \texttt{physical\_filter} &  Filter used for the exposure. \\
 \texttt{day\_obs} & The observing day. \\
-\texttt{group} &  Group identifier. \\
+\texttt{group} &  \textbf{Identifier for related observations.} \\
 \texttt{exposure} & Individual exposure. \\
 \texttt{visit} &  Collection of 1 or 2 exposures. \\
 \texttt{tract} &  Tesselation of the sky. \\
@@ -72,14 +72,14 @@ The run collection can be thought of as a logical grouping of datasets created b
 
 As a concrete example, the file from one detector of an LSSTCam observation taken sometime in 2025 could have a data coordinate of \texttt{instrument="LSSTCam", detector=42, exposure=2025080300100} and be associated with a \texttt{raw} dataset type.
 The \texttt{exposure} record itself implies other information such as the physical filter and the time of observation.
-A deep coadd on a patch of sky would not have \texttt{exposure} dimensions and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, band="r", skymap="lsst\_cells\_v1"}, which would tell you exactly where it is located in the sky and in what waveband since you can calculate it from the tract, patch, band and skymap, where the skymap defines how tract and patch correspond to regions on the sky
+A deep coadd on a patch of sky would not have \texttt{exposure} dimensions and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, band="r", skymap="lsst\_cells\_v1"}, which would tell you exactly where it is located in the sky and in what waveband since you can calculate it from the tract, patch, band and skymap, where the skymap defines how tract and patch correspond to regions on the sky.
 
-Projects can use different sets of dimension definitions, called ``universes``, and the Butler's database schema is derived from those definitions (so changing the dimension universe used by a Butler repository is possible, but not undertaken lightly, as it constitutes a schema migration).
+Projects can use different sets of dimension definitions, called ``universes'', and the Butler's database schema is derived from those definitions (so changing the dimension universe used by a Butler repository is possible, but not undertaken lightly, as it constitutes a schema migration).
 Downstream science code generally needs to make assumptions about what is in the dimension universe (e.g. whether a \texttt{detector} concept exists and, if so, whether it \emph{implies} a \texttt{band} or can be associated with any \texttt{band}), which can limit its reusability.
 
 \subsection{Pipelines and Tasks}
 
-The data dimensions system also plays a fundamental role in how the LSST Science Pipelines are assembled and run; high-level pieces of algorithmic code called \texttt{PipelineTasks} declare the dimensions of their units of work (``quanta''), their inputs, and their outputs, allowing a directed acyclic graph (a "quantum graph") describing the processing to be assembled from a YAML declaration of the tasks to be run, their configuration, and a Butler database query.
+The data dimensions system also plays a fundamental role in how the LSST Science Pipelines are assembled and run; high-level pieces of algorithmic code called \texttt{PipelineTasks} declare the dimensions of their units of work (``quanta''), their inputs, and their outputs, allowing a directed acyclic graph (a ``quantum graph'') describing the processing to be assembled from a YAML declaration of the tasks to be run, their configuration, and a Butler database query.
 Quantum graphs can range in size from a few tens of quanta (e.g., for the nightly processing performed on a single detector image) to millions (for a piece of the yearly data release pipelines), and serve as the common interface for multiple execution systems, including the low-latency nightly Prompt Processing framework \citep{DMTN-219} and the Batch Processing System \citep[BPS;][]{2025ASPC..538..325G}, which adapts quantum graphs for execution at scale by third-party workflow management systems like HTCondor \citep{2022zndo...2579447H}, Parsl \citep{10.1145/3307681.3325400}, and PanDA \citep{2024EPJWC.29504026K}.
 
 Algorithmic code below the \texttt{PipelineTask} level is often subdivided into multiple ``subtasks'' that (like \texttt{PipelineTask} itself) inherit from the base \texttt{Task} class, which provides easy access to hierarchical logging, metadata, and configuration.
@@ -148,9 +148,9 @@ There are currently project-supported \texttt{obs} packages for:
 
 All of these instruments use the default dimension universe.
 
-Additionally, teams outside the project have developed \texttt{obs} packages to support Subaru's Prime Focus Spectrograph \citep{2024SPIE13096E..05T}, VISTA's VIRCAM \citep{2015A&A...575A..25S},
-the Wide Field Survey Telescope \citep[WFST;][]{2025arXiv250115018C}, and the Gravitational-wave Optical Transient Observer \citep[GOTO;][]{2021PASA...38....4M}.
-SPHEREx \citep{2020SPIE11443E..0IC} uses the pipeline middleware but has developed pipeline tasks without the Rubin C++ dependencies and so does not use an \texttt{obs} package.
+Additionally, teams outside the project have developed \texttt{obs} packages to support Subaru's '{\={O}}nohi'ula Prime Focus Spectrograph \citep{2026SPIE14149E..0CA}, VISTA's VIRCAM \citep{2015A&A...575A..25S},
+the Wide Field Survey Telescope \citep[WFST;][]{2025arXiv250115018C}, \textbf{Lick Observatory's Nickel Telescope \citep{2026AAS...24822403G},} and the Gravitational-wave Optical Transient Observer \citep[GOTO;][]{2021PASA...38....4M}.
+SPHEREx \citep{2026ApJS..285...67A} uses the pipeline middleware but has developed pipeline tasks without the Rubin C++ dependencies and so does not use an \texttt{obs} package.
 Most of these projects have made small changes to the default dimension universe to better represent their data model.
 
 \subsection{Metadata Translation}
@@ -163,6 +163,6 @@ This allows files that were written with incorrect headers to be recovered durin
 
 \subsection{Image Data Models and File Abstraction}
 
-For DP2 we modified our file serialization system to make the files more approachable for external users and to improve performance when requesting subsets of a file from an object store.\citep{DMTN-339}
+For DP2 we modified our file serialization system to make the files more approachable for external users and to improve performance when requesting subsets of a file from an object store.\citep{2026SPIE14155E..17B}
 Additionally, as part of this work we changed the Python types such that a deep coadd and a visit image now have different specialized types and we are no longer trying to fit every image into a single type.
 This separation of data model from serialization outputs gives us the flexibility to adopt different file formats in the future if the community begins to migrate from FITS to ASDF, for example, and will allow us to do format conversion on demand in the future (we currently support lossless conversion between FITS, HDF5, and JSON).

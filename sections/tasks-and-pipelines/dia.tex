@@ -4,7 +4,7 @@
 Image subtraction for transient/variable detection and analysis is implemented in the \texttt{ip\_diffim} package, and is divided into three steps.
 While the image subtraction system could be used to work on other combinations, we primarily focus on subtracting a ``template'' coadd from a single-visit ``science'' image.
 First, the template coadd is warped to the WCS and bounding box of the science image.
-Then the warped template is subtracted from the science image using one of several available algorithms, which produces a temporary difference image.
+Then the warped template is subtracted from the science image using \textbf{the standard Alard \& Lupton algorithm \citep{1998ApJ...503..325A}}, which produces a temporary difference image.
 Finally, peaks are detected on the difference image and DIASources (``difference image analysis sources") are measured.
 The final difference image with updated mask planes is written along with the DIASource catalog.
 
