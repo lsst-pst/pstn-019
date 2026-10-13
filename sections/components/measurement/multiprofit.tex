@@ -1,14 +1,14 @@
-\subsubsection{MultiProfit Galaxy Fitting}
+\subsubsection{MultiProFit Galaxy Fitting}
 \label{sec:multiprofit}
 
 MultiProFit is a package for Gaussian mixture model fitting \citep{DMTN-312}.
-It is primarily used to provide multiband Sersic model fits to objects using all available coadds.
-The \texttt{multiprofit} package and its dependencies are included in the science pipelines but can also be installed independently, as they only depend on packages that are also available elsewhere.
+It is primarily used to provide multiband S\'ersic model fits to objects using all available coadds.
+The \texttt{multiprofit} package and its dependencies are included in the Science Pipelines but can also be installed independently, as they only depend on packages that are also available elsewhere.
 
 The \texttt{meas\_extensions\_multiprofit} package contains pipeline tasks (with interfaces defined in \texttt{pipe\_tasks}) necessary to run \texttt{multiprofit} on coadded and deblended images.
 The first of these tasks fits a Gaussian mixture model to the PSF model image at the location of each object in a patch.
 This procedure is similar to the shapelet PSF fitting functionality in \texttt{meas\_modelfit} \secrefp{sec:cmodel}.
 The main differences are that the components are pure Gaussians (shapelet parameters are not supported), can have independent shapes, and are constrained to have integrals summing to unity (i.e., they are normalized).
-Currently, only a maximum of two components are supported; this limitation may be removed in the future.
+Currently, a maximum of two components \textbf{is} supported; this limitation may be removed in the future.
 In all cases, the structural parameters for each component are band-independent, with a separate total flux parameter for each band.
 That is, individual components do not have intrinsic color gradients (although the convolved models might, if the PSF parameters vary by band).
