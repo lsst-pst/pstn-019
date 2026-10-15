@@ -2,8 +2,8 @@
 \label{sec:appendix_config}
 
 An example of a pipeline configuration can be seen in the following code block which shows a fragment used to configure one of the shape measurement routines, edited slightly for clarity.
-This abstraction \textbf{of configuration from algorithm} is critical for maintainability, \textbf{allowing different processing runs to experiment with different configurations without having to edit any code.}
-It also provides a mechanism to deprecate configuration settings \textbf{that} will change in future versions of the software stack, allowing users an easy migration path.
+This abstraction of configuration from algorithm is critical for maintainability, allowing different processing runs to experiment with different configurations without having to edit any code.
+It also provides a mechanism to deprecate configuration settings that will change in future versions of the software stack, allowing users an easy migration path.
 
 \begin{minipage}{\columnwidth}
     \begin{lstlisting}[caption=Code configuration in Python, language=python]
@@ -56,7 +56,7 @@ This ensures that the configuration system is well documented and easy to unders
 \subsection{Single-band Deblending}
 \label{sec:singleband_deblending}
 
-Deblending on single-band images (i.e., visit \textbf{images}) is performed using the \texttt{meas\_deblender} package and is based on the deblender used in SDSS \citep{rhldeblend}, with a few differences that will be discussed shortly.
+Deblending on single-band images (i.e., visit images) is performed using the \texttt{meas\_deblender} package and is based on the deblender used in SDSS \citep{rhldeblend}, with a few differences that will be discussed shortly.
 Similar to the SDSS deblender, the LSST deblender creates a template for each source in a blend using a very simple (yet computationally efficient) model for each peak position in a parent \texttt{Footprint}.
 Once a template has been created for each peak in the blend, the deblender combines all of the source templates into a single blend model by summing their values in each pixel.
 For each pixel in a source template, the ratio of the source template value to the total blend model is calculated and used to weight the pixel value from the image to create a model for each source.
@@ -65,19 +65,19 @@ A cleanup algorithm is then run to allocate the remaining pixels to one of the s
 
 \subsection{Deblender Template Generation}
 
-The main ansatz of the SDSS deblending algorithm is that the flux from stars and galaxies in a ground-based telescope is nearly \textbf{symmetric under a 180-degree rotation}.
+The main ansatz of the SDSS deblending algorithm is that the flux from stars and galaxies in a ground-based telescope is nearly symmetric under a 180-degree rotation.
 Figure \ref{fig:simple_blend} illustrates how a 1D slice through the center of two blended sources can exploit this symmetry by setting the pixels on opposite sides of the (integer) center pixel to the minimum value of both pixels.
 In other words, for simple blends of only two sources the deblender can use the flux on the non-blended side to constrain the value of the flux on the blended side.
-Despite the fact that stars (PSFs) and galaxies are not exactly symmetric, especially since their position is not exactly centered \textbf{on} a single pixel, this algorithm works quite well for generating templates in simple blends that very nearly approximate each source when redistributing flux from the image.
+Despite the fact that stars (PSFs) and galaxies are not exactly symmetric, especially since their position is not exactly centered on a single pixel, this algorithm works quite well for generating templates in simple blends that very nearly approximate each source when redistributing flux from the image.
 
-For sources with low \textbf{signal-to-noise ratio}, the algorithm fails due to noise in the image, generating galaxy templates that are typically very jagged and unphysical.
+For sources with low signal-to-noise ratio, the algorithm fails due to noise in the image, generating galaxy templates that are typically very jagged and unphysical.
 To combat this, for each \texttt{peak} in the parent \texttt{Footprint} the deblender first attempts to fit the flux from the image with a simple PSF model that allows its position, amplitude, and a linear background to vary.
 If the fit has a reasonable $\chi^2$ value then the deblender will use this scaled PSF model as a template for the source.
 Only for sources that cannot be adequately modeled with the PSF are the symmetric templates used.
 
 The main failure point of this algorithm is when three (or more) sources lie along the same axis.
 For example, Figure \ref{fig:complex_blend} illustrates a 1D slice through the center of three aligned sources.
-In this case the minimum pixel on each side of the central source cannot constrain the flux at that radial location, \textbf{which} results in a template that has extra bumps from its neighbors.
+In this case the minimum pixel on each side of the central source cannot constrain the flux at that radial location, which results in a template that has extra bumps from its neighbors.
 This turns out to be more catastrophic than one might expect.
 Notice that even the neighboring sources, which have very good templates created by using symmetry on their unblended side, have their resulting models contaminated due to the central object that steals flux from both of them.
 In single visits the number of ``three in a row'' blends is small enough that we sacrifice the quality of the models for efficiency and still use the single-band deblender.
@@ -110,7 +110,7 @@ For LSST-depth coadds this becomes a significant problem, as deep coadds can hav
 
 The multi-band deblender is an implementation of the \textsc{Scarlet} deblending algorithm described in \citet{2018A&C....24..129M}.
 In our implementation, \texttt{scarlet\_lite}, we have made our own set of simplifying assumptions that are different from the original \textsc{Scarlet} algorithm to make it more efficient when used in a large ground-based survey like LSST.
-Similar to the original \textsc{Scarlet}, we make the assumption that astrophysical objects can be thought of as a collection of components, where each component has the \textbf{following} properties:
+Similar to the original \textsc{Scarlet}, we make the assumption that astrophysical objects can be thought of as a collection of components, where each component has the following properties:
 \begin{itemize}
     \item Components have a single color (spectrum) that is the same in all pixels over its shape (morphology)
     \item Components have flux that monotonically decreases from the center
@@ -130,4 +130,4 @@ It then uses proximal-\textsc{Adam} \citep[\textsc{PAdam};][]{2019arXiv191010094
 It should be noted that although we do use symmetry to initialize the scarlet models, we do not implement a symmetry constraint and the final models are not guaranteed to be symmetric.
 The models are stored as the \texttt{object\_model\_data} data product, which contains all of the blends for a single patch.
 Like the single-band deblender, the \texttt{scarlet\_lite} models are only used as templates to redistribute flux from the image and all measurements are performed on the flux-redistributed models.
-\textbf{An example of the deblender output for a DP2 field is shown in Figure \ref{fig:sample_blend}.}
+An example of the deblender output for a DP2 field is shown in Figure \ref{fig:sample_blend}.

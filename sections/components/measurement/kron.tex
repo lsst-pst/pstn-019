@@ -1,7 +1,7 @@
 \subsubsection{Kron Photometry}
 \label{sec:kron}
 
-The \texttt{meas\_extensions\_photometryKron} \textbf{package} implements Kron photometry \citep{1980ApJS...43..305K}.
+The \texttt{meas\_extensions\_photometryKron} package implements Kron photometry \citep{1980ApJS...43..305K}.
 Our Kron implementation uses a scaled version of the HSM shapes (see \secref{sec:hsm}) to form an elliptical aperture, and then scales to $2.5$ times the first radial moment.
 
 Our implementation does not correct for the PSF in any way; this means its outputs should only be used for very well-resolved galaxies.

@@ -50,7 +50,7 @@ A datastore is usually a file store (including POSIX file system, S3 object stor
 \texttt{band} & Waveband of interest (e.g., \emph{r})  \\
 \texttt{physical\_filter} &  Filter used for the exposure. \\
 \texttt{day\_obs} & The observing day. \\
-\texttt{group} &  \textbf{Identifier for related observations.} \\
+\texttt{group} &  Identifier for related observations. \\
 \texttt{exposure} & Individual exposure. \\
 \texttt{visit} &  Collection of 1 or 2 exposures. \\
 \texttt{tract} &  Tessellation of the sky. \\
@@ -66,13 +66,13 @@ A datastore is usually a file store (including POSIX file system, S3 object stor
 A core concept of the Butler is that every dataset must be given what we call a ``data coordinate.''
 The data coordinate locates the dataset in a dimensional space, where dimensions are defined in terms that scientists understand.
 Some commonly used dimensions are listed in Table~\ref{tab:dims}.
-Each dataset is uniquely identified by specifying its dataset type, its run collection, and its coordinates, with \textbf{the} Butler refusing to accept another dataset that matches all three of those values.
+Each dataset is uniquely identified by specifying its dataset type, its run collection, and its coordinates, with the Butler refusing to accept another dataset that matches all three of those values.
 The dataset type defines the relevant dimensions (such as whether this is referring to observations or a sky map) and the associated Python type representing the dataset.
 The run collection can be thought of as a logical grouping of datasets created by the same batch operation, but does not have to correspond to any physical structure in a file system.
 
 As a concrete example, the file from one detector of an LSSTCam observation taken sometime in 2025 could have a data coordinate of \texttt{instrument="LSSTCam", detector=42, exposure=2025080300100} and be associated with a \texttt{raw} dataset type.
 The \texttt{exposure} record itself implies other information such as the physical filter and the time of observation.
-A deep coadd on a patch of sky would not have \textbf{an} \texttt{exposure} dimension and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, band="r", skymap="lsst\_cells\_v1"}, which would tell you exactly where it is located in the sky and in what waveband since you can calculate it from the tract, patch, band and skymap, where the skymap defines how tract and patch correspond to regions on the sky.
+A deep coadd on a patch of sky would not have an \texttt{exposure} dimension and would instead be something like \texttt{instrument="LSSTCam", tract=105, patch=2, band="r", skymap="lsst\_cells\_v1"}, which would tell you exactly where it is located in the sky and in what waveband since you can calculate it from the tract, patch, band and skymap, where the skymap defines how tract and patch correspond to regions on the sky.
 
 Projects can use different sets of dimension definitions, called ``universes'', and the Butler's database schema is derived from those definitions (so changing the dimension universe used by a Butler repository is possible, but not undertaken lightly, as it constitutes a schema migration).
 Downstream science code generally needs to make assumptions about what is in the dimension universe (e.g., whether a \texttt{detector} concept exists and, if so, whether it \emph{implies} a \texttt{band} or can be associated with any \texttt{band}), which can limit its reusability.
@@ -113,7 +113,7 @@ It is also possible to visualize quantum graphs, which include the actual data f
 \subsection{Configuration}
 \label{sec:config}
 The \texttt{pex\_config} package provides the foundational configuration system for running large-scale processing campaigns with the Science Pipelines.
-\texttt{pex\_config} is \textbf{designed to resemble} a domain-specific language embedded within Python, in which configuration options are defined via Python classes  and values are set via snippets of Python code.
+\texttt{pex\_config} is designed to resemble a domain-specific language embedded within Python, in which configuration options are defined via Python classes  and values are set via snippets of Python code.
 This leverages the full power of a programming language for parsing and setting configuration values, while also supporting interoperability with standard text formats (e.g., JSON, YAML), import-time plugin extensibility, provenance through parameter change history, and validation of both types and values.
 The system can be installed and used on its own, and has been adopted by the DRAGONS software \citep{2023RNAAS...7..214L}.
 A more detailed description of how the configuration system works is provided in Appendix~\ref{sec:appendix_config}.
@@ -149,7 +149,7 @@ There are currently project-supported \texttt{obs} packages for:
 All of these instruments use the default dimension universe.
 
 Additionally, teams outside the project have developed \texttt{obs} packages to support Subaru's `{\={O}}nohi`ula Prime Focus Spectrograph \citep{2026SPIE14149E..0CA}, VISTA's VIRCAM \citep{2015A&A...575A..25S},
-the Wide Field Survey Telescope \citep[WFST;][]{2025arXiv250115018C}, \textbf{Lick Observatory's Nickel Telescope \citep{2026AAS...24822403G},} and the Gravitational-wave Optical Transient Observer \citep[GOTO;][]{2021PASA...38....4M}.
+the Wide Field Survey Telescope \citep[WFST;][]{2025arXiv250115018C}, Lick Observatory's Nickel Telescope \citep{2026AAS...24822403G}, and the Gravitational-wave Optical Transient Observer \citep[GOTO;][]{2021PASA...38....4M}.
 SPHEREx \citep{2026ApJS..285...67A} uses the pipeline middleware but has developed pipeline tasks without the Rubin C++ dependencies and so does not use an \texttt{obs} package.
 Most of these projects have made small changes to the default dimension universe to better represent their data model.
 
@@ -157,7 +157,7 @@ Most of these projects have made small changes to the default dimension universe
 
 Every instrument uses different metadata standards but the Butler data model and pipelines require some form of standardization to determine values such as the coordinates of an observation, the observation type, or the time of observation.
 To perform that standard extraction of metadata each supported instrument must provide a metadata translator class using the \texttt{astro\_metadata\_translator} infrastructure.\footnote{\url{https://astro-metadata-translator.lsst.io}}
-The translator classes can understand evolving data models and allow the standardized metadata to be extracted for the lifetime of an instrument even if \textbf{the} headers change \textbf{over time}.
+The translator classes can understand evolving data models and allow the standardized metadata to be extracted for the lifetime of an instrument even if the headers change over time.
 Furthermore, in addition to providing standardized metadata the package can also provide programmatic or per-exposure corrections to data headers prior to calculating the translated metadata.
 This allows files that were written with incorrect headers to be recovered during file ingestion.
 
