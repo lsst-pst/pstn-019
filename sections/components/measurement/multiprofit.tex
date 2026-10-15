@@ -9,6 +9,6 @@ The \texttt{meas\_extensions\_multiprofit} package contains pipeline tasks (with
 The first of these tasks fits a Gaussian mixture model to the PSF model image at the location of each object in a patch.
 This procedure is similar to the shapelet PSF fitting functionality in \texttt{meas\_modelfit} \secrefp{sec:cmodel}.
 The main differences are that the components are pure Gaussians (shapelet parameters are not supported), can have independent shapes, and are constrained to have integrals summing to unity (i.e., they are normalized).
-Currently, a maximum of two components \textbf{is} supported; this limitation may be removed in the future.
+Currently, a maximum of two components is supported; this limitation may be removed in the future.
 In all cases, the structural parameters for each component are band-independent, with a separate total flux parameter for each band.
 That is, individual components do not have intrinsic color gradients (although the convolved models might, if the PSF parameters vary by band).

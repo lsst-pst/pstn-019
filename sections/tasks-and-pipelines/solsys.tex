@@ -33,7 +33,7 @@ This database, including the table of orbits as well as observations, is replica
 Following the replication, the absolute magnitudes of objects in the SSObject table will be recomputed, as well as some auxiliary per-observation information for individual observations (the SSSource table).
 
 The replicated orbits and computed absolute magnitudes are utilized to predict positions (ephemerides) and magnitudes of Solar System objects in subsequent nights.
-To enable speedy retrieval (\textbf{of order} 100\,ms or less) of all objects in a visit, we precompute on-sky locations of all Solar System objects at twenty times spread across the night, fit Chebyshev polynomials, and build an efficient HEALPix-based index allowing for fast lookup.
+To enable speedy retrieval (of order 100\,ms or less) of all objects in a visit, we precompute on-sky locations of all Solar System objects at twenty times spread across the night, fit Chebyshev polynomials, and build an efficient HEALPix-based index allowing for fast lookup.
 These ephemerides are then served to association pipelines described in \secref{sec:association}.
 This element of the pipeline is based on Sorcha \citep[computation;][]{2025AJ....170..100M} and \texttt{mpsky} \citep[fast lookup and serving;][]{mpsky}.
 The system can also perform ``precovery''---the association of originally missed observations of Solar System objects observed earlier in the survey.

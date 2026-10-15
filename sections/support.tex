@@ -16,11 +16,11 @@ This verbose logging is used for periodic logging where long-lived analysis task
 Orthogonally to the \texttt{TRACE} logging level there is also the ability to enable loggers named \texttt{TRACEn}, where \texttt{n} is an integer, and we can enable these loggers at \texttt{DEBUG} log level to provide more and more detail as the number increases.
 Finally, we use \texttt{timer} loggers for each task to simplify the collection of runtime performance metrics.
 
-For logging from C++ we use Log4CXX wrapped in the \texttt{lsst.log} package to make it look more like standard Python logging, \textbf{while} also supporting deferred string formatting such that log messages are only formed if the log message level is sufficient for the message to be logged.
+For logging from C++ we use Log4CXX wrapped in the \texttt{lsst.log} package to make it look more like standard Python logging, while also supporting deferred string formatting such that log messages are only formed if the log message level is sufficient for the message to be logged.
 These C++ log messages are forwarded to Python rather than being issued from an independent logging stream.
 Finally, we also provide some LSST-specific exceptions that can be thrown from C++ code and caught in Python.
 
-As of \textbf{September} 2026, the Science Pipelines software is more than \textbf{900,000} lines of Python and approximately 220,000 lines of C++.
+As of September 2026, the Science Pipelines software is more than 900,000 lines of Python and approximately 220,000 lines of C++.
 For the purposes of this count, the Science Pipelines are defined as the \texttt{lsst\_distrib} metapackage and do not include code from third-party packages nor from the Solar System Pipeline (see \secref{sec:solsys}).
 The number of lines in the pipelines code as a function of time is given in Fig.~\ref{fig:pipe-loc}.
 
@@ -53,7 +53,7 @@ This includes longer tests (up to a few hours) in which we run complete pipeline
 
 \subsubsection{Installation}
 
-Where possible, individual packages can be installed from the Python Package Index (PyPI)\footnote{For example, the Data Butler is on PyPI at \url{https://pypi.org/project/lsst-daf-butler/}. To simplify discoverability and prevent namespace confusion, Rubin packages on PyPI include the \texttt{lsst-} prefix in the package name (for example \texttt{lsst-daf-butler} and \texttt{lsst-pipe-base} corresponding to the EUPS names of \texttt{daf\_butler} and \texttt{pipe\_base}).} but that is mostly limited to packages, such as pipeline middleware packages, that do not have any C++ code due to limitations in Python packaging \textbf{that prevent} packages \textbf{from linking} directly against shared libraries from other packages.
+Where possible, individual packages can be installed from the Python Package Index (PyPI)\footnote{For example, the Data Butler is on PyPI at \url{https://pypi.org/project/lsst-daf-butler/}. To simplify discoverability and prevent namespace confusion, Rubin packages on PyPI include the \texttt{lsst-} prefix in the package name (for example \texttt{lsst-daf-butler} and \texttt{lsst-pipe-base} corresponding to the EUPS names of \texttt{daf\_butler} and \texttt{pipe\_base}).} but that is mostly limited to packages, such as pipeline middleware packages, that do not have any C++ code due to limitations in Python packaging that prevent packages from linking directly against shared libraries from other packages.
 To install the full set of pipelines software we provide an installation script that installs the appropriate Conda environment and then downloads the binaries (Linux x86\_64, Linux aarch64, or macOS Apple Silicon) from our artifact server.
 As mentioned in \secref{ssec:python} it is also possible to run a Docker container with everything pre-installed.
 For developers we also provide a script to build and install the software directly from the Git repositories.

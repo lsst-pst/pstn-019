@@ -4,7 +4,7 @@
 Image subtraction for transient/variable detection and analysis is implemented in the \texttt{ip\_diffim} package, and is divided into three steps.
 While the image subtraction system could be used to work on other combinations, we primarily focus on subtracting a ``template'' coadd from a single-visit ``science'' image.
 First, the template coadd is warped to the WCS and bounding box of the science image.
-Then the warped template is subtracted from the science image using \textbf{the standard Alard \& Lupton algorithm \citep{1998ApJ...503..325A}}, which produces a temporary difference image.
+Then the warped template is subtracted from the science image using the standard Alard \& Lupton algorithm \citep{1998ApJ...503..325A}, which produces a temporary difference image.
 Finally, peaks are detected on the difference image and DIASources (``difference image analysis sources'') are measured.
 The final difference image with updated mask planes is written along with the DIASource catalog.
 
@@ -33,7 +33,7 @@ These may be due to a variety of causes, including uncorrected instrument signat
 The latter can leave long streaks that cross one or more LSSTCam detectors
 \citep{2020AJ....160..226T,2022A&C....3900584H}.
 
-To reduce the number of DIASources originating from non-astrophysical sources, we apply a \textbf{multipronged} approach:
+To reduce the number of DIASources originating from non-astrophysical sources, we apply a multipronged approach:
 
 \begin{itemize}
 \item During detection, we remove sources that have pixel flags characteristic of artifacts and unusable measurements, such as when all of the central pixels of a DIASource are saturated.
@@ -60,7 +60,7 @@ These approaches are intended to enable science users to control the tradeoff be
 
 The \texttt{ap\_association} package contains multiple tasks for standardizing newly detected DIASources and associating them into ``DIAObjects''.
 Standardization converts the output catalogs from difference imaging to the format specified in \texttt{sdm\_schemas} \secrefp{sec:schemas}, and applies filtering consistent with \citet{DMTN-199}.
-Once DIASource catalogs are standardized, they are associated \textbf{with} DIAObjects in either of two modes: DRP or AP.
+Once DIASource catalogs are standardized, they are associated with DIAObjects in either of two modes: DRP or AP.
 Both implementations use the Pessimistic Pattern Matcher B \citep{DMTN-031} to score and match DIASources, but differ in how DIAObjects are stored and how visits are ordered.
 
 \begin{itemize}
@@ -77,7 +77,7 @@ Properties of the source such as its reliability score \secrefp{sec:reliability}
 
 The Alert Production Database \citep[APDB;][]{DMTN-293} supports SQLite, PostgreSQL, and Apache Cassandra database formats.
 SQLite and PostgreSQL are used for testing only; a more scalable Cassandra database is used in production.
-The previous history of DIAObjects, DIASources, and DIAForcedSources for the region containing the science image \textbf{is} loaded and passed to a task for association.
+The previous history of DIAObjects, DIASources, and DIAForcedSources for the region containing the science image is loaded and passed to a task for association.
 Loading is split from the association step to enable preloading of catalogs from the database in Prompt Processing during the interval when the next visit has been scheduled but the images have not yet been taken.
 When AP-style association is run outside of Prompt Processing, it is therefore essential to process all association tasks in strict visit order to prevent loading catalogs from the APDB prematurely and losing DIAObject history in association.
 
@@ -89,7 +89,7 @@ These packets are serialized in Apache Avro\footnote{\url{https://avro.apache.or
 \citet{DMTN-093} provides a high-level overview of the alert system.
 
 Within the pipelines, alert packets are constructed within and published by \texttt{ap\_association}.
-Alert packets contain the triggering DIASource record; the associated DIAObject or SSObject record; up to twelve months of past history from DIASources, DIAForcedSources, and/or upper limits; and cutout images of the science, template, and difference images centered at the position of the \textbf{DIASource}.
+Alert packets contain the triggering DIASource record; the associated DIAObject or SSObject record; up to twelve months of past history from DIASources, DIAForcedSources, and/or upper limits; and cutout images of the science, template, and difference images centered at the position of the DIASource.
 Cutouts are provided as FITS images serialized by the Astropy \texttt{CCDData} class, and include image, variance, and mask planes along with WCS information and an image of the approximate PSF.
 
 Avro schemas are stored in the \texttt{alert\_packet} package.

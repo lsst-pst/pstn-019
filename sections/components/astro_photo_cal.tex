@@ -26,7 +26,7 @@ We default to fitting the simple affine model because we have good distortion mo
 \label{sec:gbdes}
 
 The final astrometric solution in DRP is fit by a task in \texttt{drp\_tasks}, which runs the \texttt{wcsfit} fitter from the \texttt{gbdes} package \citep{2022ascl.soft10011B,2017PASP..129g4503B} on the ensemble of images in a given band overlapping with a given tract.
-This task fits a per-detector polynomial distortion model, a per-exposure polynomial distortion model, and \textbf{positions} for all the isolated star sources in the component images.
+This task fits a per-detector polynomial distortion model, a per-exposure polynomial distortion model, and positions for all the isolated star sources in the component images.
 This is done by first associating all isolated point sources in the input images and matching them with an external reference catalog.
 The model is then fit by iterating between fitting the per-detector and per-exposure polynomial models, and recalculating the best-fit solution for the object positions.
 
@@ -55,7 +55,7 @@ Precomputed color terms can also be applied to the reference catalog fluxes when
 Global photometric calibration for DRP is computed via the Forward Global Calibration Method~\citep[FGCM;][]{2018AJ....155...41B}, as adapted for LSST \citep{SITCOMTN-086}.
 This global calibration algorithm makes use of repeated observations of stars in all $ugrizy$ bands, combining a forward model of the atmospheric parameters with instrumental throughputs measured with auxiliary information.
 In this way we simultaneously constrain the atmospheric model as well as standardized top-of-atmosphere (TOA) star fluxes over a wide range of star colors, including full chromatic corrections from the instrument and atmosphere.
-\textbf{The software is designed to be able to track changes in telescope components over time such as the primary mirror emissivity.}
+The software is designed to be able to track changes in telescope components over time such as the primary mirror emissivity.
 
 Running \texttt{fgcmcal} first requires generating a look-up table.
 The input to the look-up table includes the effect of a MODTRAN \citep{1999SPIE.3756..348B} atmospheric model at the elevation of the observatory, as well as the throughput as a function of wavelength and position from the optics, filters, and detector quantum efficiency.
